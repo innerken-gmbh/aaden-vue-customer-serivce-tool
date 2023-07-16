@@ -11,12 +11,6 @@ export const adminRoutes = [
     children: [
       {
         parentPath: '/index',
-        menuUrl: '/index/home',
-        menuName: '主控台',
-        routeName: 'home',
-      },
-      {
-        parentPath: '/index',
         menuUrl: '/index/work-place',
         menuName: '工作台',
         routeName: 'workPlace',
@@ -34,7 +28,7 @@ export const adminRoutes = [
       {
         parentPath: '/list',
         menuUrl: '/list/upload',
-        menuName: '商品批量上传',
+        menuName: '商品批量上传(敬请期待)',
       },
       {
         parentPath: '/list',
@@ -43,13 +37,13 @@ export const adminRoutes = [
       },
       {
         parentPath: '/list',
-        menuUrl: '/list/list',
-        menuName: '批量上图',
+        menuUrl: '/list/image-upload',
+        menuName: '批量上图(敬请期待)',
       },
       {
         parentPath: '/list',
-        menuUrl: '/list/card-list',
-        menuName: '修改商品同步组',
+        menuUrl: '/list/sync-group',
+        menuName: '修改商品同步组(敬请期待)',
       },
     ],
   },
@@ -63,34 +57,20 @@ export const adminRoutes = [
     children: [
       {
         parentPath: '/form',
-        menuUrl: '/form/base-form-view',
+        menuUrl: '/form/manage',
         menuName: '外卖网站开通/管理',
         cacheable: true,
       },
       {
         parentPath: '/form',
         menuUrl: '/form/advance-form',
-        menuName: '外卖订单查询',
+        menuName: '外卖订单查询(敬请期待)',
         cacheable: true,
       },
       {
         parentPath: '/form',
         menuUrl: '/form/step-form',
         menuName: '-',
-      },
-    ],
-  },
-  {
-    menuUrl: '/project',
-    menuName: '项目信息',
-    iconPrefix: 'iconfont',
-    icon: 'detail',
-    isSingle: true,
-    children: [
-      {
-        parentPath: '/project',
-        menuUrl: '/project/infomation',
-        menuName: '项目依赖',
       },
     ],
   },

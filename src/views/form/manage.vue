@@ -1,44 +1,9 @@
 <template>
-  <n-space vertical>
-    <n-card
-      title="请填写会议基本信息（预设：grid-item），（以下表单信息是动态生成）"
-      :content-style="{ padding: '10px' }"
-      :header-style="{ padding: '10px' }"
-      :segmented="true"
-    >
-      <div class="form-wrapper" style="width: 95%">
-        <DataForm
-          ref="dataForm"
-          preset="grid-item"
-          :options="formItems"
-          :form-config="formConfig"
-        />
-        <div class="flex justify-end">
-          <n-button :loading="submitLoading" type="primary" size="small" @click="submit">
-            提交
-          </n-button>
-        </div>
-      </div>
+  <div class="main-container">
+    <n-card style="height: calc(100vh - 140px)">
+      <iframe src="http://t.aaden.online" width="100%" height="100%"></iframe>
     </n-card>
-    <n-card
-      title="请填写会议基本信息（预设：form-item），（以下表单信息是动态生成）"
-      :content-style="{ padding: '10px' }"
-      :header-style="{ padding: '10px' }"
-      :segmented="true"
-    >
-      <template #header-extra>
-        <n-button type="primary" size="small" @click="show = !show"> 隐藏 </n-button>
-      </template>
-      <div class="form-wrapper" v-show="show">
-        <DataForm ref="dataForm" :options="formItems" :form-config="formConfig" />
-        <div class="flex justify-end">
-          <n-button :loading="submitLoading" type="primary" size="small" @click="submit">
-            提交
-          </n-button>
-        </div>
-      </div>
-    </n-card>
-  </n-space>
+  </div>
 </template>
 
 <script lang="ts">
