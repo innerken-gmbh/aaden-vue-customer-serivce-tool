@@ -1,31 +1,6 @@
 <template>
   <div class="main-container">
-    <TableBody>
-      <template #header>
-        <TableHeader :show-filter="false">
-          <template #table-config>
-            <TableConfig @update-border="onUpdateBorder" @refresh="doRefresh" />
-            <SortableTable class="ml-4" :columns="tableColumns" @update="onUpdateTable" />
-          </template>
-          <template #top-right>
-            <DeleteButton @delete="onDeleteItem" />
-          </template>
-        </TableHeader>
-      </template>
-      <template #default>
-        <n-data-table
-          :loading="tableLoading"
-          :single-line="!bordered"
-          :data="dataList"
-          :columns="tableColumns"
-          :row-key="rowKey"
-          @update:checked-row-keys="handleSelectionChange"
-        />
-      </template>
-      <template #footer>
-        <TableFooter :pagination="pagination" />
-      </template>
-    </TableBody>
+    <iframe src="http://k.aaden.online" width="100%" height="900"></iframe>
   </div>
 </template>
 

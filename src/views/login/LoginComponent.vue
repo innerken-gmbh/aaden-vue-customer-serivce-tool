@@ -7,10 +7,10 @@
           <div class="logo-wrapper">
             <img src="../../assets/logo.png" />
           </div>
-          <div class="title">Admin Work</div>
-          <div class="sub-title">Vue3 + Vite2 + Typescript + Naive UI</div>
-          <div class="flex-1 flex justify-center items-center ttppii"> 生活，应该还有诗和远方 </div>
-          <div class="bottom-wrapper">Admin Work {{ version }} · Made by qingqingxuan</div>
+          <div class="title">Aaden POS 客服平台</div>
+          <div class="sub-title">好吃不贵，经济实惠</div>
+          <div class="flex-1 flex justify-center items-center ttppii"> 幸运眷顾勇毅之士 </div>
+          <div class="bottom-wrapper">Aaden POS 客服平台 {{ version }} · Made by InnerKen Team</div>
         </div>
       </div>
       <div class="right">
@@ -64,7 +64,7 @@
     <div v-else class="m-login-container">
       <div class="header">
         <div class="the-p"> P </div>
-        <div class="mt-4 text-lg font-bold text-white"> Admin Work </div>
+        <div class="mt-4 text-lg font-bold text-white"> Aaden POS 客服平台 </div>
       </div>
       <div class="content">
         <n-input round placeholder="请输入用户名/手机号" size="large" v-model:value="username">

@@ -7,7 +7,7 @@ import {
   ThemeMode,
 } from '@/store/types'
 
-export const projectName = 'Admin Work'
+export const projectName = 'Aaden POS 客服团队'
 
 export default {
   theme: ThemeMode.LIGHT,

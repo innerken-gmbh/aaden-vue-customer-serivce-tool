@@ -194,19 +194,19 @@
         currentDate: date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate(),
         dataItems: [
           {
-            title: 'Vue Admin Work',
+            title: 'Vue Aaden POS 客服平台',
             target: 'http://qingqingxuan.gitee.io/vue-admin-work',
             gitee: 'http://www.vueadminwork.com',
             ui: 'Element UI',
           },
           {
-            title: 'Vue Admin Work X',
+            title: 'Vue Aaden POS 客服平台 X',
             target: 'http://qingqingxuan.gitee.io/vue-admin-work-x',
             gitee: 'http://www.vueadminwork.com',
             ui: 'Element Plus',
           },
           {
-            title: 'Admin Work Pro',
+            title: 'Aaden POS 客服平台 Pro',
             target: 'http://qingqingxuan.gitee.io/admin-work',
             gitee: 'http://www.vueadminwork.com',
             ui: 'NaiveUI',
@@ -218,13 +218,13 @@
             ui: 'ArcoDesign',
           },
           {
-            title: 'Vue Admin Work A',
+            title: 'Vue Aaden POS 客服平台 A',
             target: 'http://qingqingxuan.gitee.io/vue-admin-work-x',
             gitee: 'http://www.vueadminwork.com',
             ui: 'Antd',
           },
           {
-            title: 'Admin Work',
+            title: 'Aaden POS 客服平台',
             target: 'http://qingqingxuan.gitee.io/admin-work',
             gitee: 'http://www.vueadminwork.com',
             ui: 'NaiveUI',
