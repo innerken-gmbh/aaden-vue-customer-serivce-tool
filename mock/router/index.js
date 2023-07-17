@@ -20,11 +20,16 @@ export const adminRoutes = [
   },
   {
     menuUrl: '/list',
-    menuName: '商品管理功能',
+    menuName: '门店管理',
     iconPrefix: 'iconfont',
     icon: 'detail',
     parentPath: '',
     children: [
+      {
+        parentPath: '/list',
+        menuUrl: '/list/manage-store',
+        menuName: '查看门店界面',
+      },
       {
         parentPath: '/list',
         menuUrl: '/list/upload',
