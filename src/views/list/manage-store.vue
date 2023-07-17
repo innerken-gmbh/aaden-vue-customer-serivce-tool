@@ -28,7 +28,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { computed, ref, watch, watchEffect } from 'vue'
+  import { computed, ref, watch } from 'vue'
 
   const deviceId = ref('1')
   const show = ref(true)
