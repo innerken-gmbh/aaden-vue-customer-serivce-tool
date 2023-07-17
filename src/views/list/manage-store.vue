@@ -8,18 +8,21 @@
         <n-button type="primary" @click="refresh">刷新</n-button>
       </n-space>
       <n-divider />
-      <iframe
-        :src="url"
-        width="1368"
-        height="768"
-        class="shadow"
-        style="background: white"
-      ></iframe>
-      <div class="mt-2">
-        <n-text>
-          {{ url }}
-        </n-text>
-      </div>
+      <n-empty v-if="!show || !url" />
+      <template v-else>
+        <iframe
+          :src="url"
+          width="1368"
+          height="768"
+          class="shadow"
+          style="background: white"
+        ></iframe>
+        <div class="mt-2">
+          <n-text>
+            {{ url }}
+          </n-text>
+        </div>
+      </template>
     </n-card>
   </div>
 </template>
@@ -28,9 +31,12 @@
   import { computed, ref, watch, watchEffect } from 'vue'
 
   const deviceId = ref('1')
-  const show = ref(false)
+  const show = ref(true)
   const url = computed(() => {
     const ngrokUrl = 'ik' + deviceId.value.padStart(4, '0') + '.ngrok.aaden.io'
+    if (deviceId.value.length != 1 && deviceId.value.length != 4) {
+      return ''
+    }
     if (parseInt(deviceId.value) > 6000) {
       return location.protocol + '//app-beta.aaden.io/?Base=' + deviceId.value.padStart(4, '0')
     } else {
