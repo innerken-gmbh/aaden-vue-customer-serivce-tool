@@ -40,7 +40,7 @@
     if (parseInt(deviceId.value) > 6000) {
       return location.protocol + '//app-beta.aaden.io/?Base=' + deviceId.value.padStart(4, '0')
     } else {
-      return 'http://' + ngrokUrl + '/App?Base=' + ngrokUrl
+      return location.protocol + '//' + ngrokUrl + '/App?Base=' + ngrokUrl
     }
   })
   function refresh() {
