@@ -36,3 +36,11 @@ export function dishBuilder(startDishInfo) {
     prepareForUpload,
   }
 }
+
+export default {
+  default: {
+    t: (a) => {
+      return a
+    },
+  },
+}

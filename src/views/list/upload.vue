@@ -1,21 +1,21 @@
 <template>
-  <div class="main-container pa-4">
+  <div class="main-container p-4">
+    <n-h3>标签信息</n-h3>
     <n-space>
-      <n-form-item label="Blade · Stairways to Heaven 价格">
-        <n-input v-model:value="price1" />
+      <n-form-item label="标签名称">
+        <n-input v-model:value="categoryName" />
       </n-form-item>
-      <n-form-item label="Blade · Stairways to Heaven 复制属性组名称">
-        <n-input v-model:value="attrName1" />
+      <n-form-item label="标签类型">
+        <n-input v-model:value="categoryType" />
       </n-form-item>
     </n-space>
-    <n-space>
-      <n-form-item label="Kafka · Gun & Roses 价格">
-        <n-input v-model:value="price2" />
-      </n-form-item>
-      <n-form-item label="Kafka · Gun & Roses 复制属性组名称">
-        <n-input v-model:value="attrName2" />
+    <n-h3>菜品信息</n-h3>
+    <n-space :key="i" v-for="i in uploadInfo">
+      <n-form-item :label="info.label" :key="info.field" v-for="info in i.field">
+        <n-input v-model:value="i.item[info.field]" />
       </n-form-item>
     </n-space>
+    {{ uploadInfo.map((it) => it.item) }}
 
     <n-space>
       <n-input v-model:value="deviceId" placeholder="设备ID" />
@@ -25,26 +25,63 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref } from 'vue'
+  import { reactive, ref } from 'vue'
   import hillo from 'hillo'
   import { dishBuilder } from '@/i18n'
   import { useMessage } from 'naive-ui'
+  import { IKUtils } from 'innerken-js-utils'
 
   const deviceId = ref('')
+  const categoryName = ref('')
+  const categoryType = ref('9')
 
   const price1 = ref('5.7')
   const price2 = ref('5.5')
   const attrName1 = ref('蓝莓冰茶')
   const attrName2 = ref('青柠香柚')
-  const categoryInfo = {
-    catTypeId: 9,
-    langs: JSON.stringify([
-      { name: 'Star Rail', lang: 'ZH' },
-      { name: 'Star Rail', lang: 'DE' },
-      { name: 'Star Rail', lang: 'EN' },
-    ]),
-    printOrder: 10,
+
+  const dishInfo = [
+    {
+      field: 'code',
+      label: '菜号',
+      required: true,
+    },
+    {
+      field: 'name',
+      label: '名称',
+      required: true,
+    },
+    {
+      field: 'price',
+      label: '价格',
+      required: true,
+    },
+    {
+      field: 'printGroupId',
+      label: '打印组',
+      required: true,
+    },
+
+    {
+      field: 'copyAttributeName',
+      label: '从某菜品复制属性（可不填）',
+      required: false,
+    },
+  ]
+
+  const uploadInfo: any[] = reactive([])
+
+  function init() {
+    addEmptyDish()
+    addEmptyDish()
   }
+
+  function addEmptyDish() {
+    const field = IKUtils.deepCopy(dishInfo)
+    uploadInfo.push({ field: field, item: {} })
+  }
+
+  init()
 
   async function uploadDishIfNotExist(dishInfo) {
     const currentDishList = (await hillo.get('Dishes.php')).content
@@ -55,7 +92,9 @@
       const id = (await hillo.post('Dishes.php?op=add', dishInfo))?.content?.id
     }
   }
+
   const message = useMessage()
+
   async function doUpload() {
     const ngrokUrl = 'ik' + deviceId.value.padStart(4, '0') + '.ngrok.aaden.io'
     hillo.use({
@@ -77,53 +116,65 @@
         return value
       },
     })
-    const currentCategoryList = (await hillo.get('Category.php')).content
-    console.log(currentCategoryList)
-    let existId = currentCategoryList.find((it: any) => {
-      return it?.langs?.some((that: { name: string }) => that?.name === 'Star Rail')
-    })?.id
-    if (!existId) {
-      const id = (await hillo.post('Category.php?op=add', categoryInfo))?.content?.id
-      console.log(id)
-      existId = id
+    if (!categoryName.value) {
+      message.error('请输入标签名字')
     }
 
-    console.log(existId, 'currentCategoryId')
-    const currentDishList = (await hillo.get('Dishes.php')).content
-    console.log(currentDishList, 'dish')
-    const dishInfo1 = dishBuilder({
-      price: price1.value,
-      categoryId: existId,
-      printGroupId: 8,
-      langs: [
-        { name: 'Blade · Stairways to Heaven', lang: 'ZH' },
-        { name: 'Blade · Stairways to Heaven', lang: 'DE' },
-        { name: 'Blade · Stairways to Heaven', lang: 'EN' },
-      ],
-      code: 'rr1',
-      attributeGroup: [],
-    })
-    const dishInfo2 = dishBuilder({
-      price: price2.value,
-      categoryId: existId,
-      printGroupId: 8,
-      langs: [
-        { name: 'Kafka · Gun & Roses', lang: 'ZH' },
-        { name: 'Kafka · Gun & Roses', lang: 'DE' },
-        { name: 'Kafka · Gun & Roses', lang: 'EN' },
-      ],
-      code: 'rr2',
-      attributeGroup: [],
-    })
+    const categoryInfo = {
+      catTypeId: categoryType.value,
+      langs: JSON.stringify([
+        { name: categoryName.value, lang: 'ZH' },
+        { name: categoryName.value, lang: 'DE' },
+        { name: categoryName.value, lang: 'EN' },
+      ]),
+      printOrder: 10,
+    }
     try {
-      await dishInfo1.copyFrom(attrName1.value, 'attributeGroup', 'localAttributeGroupId')
-      await uploadDishIfNotExist(dishInfo1.prepareForUpload())
-      await dishInfo2.copyFrom(attrName2.value, 'attributeGroup', 'localAttributeGroupId')
-      await uploadDishIfNotExist(dishInfo2.prepareForUpload())
-      message.success('上传成功！')
+      const currentCategoryList = (await hillo.get('Category.php')).content
+      console.log(currentCategoryList)
+      let existId = currentCategoryList.find((it: any) => {
+        return it?.langs?.some((that: { name: string }) => that?.name === 'Star Rail')
+      })?.id
+      if (!existId) {
+        const id = (await hillo.post('Category.php?op=add', categoryInfo))?.content?.id
+        console.log(id)
+        existId = id
+      }
+      console.log(existId, 'currentCategoryId')
+      for (const info of uploadInfo) {
+        let shouldUpload = true
+        for (const f of info.field) {
+          if (f.required && !info.item[f.field]) {
+            shouldUpload = false
+          }
+        }
+        if (shouldUpload) {
+          const dishInfo = dishBuilder({
+            price: info.item.price,
+            categoryId: existId,
+            code: info.code,
+            printGroupId: info.item.printGroupId,
+            langs: [
+              { name: info.item.name, lang: 'ZH' },
+              { name: info.item.name, lang: 'DE' },
+              { name: info.item.name, lang: 'EN' },
+            ],
+          })
+          if (info.item.copyAttributeName) {
+            await dishInfo.copyFrom(
+              info.item.copyAttributeName,
+              'attributeGroup',
+              'localAttributeGroupId'
+            )
+          }
+          await uploadDishIfNotExist(dishInfo.prepareForUpload())
+        }
+      }
+      message.success('全部上传成功')
+      deviceId.value = ''
     } catch (e) {
-      console.log(e)
-      message.error(e?.message)
+      console.log(e, 'error')
+      message.error('上传失败' + e?.message)
     }
   }
 </script>
