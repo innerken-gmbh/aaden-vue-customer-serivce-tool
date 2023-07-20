@@ -1,295 +1,129 @@
 <template>
-  <div class="main-container">
-    <TableBody ref="tableBody">
-      <template #header>
-        <TableHeader
-          :show-filter="true"
-          title="查询条件"
-          @search="onSearch"
-          @reset-search="onResetSearch"
-        >
-          <template #search-content>
-            <DataForm
-              ref="searchForm"
-              :form-config="{
-                labelWidth: 60,
-              }"
-              :options="conditionItems"
-              preset="grid-item"
-            />
-          </template>
-        </TableHeader>
-      </template>
-      <template #default>
-        <n-data-table
-          size="small"
-          :loading="tableLoading"
-          :data="dataList"
-          :columns="tableColumns"
-          :row-key="rowKey"
-          :style="{ height: `${tableHeight}px` }"
-          :flex-height="true"
-        />
-      </template>
-      <template #footer>
-        <TableFooter :pagination="pagination" />
-      </template>
-    </TableBody>
+  <div class="main-container pa-4">
+    <n-space>
+      <n-form-item label="Blade · Stairways to Heaven 价格">
+        <n-input v-model:value="price1" />
+      </n-form-item>
+      <n-form-item label="Blade · Stairways to Heaven 复制属性组名称">
+        <n-input v-model:value="attrName1" />
+      </n-form-item>
+    </n-space>
+    <n-space>
+      <n-form-item label="Kafka · Gun & Roses 价格">
+        <n-input v-model:value="price2" />
+      </n-form-item>
+      <n-form-item label="Kafka · Gun & Roses 复制属性组名称">
+        <n-input v-model:value="attrName2" />
+      </n-form-item>
+    </n-space>
+
+    <n-space>
+      <n-input v-model:value="deviceId" placeholder="设备ID" />
+      <n-button @click="doUpload"> 上传</n-button>
+    </n-space>
   </div>
 </template>
 
-<script lang="ts">
-  import { post } from '@/api/http'
-  import { getTableList } from '@/api/url'
-  import { renderTag } from '@/hooks/form'
-  import { usePagination, useRowKey, useTable, useTableColumn, useTableHeight } from '@/hooks/table'
-  import { DataFormType, FormItem } from '@/types/components'
-  import {
-    DataTableColumn,
-    NAvatar,
-    NCheckbox,
-    NCheckboxGroup,
-    NDatePicker,
-    NInput,
-    NSelect,
-    NSpace,
-    NTimePicker,
-    SelectOption,
-    useMessage,
-  } from 'naive-ui'
-  import { defineComponent, h, onMounted, ref } from 'vue'
-  const conditionItems: Array<FormItem> = [
-    {
-      key: 'name',
-      label: '用户姓名',
-      value: ref(null),
-      render: (formItem) => {
-        return h(NInput, {
-          value: formItem.value.value,
-          onUpdateValue: (val) => {
-            formItem.value.value = val
-          },
-          placeholder: '请输入姓名',
-        })
+<script lang="ts" setup>
+  import { ref } from 'vue'
+  import hillo from 'hillo'
+  import { dishBuilder } from '@/i18n'
+  import { useMessage } from 'naive-ui'
+
+  const deviceId = ref('')
+
+  const price1 = ref('5.3')
+  const price2 = ref('5.7')
+  const attrName1 = ref('蓝莓冰茶')
+  const attrName2 = ref('青柠香柚')
+  const categoryInfo = {
+    catTypeId: 9,
+    langs: JSON.stringify([
+      { name: 'Star Rail', lang: 'ZH' },
+      { name: 'Star Rail', lang: 'DE' },
+      { name: 'Star Rail', lang: 'EN' },
+    ]),
+    printOrder: 10,
+  }
+
+  async function uploadDishIfNotExist(dishInfo) {
+    const currentDishList = (await hillo.get('Dishes.php')).content
+    if (currentDishList.some((it) => it.code === dishInfo.code)) {
+      return
+    } else {
+      const id = (await hillo.post('Dishes.php?op=add', dishInfo))?.content?.id
+    }
+  }
+  const message = useMessage()
+  async function doUpload() {
+    const ngrokUrl = 'ik' + deviceId.value.padStart(4, '0') + '.ngrok.aaden.io'
+    hillo.use({
+      errorHandler<T>(data: any) {
+        message.error(data?.message)
       },
-    },
-    {
-      key: 'sex',
-      label: '用户姓别',
-      value: ref(null),
-      optionItems: [
-        {
-          label: '男',
-          value: 0,
-        },
-        {
-          label: '女',
-          value: 1,
-        },
+      isDebug: false,
+      productionUrl: 'http://' + ngrokUrl + '/PHP/',
+      debugUrl: 'http://' + ngrokUrl + '/PHP/',
+      LoadingUtils: {
+        showLoading: function () {},
+        hideLoading: function () {},
+        showError: function () {},
+      },
+      refreshHeader: function () {
+        return ''
+      },
+      tokenRefresh: function (value: string) {
+        return value
+      },
+    })
+    const currentCategoryList = (await hillo.get('Category.php')).content
+    console.log(currentCategoryList)
+    let existId = currentCategoryList.find((it: any) => {
+      return it?.langs?.some((that: { name: string }) => that?.name === 'Star Rail')
+    })?.id
+    if (!existId) {
+      const id = (await hillo.post('Category.php?op=add', categoryInfo))?.content?.id
+      console.log(id)
+      existId = id
+    }
+
+    console.log(existId, 'currentCategoryId')
+    const currentDishList = (await hillo.get('Dishes.php')).content
+    console.log(currentDishList, 'dish')
+    const dishInfo1 = dishBuilder({
+      price: price1.value,
+      categoryId: existId,
+      printGroupId: 8,
+      langs: [
+        { name: 'Blade · Stairways to Heaven', lang: 'ZH' },
+        { name: 'Blade · Stairways to Heaven', lang: 'DE' },
+        { name: 'Blade · Stairways to Heaven', lang: 'EN' },
       ],
-      render: (formItem) => {
-        return h(NSelect, {
-          options: formItem.optionItems as Array<SelectOption>,
-          value: formItem.value.value,
-          placeholder: '请选择用户姓别',
-          onUpdateValue: (val) => {
-            formItem.value.value = val
-          },
-        })
-      },
-    },
-    {
-      key: 'date',
-      label: '日期',
-      value: ref(null),
-      render: (formItem) => {
-        return h(NDatePicker, {
-          value: formItem.value.value,
-          placeholder: '请选择日期',
-          style: 'width: 100%',
-          onUpdateValue: (val) => {
-            formItem.value.value = val
-          },
-          type: 'date',
-        })
-      },
-    },
-    {
-      key: 'time',
-      label: '时间',
-      value: ref(null),
-      render: (formItem) => {
-        return h(NTimePicker, {
-          options: formItem.optionItems as Array<SelectOption>,
-          value: formItem.value.value,
-          placeholder: '请选择时间',
-          style: 'width: 100%',
-          onUpdateValue: (val) => {
-            formItem.value.value = val
-          },
-        })
-      },
-    },
-    {
-      key: 'checkbox',
-      label: '复选',
-      value: ref(null),
-      optionItems: [
-        {
-          label: '选项1',
-          value: 0,
-        },
-        {
-          label: '选项2',
-          value: 1,
-        },
+      code: 'rr1',
+      attributeGroup: [],
+    })
+    const dishInfo2 = dishBuilder({
+      price: price2.value,
+      categoryId: existId,
+      printGroupId: 8,
+      langs: [
+        { name: 'Kafka · Gun & Roses', lang: 'ZH' },
+        { name: 'Kafka · Gun & Roses', lang: 'DE' },
+        { name: 'Kafka · Gun & Roses', lang: 'EN' },
       ],
-      render: (formItem) => {
-        return h(
-          NCheckboxGroup,
-          {
-            options: formItem.optionItems as Array<SelectOption>,
-            value: formItem.value.value,
-            placeholder: '请选择用户姓别',
-            onUpdateValue: (val) => {
-              formItem.value.value = val
-            },
-          },
-          {
-            default: () => {
-              return h(
-                NSpace,
-                {
-                  itemStyle: 'display: flex;',
-                },
-                {
-                  default: () => {
-                    return formItem.optionItems?.map((it) => {
-                      return h(NCheckbox, {
-                        key: it.value,
-                        label: it.label,
-                        value: it.value,
-                      })
-                    })
-                  },
-                }
-              )
-            },
-          }
-        )
-      },
-    },
-  ]
-  export default defineComponent({
-    name: 'TableWithSearch',
-    setup() {
-      const searchForm = ref<DataFormType | null>(null)
-      const pagination = usePagination(doRefresh)
-      pagination.pageSize = 20
-      const table = useTable()
-      const message = useMessage()
-      const rowKey = useRowKey('id')
-      const tableColumns = useTableColumn(
-        [
-          table.selectionColumn,
-          table.indexColumn,
-          {
-            title: '名称',
-            key: 'nickName',
-          },
-          {
-            title: '性别',
-            key: 'gender',
-            width: 80,
-            render: (rowData) => {
-              return h('div', rowData.gender === 0 ? '男' : '女')
-            },
-          },
-          {
-            title: '头像',
-            key: 'avatar',
-            render: (rowData: any) => {
-              return h(
-                NAvatar,
-                {
-                  circle: true,
-                  size: 'small',
-                },
-                { default: () => rowData.nickName.substring(0, 1) }
-              )
-            },
-          },
-          {
-            title: '地址',
-            key: 'address',
-          },
-          {
-            title: '名称',
-            key: 'nickName',
-          },
-          {
-            title: '上次登录时间',
-            key: 'lastLoginTime',
-            width: 180,
-          },
-          {
-            title: '上次登录IP',
-            key: 'lastLoginIp',
-          },
-          {
-            title: '状态',
-            key: 'status',
-            render: (rowData) =>
-              renderTag(!!rowData.status ? '正常' : '禁用', {
-                type: !!rowData.status ? 'success' : 'error',
-                size: 'small',
-              }),
-          },
-        ],
-        {
-          align: 'center',
-        } as DataTableColumn
-      )
-      function doRefresh() {
-        post({
-          url: getTableList,
-          data: () => {
-            return {
-              page: pagination.page,
-              pageSize: pagination.pageSize,
-            }
-          },
-        })
-          .then((res) => {
-            table.handleSuccess(res)
-            pagination.setTotalSize(res.totalSize || 10)
-          })
-          .catch(console.log)
-      }
-      function onSearch() {
-        message.success(
-          '模拟查询成功，参数为：' + JSON.stringify(searchForm.value?.generatorParams())
-        )
-      }
-      function onResetSearch() {
-        searchForm.value?.reset()
-      }
-      onMounted(async () => {
-        table.tableHeight.value = await useTableHeight()
-        doRefresh()
-      })
-      return {
-        ...table,
-        rowKey,
-        pagination,
-        searchForm,
-        tableColumns,
-        conditionItems,
-        onSearch,
-        onResetSearch,
-      }
-    },
-  })
+      code: 'rr1',
+      attributeGroup: [],
+    })
+    try {
+      await dishInfo1.copyFrom(attrName1.value, 'attributeGroup', 'localAttributeGroupId')
+      await uploadDishIfNotExist(dishInfo1.prepareForUpload())
+      await dishInfo2.copyFrom(attrName2.value, 'attributeGroup', 'localAttributeGroupId')
+      await uploadDishIfNotExist(dishInfo1.prepareForUpload())
+    } catch (e) {
+      console.log(e)
+      message.error(e?.message)
+    }
+  }
 </script>
 
 <style lang="scss" scoped>
@@ -299,14 +133,17 @@
     height: 30px;
     margin: 0 auto;
     vertical-align: middle;
+
     .avatar {
       width: 100%;
       height: 100%;
       border-radius: 50%;
     }
+
     .avatar-vip {
       border: 2px solid #cece1e;
     }
+
     .vip {
       position: absolute;
       top: 0;
@@ -315,6 +152,7 @@
       transform: rotate(60deg);
     }
   }
+
   .gender-container {
     .gender-icon {
       width: 20px;
