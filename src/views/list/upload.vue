@@ -32,8 +32,8 @@
 
   const deviceId = ref('')
 
-  const price1 = ref('5.3')
-  const price2 = ref('5.7')
+  const price1 = ref('5.7')
+  const price2 = ref('5.5')
   const attrName1 = ref('蓝莓冰茶')
   const attrName2 = ref('青柠香柚')
   const categoryInfo = {
@@ -49,6 +49,7 @@
   async function uploadDishIfNotExist(dishInfo) {
     const currentDishList = (await hillo.get('Dishes.php')).content
     if (currentDishList.some((it) => it.code === dishInfo.code)) {
+      message.warning('菜品重复' + dishInfo.code)
       return
     } else {
       const id = (await hillo.post('Dishes.php?op=add', dishInfo))?.content?.id
@@ -111,14 +112,15 @@
         { name: 'Kafka · Gun & Roses', lang: 'DE' },
         { name: 'Kafka · Gun & Roses', lang: 'EN' },
       ],
-      code: 'rr1',
+      code: 'rr2',
       attributeGroup: [],
     })
     try {
       await dishInfo1.copyFrom(attrName1.value, 'attributeGroup', 'localAttributeGroupId')
       await uploadDishIfNotExist(dishInfo1.prepareForUpload())
       await dishInfo2.copyFrom(attrName2.value, 'attributeGroup', 'localAttributeGroupId')
-      await uploadDishIfNotExist(dishInfo1.prepareForUpload())
+      await uploadDishIfNotExist(dishInfo2.prepareForUpload())
+      message.success('上传成功！')
     } catch (e) {
       console.log(e)
       message.error(e?.message)

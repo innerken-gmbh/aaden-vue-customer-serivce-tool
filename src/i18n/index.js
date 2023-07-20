@@ -2,7 +2,7 @@ import hillo from 'hillo'
 
 function findAny(list, name) {
   return list.find((it) => {
-    return it?.langs?.some((that) => that?.name === name)
+    return it?.langs?.some((that) => that?.name.includes(name))
   })
 }
 
@@ -11,7 +11,7 @@ export function dishBuilder(startDishInfo) {
 
   const copyFrom = async (name, key, sourceKey) => {
     const currentDishList = (await hillo.get('Dishes.php')).content
-    console.log(currentDishList)
+    console.log(currentDishList.map((it) => it.dishName))
     const targetDish = findAny(currentDishList, name)
     if (!sourceKey) {
       sourceKey = key
@@ -25,7 +25,6 @@ export function dishBuilder(startDishInfo) {
   }
   const prepareForUpload = () => {
     const newInfo = dishInfo
-    newInfo.attributeGroup = dishInfo.attributeGroup.join(',')
     return {
       params: JSON.stringify(newInfo),
       ...newInfo,
