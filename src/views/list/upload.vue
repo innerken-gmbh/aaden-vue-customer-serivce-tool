@@ -15,12 +15,26 @@
         <n-input v-model:value="i.item[info.field]" />
       </n-form-item>
     </n-space>
-    {{ uploadInfo.map((it) => it.item) }}
+    <div class="my-2">
+      <n-space>
+        <n-button type="info" @click="addEmptyDish">继续添加</n-button>
+        <n-button type="warning" @click="save">保存输入内容</n-button>
+        <n-button type="success" @click="load">加载</n-button>
+        <n-button type="error" @click="clear">全部清空</n-button>
+      </n-space>
+    </div>
+    <div class="my-4">
+      <n-space>
+        <n-input v-model:value="deviceId" placeholder="设备ID" />
+        <n-button type="primary" :loading="loading" @click="doUpload"> 上传</n-button>
+      </n-space>
+    </div>
 
-    <n-space>
-      <n-input v-model:value="deviceId" placeholder="设备ID" />
-      <n-button @click="doUpload"> 上传</n-button>
-    </n-space>
+    <div class="my-4 p-4 bg-white">
+      <n-code>
+        {{ uploadInfo.map((it) => it.item) }}
+      </n-code>
+    </div>
   </div>
 </template>
 
@@ -35,10 +49,7 @@
   const categoryName = ref('')
   const categoryType = ref('9')
 
-  const price1 = ref('5.7')
-  const price2 = ref('5.5')
-  const attrName1 = ref('蓝莓冰茶')
-  const attrName2 = ref('青柠香柚')
+  const loading = ref(false)
 
   const dishInfo = [
     {
@@ -68,6 +79,24 @@
       required: false,
     },
   ]
+  const key = 'cs-cache-upload-info'
+  function save() {
+    localStorage[key] = JSON.stringify(uploadInfo)
+  }
+  function load() {
+    try {
+      const info = JSON.parse(localStorage[key])
+      Object.assign(uploadInfo, info)
+    } catch (e) {}
+  }
+
+  function clear() {
+    try {
+      uploadInfo.length = 0
+      addEmptyDish()
+      addEmptyDish()
+    } catch (e) {}
+  }
 
   const uploadInfo: any[] = reactive([])
 
@@ -89,13 +118,17 @@
       message.warning('菜品重复' + dishInfo.code)
       return
     } else {
-      const id = (await hillo.post('Dishes.php?op=add', dishInfo))?.content?.id
+      const res = await hillo.post('Dishes.php?op=add', dishInfo)
+      if (res?.status !== 'good') {
+        throw Error(res?.info ?? '网络错误')
+      }
     }
   }
 
   const message = useMessage()
 
   async function doUpload() {
+    loading.value = true
     const ngrokUrl = 'ik' + deviceId.value.padStart(4, '0') + '.ngrok.aaden.io'
     hillo.use({
       errorHandler<T>(data: any) {
@@ -152,7 +185,7 @@
           const dishInfo = dishBuilder({
             price: info.item.price,
             categoryId: existId,
-            code: info.code,
+            code: info.item.code,
             printGroupId: info.item.printGroupId,
             langs: [
               { name: info.item.name, lang: 'ZH' },
@@ -176,6 +209,7 @@
       console.log(e, 'error')
       message.error('上传失败' + e?.message)
     }
+    loading.value = false
   }
 </script>
 
