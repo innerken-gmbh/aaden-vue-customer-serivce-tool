@@ -27,6 +27,7 @@
     "vue": "^3.2.25",
     "vue-router": "^4.0.10",
     "vuedraggable": "^4.0.3",
+    "vuetify": "^3.4.3",
     "vuex": "^4.0.2",
     "xgplayer": "^2.28.0"
   },

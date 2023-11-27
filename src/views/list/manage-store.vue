@@ -2,11 +2,38 @@
   <div class="main-container">
     <n-card content-style="background:#f6f6f6" style="height: calc(100vh - 140px)">
       请输入设备ID
+      <div class="d-flex align-center">
+        <div style="width: 400px">
+          <v-text-field
+            hide-details
+            density="compact"
+            clearable="1"
+            v-model="deviceId"
+            @focus="deviceId = ''"
+          />
+        </div>
+        <v-spacer />
+        <div class="ml-2">
+          <v-switch
+            color="primary"
+            hide-details
+            density="compact"
+            v-model="newValue"
+            label="新版页面"
+          />
+        </div>
+        <div class="ml-2">
+          <v-switch
+            color="primary"
+            hide-details
+            density="compact"
+            v-model="appOrAdmin"
+            label="前端/中台"
+          />
+        </div>
 
-      <n-space>
-        <n-input clearable v-model:value="deviceId" @focus="deviceId = ''" />
-        <n-button type="primary" @click="refresh">刷新</n-button>
-      </n-space>
+        <v-btn color="primary" class="ml-2" @click="refresh">刷新</v-btn>
+      </div>
       <n-divider />
       <n-empty v-if="!show || !url" />
       <template v-else>
@@ -32,23 +59,30 @@
 
   const deviceId = ref('1')
   const show = ref(true)
+  const newValue = ref(true)
+  const appOrAdmin = ref(true)
   const url = computed(() => {
     const ngrokUrl = 'ik' + deviceId.value.padStart(4, '0') + '.ngrok.aaden.io'
     if (deviceId.value.length != 1 && deviceId.value.length != 4) {
       return ''
     }
-    if (parseInt(deviceId.value) > 6000) {
-      return location.protocol + '//app-beta.aaden.io/?Base=' + deviceId.value.padStart(4, '0')
+    const endPoint = appOrAdmin.value ? 'App' : 'Admin'
+    const base = parseInt(deviceId.value) > 6000 ? 'ht.api.aaden.io/ik' + deviceId.value : ngrokUrl
+
+    if (newValue.value || parseInt(deviceId.value) > 6000) {
+      return location.protocol + '//' + endPoint + '.aaden.io/?Base=' + base
     } else {
-      return 'https://' + ngrokUrl + '/App?Base=' + ngrokUrl
+      return 'https://' + ngrokUrl + '/' + endPoint + '?Base=' + base
     }
   })
+
   function refresh() {
     show.value = false
     setTimeout(() => {
       show.value = true
     }, 300)
   }
+
   watch(url, refresh)
 </script>
 
