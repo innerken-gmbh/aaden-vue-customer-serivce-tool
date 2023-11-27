@@ -62,3 +62,11 @@ export async function getDeviceStatus() {
     return maxBy(v, 'timestamp')
   })
 }
+
+export function getNgrokUrl(deviceId: string) {
+  return 'ik' + deviceId.padStart(4, '0') + '.ngrok.aaden.io'
+}
+
+export function getEndPointUrl(deviceId: string) {
+  return 'https://' + getNgrokUrl(deviceId) + '/PHP/'
+}

@@ -1,37 +1,5 @@
 <template>
   <div class="main-container">
-    <n-card title="工作台" :content-style="{ padding: '10px' }" :header-style="{ padding: '10px' }">
-      <n-grid :cols="4" :y-gap="15" item-responsive responsive="screen">
-        <n-grid-item class="flex" span="4 s:2 m:2 l:2 xl:2 2xl:2">
-          <div class="avatar-wrapper">
-            <img :src="avatar" />
-          </div>
-          <div class="flex flex-col justify-around ml-3.5 flex-1">
-            <div class="text-lg">早上好，冶金难/丁一，新的一天，新的开始，与人为善，贯彻始终</div>
-            <div class="text-sm text-gray-500">今日有小雨，出门别忘记带伞哦~</div>
-          </div>
-        </n-grid-item>
-        <n-grid-item class="flex justify-end" span="4 s:2 m:2 l:2 xl:2 2xl:2">
-          <div class="flex flex-col justify-around align-end item-action">
-            <div class="text-gray">使用新版逻辑的客户数量</div>
-            <div class="text-xl">{{ deviceLogs.length }}</div>
-          </div>
-          <div @click="updateMyFood" class="flex flex-col justify-around align-end item-action">
-            <div class="text-gray">中午吃</div>
-
-            <div class="flex items-baseline">
-              <div class="text-xl mr-4">{{ myFood }}</div>
-              <div class="flex-grow"></div>
-              <n-button dashed type="success" size="tiny">换</n-button>
-            </div>
-          </div>
-          <div class="flex flex-col justify-around align-end item-action">
-            <div class="text-gray">当前日期</div>
-            <div class="text-xl">{{ currentDate }}</div>
-          </div>
-        </n-grid-item>
-      </n-grid>
-    </n-card>
     <v-card class="mt-4">
       <v-data-table :items-per-page="-1" :items="deviceLogs" :headers="headers">
         <template #[`item.timestamp`]="{ item }">
@@ -39,6 +7,14 @@
         </template>
         <template #[`item.restaurantInfo`]="{ item }">
           {{ formatRestaurantInfo(item.restaurantInfo) }}
+        </template>
+        <template #[`item.action`]="{ item }">
+          <template v-if="item.loading">
+            <v-progress-circular indeterminate />
+          </template>
+          <v-btn v-else @click="updateBackend(item)" color="primary" elevation="0" variant="tonal"
+            >更新后端</v-btn
+          >
         </template>
       </v-data-table>
     </v-card>
@@ -50,8 +26,9 @@
   import { useRouter } from 'vue-router'
   import { random } from 'lodash-es'
   import useUserStore from '@/store/modules/user'
-  import { getDeviceStatus } from '@/utils/firebase'
+  import { getDeviceStatus, getEndPointUrl } from '@/utils/firebase'
   import dayjs from 'dayjs'
+  import hillo from 'hillo'
 
   const userStore = useUserStore()
   const avatar = computed(() => userStore.avatar)
@@ -74,6 +51,7 @@
     deviceLogs.value = await getDeviceStatus()
     console.log(deviceLogs.value)
   }
+
   const headers = ref([
     {
       title: 'DeviceId',
@@ -84,11 +62,22 @@
     { title: '前端版本号', key: 'frontendVersion', align: 'end' },
     { title: '最后一次报告时间', key: 'timestamp', align: 'end' },
     { title: '餐馆名称', key: 'restaurantInfo', align: 'end' },
+    { title: '操作', key: 'action', align: 'end' },
   ])
 
   function formatRestaurantInfo(restaurantInfoString: any): any {
     return restaurantInfoString?.name ?? ''
   }
+
+  async function updateBackend(item) {
+    console.log(item)
+    const url = getEndPointUrl(item.deviceId) + 'UpdateSelf.php?op=doUpdate'
+    item.loading = true
+    const res = await hillo.post(url, { chaos: dayjs().valueOf() })
+    console.log(res)
+    item.loading = false
+  }
+
   updateDeviceLog()
 </script>
 
