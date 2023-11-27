@@ -11,12 +11,16 @@ import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
+import zh from 'dayjs/locale/zh'
 
 const vuetify = createVuetify({
   components,
   directives,
 })
-
+dayjs.extend(relativeTime)
+dayjs.locale(zh)
 function vawBoot() {
   const app = createApp(App)
   useAppPinia(app)

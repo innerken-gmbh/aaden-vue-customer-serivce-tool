@@ -13,8 +13,8 @@
         </n-grid-item>
         <n-grid-item class="flex justify-end" span="4 s:2 m:2 l:2 xl:2 2xl:2">
           <div class="flex flex-col justify-around align-end item-action">
-            <div class="text-gray">客户数量</div>
-            <div class="text-xl">506</div>
+            <div class="text-gray">使用新版逻辑的客户数量</div>
+            <div class="text-xl">{{ deviceLogs.length }}</div>
           </div>
           <div @click="updateMyFood" class="flex flex-col justify-around align-end item-action">
             <div class="text-gray">中午吃</div>
@@ -32,161 +32,64 @@
         </n-grid-item>
       </n-grid>
     </n-card>
-    <n-grid
-      class="mt-4 mb-4"
-      :y-gap="15"
-      :x-gap="15"
-      cols="2 s:2 m:3 l:6 xl:6 2xl:6"
-      responsive="screen"
-    >
-      <n-grid-item v-for="(item, index) of fastActions" :key="index">
-        <n-card @click="fastActionClick(item)">
-          <div class="flex flex-col items-center justify-center">
-            <span
-              :class="[item.icon, 'iconfont']"
-              :style="{ color: item.color, fontSize: '30px' }"
-            ></span>
-            <span class="mt-1">{{ item.title }}</span>
-          </div>
-        </n-card>
-      </n-grid-item>
-    </n-grid>
-
-    <n-grid
-      class="mt-4 mb-4"
-      :y-gap="15"
-      :x-gap="15"
-      cols="2 s:2 m:3 l:6 xl:6 2xl:6"
-      responsive="screen"
-    >
-      <n-grid-item v-for="(item, index) of dataItems" :key="index">
-        <ProjectItem :item="item" />
-      </n-grid-item>
-    </n-grid>
+    <v-card class="mt-4">
+      <v-data-table :items-per-page="-1" :items="deviceLogs" :headers="headers">
+        <template #[`item.timestamp`]="{ item }">
+          {{ dayjs(item.timestamp).fromNow() }}
+        </template>
+        <template #[`item.restaurantInfo`]="{ item }">
+          {{ formatRestaurantInfo(item.restaurantInfo) }}
+        </template>
+      </v-data-table>
+    </v-card>
   </div>
 </template>
 
-<script lang="ts">
-  import ProjectItem from './components/ProjectItem.vue'
-  import { computed, defineComponent, ref } from 'vue'
+<script lang="ts" setup>
+  import { computed, ref } from 'vue'
   import { useRouter } from 'vue-router'
   import { random } from 'lodash-es'
   import useUserStore from '@/store/modules/user'
-  import { DeviceType } from '@/store/types'
-  import useAppConfigStore from '@/store/modules/app-config'
+  import { getDeviceStatus } from '@/utils/firebase'
+  import dayjs from 'dayjs'
 
-  const COLORS = ['#67C23A', '#E6A23C', '#F56C6C', '#409EFF']
-  const date = new Date()
-  export default defineComponent({
-    name: 'WorkPlace',
-    components: {
-      ProjectItem,
+  const userStore = useUserStore()
+  const avatar = computed(() => userStore.avatar)
+  const router = useRouter()
+
+  const myFood = ref('糖醋里脊')
+
+  function updateMyFood() {
+    const foods =
+      '糖醋里脊 馄饨 拉面 烩面 热干面 刀削面 油泼面 炸酱面 炒面 重庆小面 米线 酸辣粉 土豆粉 螺狮粉 凉皮儿 麻辣烫 肉夹馍 羊肉汤 炒饭 盖浇饭 卤肉饭 烤肉饭 黄焖鸡米饭 驴肉火烧 川菜 麻辣香锅 火锅 酸菜鱼 烤串 披萨 烤鸭 汉堡 炸鸡 寿司 蟹黄包 煎饼果子 生煎 炒年糕'
+    const foodArr = foods.split(' ')
+    myFood.value = foodArr.at(random(0, foodArr.length - 1)) ?? '糖醋里脊'
+  }
+
+  updateMyFood()
+  const currentDate = ref(dayjs().toString())
+  const deviceLogs = ref([])
+
+  async function updateDeviceLog() {
+    deviceLogs.value = await getDeviceStatus()
+    console.log(deviceLogs.value)
+  }
+  const headers = ref([
+    {
+      title: 'DeviceId',
+      key: 'deviceId',
     },
-    setup() {
-      const appConfigStore = useAppConfigStore()
-      const isMobileScreen = computed(() => {
-        return appConfigStore.deviceType === DeviceType.MOBILE
-      })
-      const userStore = useUserStore()
-      const avatar = computed(() => userStore.avatar)
-      const router = useRouter()
-      const fastActionClick = ({ path = '/' }) => {
-        router.push(path)
-      }
+    { title: '访问类型', key: 'accessFrom', align: 'end' },
+    { title: '后端版本号', key: 'backendVersion', align: 'end' },
+    { title: '前端版本号', key: 'frontendVersion', align: 'end' },
+    { title: '最后一次报告时间', key: 'timestamp', align: 'end' },
+    { title: '餐馆名称', key: 'restaurantInfo', align: 'end' },
+  ])
 
-      const myFood = ref('糖醋里脊')
-      function updateMyFood() {
-        const foods =
-          '糖醋里脊 馄饨 拉面 烩面 热干面 刀削面 油泼面 炸酱面 炒面 重庆小面 米线 酸辣粉 土豆粉 螺狮粉 凉皮儿 麻辣烫 肉夹馍 羊肉汤 炒饭 盖浇饭 卤肉饭 烤肉饭 黄焖鸡米饭 驴肉火烧 川菜 麻辣香锅 火锅 酸菜鱼 烤串 披萨 烤鸭 汉堡 炸鸡 寿司 蟹黄包 煎饼果子 生煎 炒年糕'
-        const foodArr = foods.split(' ')
-        myFood.value = foodArr.at(random(0, foodArr.length - 1)) ?? '糖醋里脊'
-      }
-      updateMyFood()
-
-      return {
-        isMobileScreen,
-        avatar,
-        updateMyFood,
-        currentDate: date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate(),
-        dataItems: [
-          {
-            title: 'Aaden POS 中台',
-            target: 'https://admin.aaden.io',
-            gitee: 'http://www.vueadminwork.com',
-            ui: '精心打造',
-          },
-          {
-            title: '谷歌翻译',
-            target: 'https://translate.google.com',
-            gitee: 'http://www.vueadminwork.com',
-            ui: '精心打造',
-          },
-        ],
-        fastActions: [
-          {
-            title: '首页',
-            icon: 'icon-dashboard-fill',
-            path: '/',
-            color: COLORS[random(0, COLORS.length)],
-          },
-          {
-            title: '商品复制',
-            path: '/list/copy',
-            icon: 'icon-setting-fill',
-            color: COLORS[random(0, COLORS.length)],
-          },
-          {
-            title: '外卖开通',
-            path: '/form/manage',
-            icon: 'icon-detail-fill',
-            color: COLORS[random(0, COLORS.length)],
-          },
-          {
-            title: '敬请期待',
-            path: '/form/base-form-view',
-            icon: 'icon-file-text-fill',
-            color: COLORS[random(0, COLORS.length)],
-          },
-          {
-            title: '敬请期待',
-            path: '/next/menu2/menu-2-1/menu-2-1-1',
-            icon: 'icon-golden-fill',
-            color: COLORS[random(0, COLORS.length)],
-          },
-          {
-            title: '敬请期待',
-            path: '/other/qrcode',
-            icon: 'icon-appstore-fill',
-            color: COLORS[random(0, COLORS.length)],
-          },
-        ],
-        fastActionClick,
-        myFood,
-        columns: [
-          {
-            title: '项目名',
-            key: 'projectName',
-          },
-          {
-            title: '开始时间',
-            key: 'beginTime',
-          },
-          {
-            title: '结束时间',
-            key: 'endTime',
-          },
-          {
-            title: '进度',
-            key: 'progress',
-          },
-          {
-            title: '状态',
-            key: 'status',
-          },
-        ],
-      }
-    },
-  })
+  function formatRestaurantInfo(restaurantInfoString: any): any {
+    return restaurantInfoString?.name ?? ''
+  }
+  updateDeviceLog()
 </script>
 
 <style lang="scss" scoped>
