@@ -10,23 +10,59 @@
       </n-form-item>
     </n-space>
     <n-h3>菜品信息</n-h3>
-    <n-space :key="i" v-for="i in uploadInfo">
-      <n-form-item :label="info.label" :key="info.field" v-for="info in i.field">
+    <n-space
+      v-for="i in uploadInfo"
+      :key="i"
+    >
+      <n-form-item
+        v-for="info in i.field"
+        :key="info.field"
+        :label="info.label"
+      >
         <n-input v-model:value="i.item[info.field]" />
       </n-form-item>
     </n-space>
     <div class="my-2">
       <n-space>
-        <n-button type="info" @click="addEmptyDish">继续添加</n-button>
-        <n-button type="warning" @click="save">保存输入内容</n-button>
-        <n-button type="success" @click="load">加载</n-button>
-        <n-button type="error" @click="clear">全部清空</n-button>
+        <n-button
+          type="info"
+          @click="addEmptyDish"
+        >
+          继续添加
+        </n-button>
+        <n-button
+          type="warning"
+          @click="save"
+        >
+          保存输入内容
+        </n-button>
+        <n-button
+          type="success"
+          @click="load"
+        >
+          加载
+        </n-button>
+        <n-button
+          type="error"
+          @click="clear"
+        >
+          全部清空
+        </n-button>
       </n-space>
     </div>
     <div class="my-4">
       <n-space>
-        <n-input v-model:value="deviceId" placeholder="设备ID" />
-        <n-button type="primary" :loading="loading" @click="doUpload"> 上传</n-button>
+        <n-input
+          v-model:value="deviceId"
+          placeholder="设备ID"
+        />
+        <n-button
+          type="primary"
+          :loading="loading"
+          @click="doUpload"
+        >
+          上传
+        </n-button>
       </n-space>
     </div>
 
@@ -39,13 +75,13 @@
 </template>
 
 <script lang="ts" setup>
-  import { reactive, ref } from 'vue'
-  import hillo from 'hillo'
-  import { dishBuilder } from '@/old/i18n'
-  import { useMessage } from 'naive-ui'
-  import { IKUtils } from 'innerken-js-utils'
+import {reactive, ref} from 'vue'
+import hillo from 'hillo'
+import {dishBuilder} from 'src/i18n'
+import {useMessage} from 'naive-ui'
+import {IKUtils} from 'innerken-js-utils'
 
-  const deviceId = ref('')
+const deviceId = ref('')
   const categoryName = ref('')
   const categoryType = ref('9')
 
