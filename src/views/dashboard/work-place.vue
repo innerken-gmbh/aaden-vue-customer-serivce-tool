@@ -25,7 +25,7 @@ updateMyFood()
 
 function getRowProp(data: any) {
   return {
-    class: 'bg-' + frontendChannel(data.item.frontendVersion).color + '-lighten-4'
+    class: 'bg-' + frontendChannel(data.item.frontendVersion).color + '-lighten-5'
   }
 }
 
@@ -76,22 +76,26 @@ deviceEchoLog.updateDeviceLog()
         <v-sheet
           style="display: grid;grid-template-columns: repeat(4,minmax(0,1fr))"
         >
-          <v-sheet
+          <v-card
             v-for="c in deviceEchoLog.channels"
             :key="c.name"
+            rounded="0"
+            elevation="0"
             :color="c.color+'-lighten-4'"
             height="100%"
             class="text-body-2 d-flex align-center justify-center"
+            :class="deviceEchoLog.activeChannelName===c.name?'font-weight-black text-h4':''"
+            @click="deviceEchoLog.toggleActiveChannel(c.name)"
           >
             {{ c.name }}
-          </v-sheet>
+          </v-card>
         </v-sheet>
       </div>
 
       <v-data-table
         :row-props="getRowProp"
         :items-per-page="-1"
-        :items="deviceEchoLog.deviceLogs"
+        :items="deviceEchoLog.activeDeviceLogs"
         :headers="headers"
       >
         <template #[`item.timestamp`]="{ item }">
