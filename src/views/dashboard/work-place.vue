@@ -59,13 +59,19 @@ deviceEchoLog.updateDeviceLog()
     <v-card class="mt-4">
       <div
         class="text-h6"
-        style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr))"
+        style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr))"
       >
         <v-sheet
           color="blue-darken-4"
           class="pa-4"
         >
           上次刷新时间:{{ deviceEchoLog.lastUpdateTimestamp }}
+        </v-sheet>
+        <v-sheet
+          color="pink-darken-4"
+          class="pa-4"
+        >
+          结果总数:{{ deviceEchoLog.activeDeviceLogs.length }}
         </v-sheet>
         <v-sheet
           color="green-darken-4"
