@@ -36,6 +36,7 @@ const headers = ref([
     key: 'deviceId',
   },
   {title: '餐馆名称', key: 'restaurantInfo', align: 'end'},
+  {title: 'cli', key: 'cliVersion', align: 'end'},
   {title: '后端', key: 'backendVersion', align: 'end'},
   {title: '前端', key: 'frontendVersion', align: 'end'},
   {title: '最后一次报告时间', key: 'timestamp', align: 'end'},
