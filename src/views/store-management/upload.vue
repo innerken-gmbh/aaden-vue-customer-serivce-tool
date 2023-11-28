@@ -77,7 +77,7 @@
 <script lang="ts" setup>
 import {reactive, ref} from 'vue'
 import hillo from 'hillo'
-import {dishBuilder} from 'src/i18n'
+import {dishBuilder} from '@/i18n'
 import {useMessage} from 'naive-ui'
 import {IKUtils} from 'innerken-js-utils'
 

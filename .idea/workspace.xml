@@ -7,7 +7,6 @@
     <list default="true" id="1777049f-9f7a-4424-9005-71635bd2b339" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/components.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/old/i18n/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/i18n/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/store-management/upload.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/store-management/upload.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -143,7 +142,7 @@
       <workItem from="1689867407617" duration="7562000" />
       <workItem from="1701077810936" duration="3634000" />
       <workItem from="1701103441773" duration="2689000" />
-      <workItem from="1701118325783" duration="8440000" />
+      <workItem from="1701118325783" duration="8483000" />
     </task>
     <servers />
   </component>
