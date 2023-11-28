@@ -1,13 +1,13 @@
 import Mock, { Random } from 'mockjs'
 import { baseData } from '../base.ts'
 import {
-  getDepartmentList,
-  getTableList,
+  addDepartment,
   getCardList,
   getCommentList,
-  addDepartment,
+  getDepartmentList,
   getRoleList,
-} from '@/api/url'
+  getTableList,
+} from '@/old/api/url'
 
 const isDev = import.meta.env.MODE === 'development'
 

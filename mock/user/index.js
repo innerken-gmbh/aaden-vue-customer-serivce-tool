@@ -1,5 +1,5 @@
-import { getMenuListByRoleId, getAllMenuByRoleId, login, updateUserInfo } from '@/api/url'
-import { randomString } from '@/utils'
+import { getAllMenuByRoleId, getMenuListByRoleId, login, updateUserInfo } from '@/old/api/url'
+import { randomString } from '@/old/utils'
 import Mock from 'mockjs'
 import { baseData } from '../base.ts'
 import { adminRoutes, editorRoutes } from '../router'

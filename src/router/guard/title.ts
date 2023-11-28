@@ -1,5 +1,5 @@
 import router from '@/router'
-import { projectName } from '@/setting'
+import { projectName } from '@/old/setting'
 
 function usePageTitleGuard() {
   router.afterEach((to) => {

@@ -7,7 +7,7 @@
 </template>
 
 <script lang="ts">
-  import { DataFormType, FormItem } from '@/types/components'
+  import { DataFormType, FormItem } from '@/old/types/components'
   import { FormProps, SelectOption, useMessage } from 'naive-ui'
   import { defineComponent, ref } from 'vue'
   import {
@@ -18,7 +18,8 @@
     renderPopSelect,
     renderSelect,
     renderTimePicker,
-  } from '@/hooks/form'
+  } from '@/old/hooks/form'
+
   export default defineComponent({
     name: 'BaseFormView',
     setup() {

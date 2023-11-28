@@ -120,20 +120,21 @@
   import { computed, defineComponent, ref } from 'vue'
   import { useRoute, useRouter } from 'vue-router'
   import ImageBg1 from '@/assets/img_login_bg.png'
-  import { post, Response } from '@/api/http'
-  import { login } from '@/api/url'
+  import { post, Response } from '@/old/api/http'
+  import { login } from '@/old/api/url'
   import { DeviceType, UserState } from '@/store/types'
   import { useMessage } from 'naive-ui'
   import {
-    PhonePortraitOutline as PhoneIcon,
     LockClosedOutline as PasswordIcon,
-    LogoGithub,
     LogoAlipay,
+    LogoGithub,
     LogoWechat,
+    PhonePortraitOutline as PhoneIcon,
   } from '@vicons/ionicons5'
-  import useAppInfo from '@/hooks/useAppInfo'
+  import useAppInfo from '@/old/hooks/useAppInfo'
   import useUserStore from '@/store/modules/user'
   import useAppConfigStore from '@/store/modules/app-config'
+
   export default defineComponent({
     name: 'Login',
     components: { PhoneIcon, PasswordIcon, LogoGithub, LogoAlipay, LogoWechat },
@@ -204,7 +205,7 @@
     overflow: hidden;
     height: 100vh;
     width: 100%;
-    @media screen and (max-width:960px) {
+    @media screen and (max-width: 960px) {
       .left {
         display: none !important;
       }

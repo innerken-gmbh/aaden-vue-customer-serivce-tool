@@ -2,7 +2,7 @@ import { LAYOUT } from '@/store/keys'
 
 export const asyncRoutes = [
   {
-    path: '/index',
+    path: '/dashboard',
     component: LAYOUT,
     name: 'Index',
     meta: {
@@ -14,7 +14,7 @@ export const asyncRoutes = [
       {
         path: 'home',
         name: 'Home',
-        component: () => import('@/views/index/main.vue'),
+        component: () => import('@/views/dashboard/main.vue'),
         meta: {
           title: '主控台',
           affix: true,
@@ -26,7 +26,7 @@ export const asyncRoutes = [
       {
         path: 'work-place',
         name: 'WorkPlace',
-        component: () => import('@/views/index/work-place.vue'),
+        component: () => import('@/views/dashboard/work-place.vue'),
         meta: {
           title: '工作台',
           affix: true,

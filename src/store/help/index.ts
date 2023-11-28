@@ -1,10 +1,10 @@
-import { isExternal, toHump } from '@/utils'
+import { isExternal, toHump } from '@/old/utils'
 import { resolve } from 'path-browserify'
 import { h, ref } from 'vue'
 import { RouteRecordRaw } from 'vue-router'
 import { OriginRoute, SplitTab } from '../types'
 import { MenuOption, NIcon } from 'naive-ui'
-import SvgIcon from '@/components/svg-icon/index.vue'
+import SvgIcon from '@/views/components/svg-icon/index.vue'
 import { asyncRoutes } from '@/router/routes/async'
 import { LAYOUT } from '../keys'
 

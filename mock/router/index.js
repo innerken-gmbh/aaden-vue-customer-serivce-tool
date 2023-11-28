@@ -1,17 +1,17 @@
-import { getMenuList } from '@/api/url'
+import { getMenuList } from '@/old/api/url'
 import Mock from 'mockjs'
 
 export const adminRoutes = [
   {
-    menuUrl: '/index',
+    menuUrl: '/dashboard',
     menuName: 'Dashborad',
     routeName: 'dashborad',
     icon: 'icon-dashboard',
     parentPath: '',
     children: [
       {
-        parentPath: '/index',
-        menuUrl: '/index/work-place',
+        parentPath: '/dashboard',
+        menuUrl: '/dashboard/work-place',
         menuName: '工作台',
         routeName: 'workPlace',
         isRootPath: true,
@@ -19,35 +19,35 @@ export const adminRoutes = [
     ],
   },
   {
-    menuUrl: '/list',
+    menuUrl: '/store-management',
     menuName: '门店管理',
     iconPrefix: 'iconfont',
     icon: 'detail',
     parentPath: '',
     children: [
       {
-        parentPath: '/list',
-        menuUrl: '/list/manage-store',
+        parentPath: '/store-management',
+        menuUrl: '/store-management/manage-store',
         menuName: '查看门店界面',
       },
       {
-        parentPath: '/list',
-        menuUrl: '/list/upload',
+        parentPath: '/store-management',
+        menuUrl: '/store-management/upload',
         menuName: '商品批量上传(敬请期待)',
       },
       {
-        parentPath: '/list',
-        menuUrl: '/list/copy',
+        parentPath: '/store-management',
+        menuUrl: '/store-management/copy',
         menuName: '商品复制',
       },
       {
-        parentPath: '/list',
-        menuUrl: '/list/image-upload',
+        parentPath: '/store-management',
+        menuUrl: '/store-management/image-upload',
         menuName: '批量上图(敬请期待)',
       },
       {
-        parentPath: '/list',
-        menuUrl: '/list/sync-group',
+        parentPath: '/store-management',
+        menuUrl: '/store-management/sync-group',
         menuName: '修改商品同步组(敬请期待)',
       },
     ],
@@ -82,30 +82,30 @@ export const adminRoutes = [
 ]
 export const editorRoutes = [
   {
-    menuUrl: '/list',
+    menuUrl: '/store-management',
     menuName: '列表页面',
     iconPrefix: 'iconfont',
     icon: 'detail',
     parentPath: '',
     children: [
       {
-        parentPath: '/list',
-        menuUrl: '/list/table-with-search',
+        parentPath: '/store-management',
+        menuUrl: '/store-management/table-with-search',
         menuName: '表格搜索',
       },
       {
-        parentPath: '/list',
-        menuUrl: '/list/table-custom',
+        parentPath: '/store-management',
+        menuUrl: '/store-management/table-custom',
         menuName: '自定义表格',
       },
       {
-        parentPath: '/list',
-        menuUrl: '/list/list',
+        parentPath: '/store-management',
+        menuUrl: '/store-management/store-management',
         menuName: '普通列表',
       },
       {
-        parentPath: '/list',
-        menuUrl: '/list/card-list',
+        parentPath: '/store-management',
+        menuUrl: '/store-management/card-store-management',
         menuName: '卡片列表',
       },
     ],

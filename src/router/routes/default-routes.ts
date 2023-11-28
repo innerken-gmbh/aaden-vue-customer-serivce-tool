@@ -4,21 +4,21 @@
  */
 export default [
   {
-    menuUrl: '/index',
+    menuUrl: '/dashboard',
     menuName: 'Dashborad',
     routeName: 'dashborad',
     icon: 'icon-dashboard',
     parentPath: '',
     children: [
       {
-        parentPath: '/index',
-        menuUrl: '/index/home',
+        parentPath: '/dashboard',
+        menuUrl: '/dashboard/home',
         menuName: '主控台',
         routeName: 'home',
       },
       {
-        parentPath: '/index',
-        menuUrl: '/index/work-place',
+        parentPath: '/dashboard',
+        menuUrl: '/dashboard/work-place',
         menuName: '工作台',
         routeName: 'workPlace',
       },

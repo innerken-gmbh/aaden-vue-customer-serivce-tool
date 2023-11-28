@@ -1,4 +1,4 @@
-import { toHump } from '@/utils'
+import { toHump } from '@/old/utils'
 import { defineStore } from 'pinia'
 
 const useCachedRouteStore = defineStore('cached-routes', {

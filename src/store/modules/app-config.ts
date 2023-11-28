@@ -1,9 +1,10 @@
 import { defineStore } from 'pinia'
 
-import defaultSetting from '@/setting'
-import { LayoutMode, PageAnim, SideTheme, ThemeMode, DeviceType } from '../types'
+import defaultSetting from '@/old/setting'
+import { DeviceType, LayoutMode, PageAnim, SideTheme, ThemeMode } from '../types'
 
-import { useChangeMenuWidth } from '@/hooks/useMenuWidth'
+import { useChangeMenuWidth } from '@/old/hooks/useMenuWidth'
+
 useChangeMenuWidth(defaultSetting.sideWidth)
 
 const useAppConfigStore = defineStore('app-config', {
