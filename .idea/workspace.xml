@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1777049f-9f7a-4424-9005-71635bd2b339" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/dashboard/work-place.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/dashboard/work-place.vue" afterDir="false" />
-    </list>
+    <list default="true" id="1777049f-9f7a-4424-9005-71635bd2b339" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -72,7 +69,7 @@
     "npm.build.executor": "Run",
     "npm.dev.executor": "Run",
     "settings.editor.selected.configurable": "settings.typescriptcompiler",
-    "ts.external.directory.path": "/Volumes/Code/Github/aaden-vue-customer-serivce-tool/node_modules/typescript/lib",
+    "ts.external.directory.path": "C:\\Users\\juhao\\Documents\\GitHub\\aaden-vue-customer-serivce-tool\\node_modules\\typescript\\lib",
     "vue.rearranger.settings.migration": "true"
   },
   "keyToStringList": {
@@ -142,6 +139,7 @@
       <workItem from="1701077810936" duration="3634000" />
       <workItem from="1701103441773" duration="2689000" />
       <workItem from="1701118325783" duration="9815000" />
+      <workItem from="1701193422717" duration="580000" />
     </task>
     <servers />
   </component>
