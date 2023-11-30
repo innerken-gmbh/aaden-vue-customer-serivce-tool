@@ -25,7 +25,8 @@ updateMyFood()
 
 function getRowProp(data: any) {
   return {
-    class: 'bg-' + frontendChannel(data.item.frontendVersion).color + '-lighten-5'
+    class: 'bg-' + frontendChannel(data.item.frontendVersion).color + '-lighten-5',
+    key:data.item.deviceId
   }
 }
 

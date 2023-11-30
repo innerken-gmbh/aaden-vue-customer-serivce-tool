@@ -3,7 +3,7 @@ import {AppConfigState, DeviceType, LayoutMode, PageAnim, SideTheme, ThemeMode,}
 export const projectName = 'Aaden 客服平台'
 
 export default {
-  theme: ThemeMode.DARK,
+  theme: ThemeMode.LIGHT,
   sideTheme: SideTheme.DARK,
   themeColor: '#409eff',
   layoutMode: LayoutMode.TTB,
