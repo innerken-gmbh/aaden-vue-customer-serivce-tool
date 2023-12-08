@@ -18,7 +18,7 @@ onMounted(() => {
   const clear = setInterval(deviceEchoLog.updateDeviceLog, 10 * 1000)
   onBeforeUnmount(() => {
     clearInterval(clear)
-  })
+  }) 
 })
 
 updateMyFood()

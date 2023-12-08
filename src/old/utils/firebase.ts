@@ -53,6 +53,12 @@ export async function getDeviceStatus() {
     return Object.entries(groupBy(res.filter(it => {
         return (it?.accessFrom??'').startsWith('aaden-cli')
     }), 'deviceId')).map(([key, v]) => {
+      v.forEach(that=>{
+          console.log(that.timestamp)
+          if(that.timestamp?.seconds){
+              that.timestamp=that.timestamp?.seconds*1000
+          }
+      })
         return maxBy(v, 'timestamp')
     })
 }
