@@ -54,7 +54,6 @@ export async function getDeviceStatus() {
         return (it?.accessFrom??'').startsWith('aaden-cli')
     }), 'deviceId')).map(([key, v]) => {
       v.forEach(that=>{
-          console.log(that.timestamp)
           if(that.timestamp?.seconds){
               that.timestamp=that.timestamp?.seconds*1000
           }

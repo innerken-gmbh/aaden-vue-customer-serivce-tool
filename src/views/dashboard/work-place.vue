@@ -18,7 +18,7 @@ onMounted(() => {
   const clear = setInterval(deviceEchoLog.updateDeviceLog, 10 * 1000)
   onBeforeUnmount(() => {
     clearInterval(clear)
-  }) 
+  })
 })
 
 updateMyFood()
@@ -39,6 +39,7 @@ const headers = ref([
   {title: '餐馆名称', key: 'restaurantInfo', align: 'end'},
   {title: 'cli', key: 'cliVersion', align: 'end'},
   {title: '后端', key: 'backendVersion', align: 'end'},
+  {title: '税率正常', key: 'taxOk', align: 'end'},
   {title: '前端', key: 'frontendVersion', align: 'end'},
   {title: '最后一次报告时间', key: 'timestamp', align: 'end'},
 ])
@@ -78,7 +79,7 @@ deviceEchoLog.updateDeviceLog()
           color="green-darken-4"
           class="pa-4"
         >
-          最新版本后端:{{ deviceEchoLog.currentBackendVersion }}
+          最新版本后端:{{ deviceEchoLog.currentBackendVersion }}({{ deviceEchoLog.activeDeviceLogs.filter(it => it.backendVersion === deviceEchoLog.currentBackendVersion).length }})
         </v-sheet>
 
         <v-sheet
@@ -116,6 +117,14 @@ deviceEchoLog.updateDeviceLog()
           >
             {{ formatRestaurantInfo(item.restaurantInfo) }}
           </span>
+        </template>
+        <template #[`item.taxOk`]="{ item }">
+          <template v-if="item.taxOk">
+            OK
+          </template>
+          <template v-else>
+            🙅‍
+          </template>
         </template>
         <template #[`item.action`]="{ item }">
           <template v-if="item.loading">

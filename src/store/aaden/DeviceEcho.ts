@@ -5,10 +5,10 @@ import dayjs from 'dayjs'
 
 interface DeviceEchoType {
     deviceLogs: any[],
-    loading:boolean,
+    loading: boolean,
     currentBackendVersion: string
     lastUpdateTimestamp: string,
-    activeChannelName:string,
+    activeChannelName: string,
     channels: any[],
 }
 
@@ -21,28 +21,32 @@ export const useDeviceEchoLog = defineStore('deviceLog', {
             currentBackendVersion: '',
             lastUpdateTimestamp: '',
             channels: Object.values(ChannelsInfo),
-            activeChannelName:''
+            activeChannelName: ''
         }
     },
-    getters:{
-        activeDeviceLogs():any[]{
-            if(!this.activeChannelName){
+    getters: {
+        activeDeviceLogs(): any[] {
+            if (!this.activeChannelName) {
                 return this.deviceLogs
-            }else{
-                return this.deviceLogs.filter((it: { channelInfo: { name: string } }) =>it.channelInfo.name===this.activeChannelName)
+            } else {
+                return this.deviceLogs.filter((it: {
+                    channelInfo: { name: string }
+                }) => it.channelInfo.name === this.activeChannelName)
             }
         }
     },
     actions: {
-        toggleActiveChannel(channel){
-            this.activeChannelName=this.activeChannelName===channel?'':channel
+        toggleActiveChannel(channel) {
+            this.activeChannelName = this.activeChannelName === channel ? '' : channel
         },
         async updateDeviceLog() {
             this.loading = true
             this.deviceLogs = (await getDeviceStatus()).map(it => {
                 it.channelInfo = frontendChannel(it.frontendVersion)
+                it.taxOk = Math.abs(parseFloat(it?.restaurantInfo?.content?.find(that => that.consumeTypeId === '3' && that.dishesCategoryTypeId === '8')?.taxRateValue) - 0.19) < 0.01
                 return it
             })
+            console.log(this.deviceLogs)
             const {version} = await hillo.get(
                 'https://api.aaden.online/proxy.php?url=https://aaden-backend.s3.eu-central-1.amazonaws.com/raw/package.json',
                 {}
