@@ -41,12 +41,13 @@ export const useDeviceEchoLog = defineStore('deviceLog', {
         },
         async updateDeviceLog() {
             this.loading = true
+            console.time('1')
             this.deviceLogs = (await getDeviceStatus()).map(it => {
                 it.channelInfo = frontendChannel(it.frontendVersion)
-                it.taxOk = Math.abs(parseFloat(it?.restaurantInfo?.content?.find(that => that.consumeTypeId === '3' && that.dishesCategoryTypeId === '8')?.taxRateValue) - 0.19) < 0.01
+                it.taxOk = true
                 return it
             })
-            console.log(this.deviceLogs)
+            console.timeEnd('1')
             const {version} = await hillo.get(
                 'https://api.aaden.online/proxy.php?url=https://aaden-backend.s3.eu-central-1.amazonaws.com/raw/package.json',
                 {}

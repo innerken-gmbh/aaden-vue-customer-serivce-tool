@@ -6,9 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="1777049f-9f7a-4424-9005-71635bd2b339" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/old/utils/firebase.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/old/utils/firebase.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/store/aaden/DeviceEcho.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/aaden/DeviceEcho.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/dashboard/work-place.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/dashboard/work-place.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -151,6 +149,8 @@
       <workItem from="1701679249023" duration="98000" />
       <workItem from="1701693433916" duration="1054000" />
       <workItem from="1704120399104" duration="539000" />
+      <workItem from="1704180766372" duration="618000" />
+      <workItem from="1705251436941" duration="492000" />
     </task>
     <servers />
   </component>
