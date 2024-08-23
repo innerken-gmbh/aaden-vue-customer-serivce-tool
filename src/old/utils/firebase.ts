@@ -1,9 +1,9 @@
 // Import the functions you need from the SDKs you need
 import {initializeApp} from 'firebase/app'
 import {getAnalytics} from 'firebase/analytics'
-import {collectionGroup, DocumentData, getDoc, getDocs, getFirestore, Query, QuerySnapshot,} from 'firebase/firestore'
+import {DocumentData, getDoc, getDocs, getFirestore, Query, QuerySnapshot,} from 'firebase/firestore'
 import firebase from 'firebase/compat'
-import {groupBy, maxBy} from 'lodash-es'
+import hillo from "hillo";
 import DocumentReference = firebase.firestore.DocumentReference;
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -49,17 +49,8 @@ export function downloadFile(url: string) {
 }
 
 export async function getDeviceStatus() {
-    const res = await executeQuery(collectionGroup(db, 'echoLog'))
-    return Object.entries(groupBy(res.filter(it => {
-        return (it?.accessFrom??'').startsWith('aaden-cli')
-    }), 'deviceId')).map(([key, v]) => {
-      v.forEach(that=>{
-          if(that.timestamp?.seconds){
-              that.timestamp=that.timestamp?.seconds*1000
-          }
-      })
-        return maxBy(v, 'timestamp')
-    })
+    const res = await hillo.get("https://cloud-v2.aaden.io/deviceLog/list")
+    return res
 }
 
 export function getNgrokUrl(deviceId: string) {
