@@ -48,7 +48,7 @@ function formatRestaurantInfo(restaurantInfoString: { name?: string }): string {
 
 function canUpdateBackend(backendVersion:string) :boolean{
   return deviceEchoLog.currentBackendVersion !== backendVersion
-      && backendVersion>"1.7.709"
+      && backendVersion>"1.7.853"
 }
 
 deviceEchoLog.updateDeviceLog()
