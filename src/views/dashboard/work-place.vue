@@ -79,24 +79,11 @@ deviceEchoLog.updateDeviceLog()
         >
           最新版本后端:{{ deviceEchoLog.currentBackendVersion }}({{ deviceEchoLog.activeDeviceLogs.filter(it => it.backendVersion === deviceEchoLog.currentBackendVersion).length }})
         </v-sheet>
-
-        <v-sheet
-          style="display: grid;grid-template-columns: repeat(4,minmax(0,1fr))"
-        >
-          <v-card
-            v-for="c in deviceEchoLog.channels"
-            :key="c.name"
-            rounded="0"
-            elevation="0"
-            :color="c.color+'-lighten-4'"
-            height="100%"
-            class="text-body-2 d-flex align-center justify-center"
-            :class="deviceEchoLog.activeChannelName===c.name?'font-weight-black text-h4':''"
-            @click="deviceEchoLog.toggleActiveChannel(c.name)"
-          >
-            {{ c.name }}
-          </v-card>
-        </v-sheet>
+        <v-text-field
+          v-model="deviceEchoLog.search"
+          hide-details
+          prepend-inner-icon="mdi-magnify"
+        />
       </div>
 
       <v-data-table

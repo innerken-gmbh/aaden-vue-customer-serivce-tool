@@ -10,6 +10,7 @@ interface DeviceEchoType {
     lastUpdateTimestamp: string,
     activeChannelName: string,
     channels: any[],
+    search:string,
 }
 
 
@@ -18,6 +19,7 @@ export const useDeviceEchoLog = defineStore('deviceLog', {
         return {
             loading: false,
             deviceLogs: [],
+            search:'',
             currentBackendVersion: '',
             lastUpdateTimestamp: '',
             channels: Object.values(ChannelsInfo),
@@ -26,13 +28,9 @@ export const useDeviceEchoLog = defineStore('deviceLog', {
     },
     getters: {
         activeDeviceLogs(): any[] {
-            if (!this.activeChannelName) {
-                return this.deviceLogs
-            } else {
-                return this.deviceLogs.filter((it: {
-                    channelInfo: { name: string }
-                }) => it.channelInfo.name === this.activeChannelName)
-            }
+
+                return this.deviceLogs.filter(it=>!this.search||it.deviceId.startsWith(this.search))
+
         }
     },
     actions: {
@@ -44,7 +42,6 @@ export const useDeviceEchoLog = defineStore('deviceLog', {
             console.time('1')
             this.deviceLogs = (await getDeviceStatus()).map(it => {
                 it.channelInfo = frontendChannel(it.frontendVersion)
-                it.taxOk = true
                 return it
             })
             console.timeEnd('1')
