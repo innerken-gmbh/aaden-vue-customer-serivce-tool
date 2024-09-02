@@ -16,11 +16,11 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 import zh from 'dayjs/locale/zh'
 
 import {aliases, mdi} from 'vuetify/iconsets/mdi'
-import '@mdi/font/css/materialdesignicons.css' // Ensure you are using css-loader
+import '@mdi/font/css/materialdesignicons.min.css' // Ensure you are using css-loader
 const vuetify = createVuetify({
   components,
   directives,
-  icons: { 
+  icons: {
     defaultSet: 'mdi',
     aliases,
     sets: {
