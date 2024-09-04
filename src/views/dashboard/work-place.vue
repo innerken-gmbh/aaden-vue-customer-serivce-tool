@@ -1,15 +1,16 @@
 <script lang="ts" setup>
 import {onBeforeUnmount, onMounted, ref} from 'vue'
 import {random} from 'lodash-es'
-import {frontendChannel, useDeviceEchoLog} from '@/store/aaden/DeviceEcho'
-import dayjs from "dayjs";
+import {fromNowTimestamp, frontendChannel, useDeviceEchoLog} from '@/store/aaden/DeviceEcho'
 
 const deviceEchoLog = useDeviceEchoLog()
 const myFood = ref('糖醋里脊')
 
 function updateMyFood() {
   const foods =
-      '糖醋里脊 馄饨 拉面 烩面 热干面 刀削面 油泼面 炸酱面 炒面 重庆小面 米线 酸辣粉 土豆粉 螺狮粉 凉皮儿 麻辣烫 肉夹馍 羊肉汤 炒饭 盖浇饭 卤肉饭 烤肉饭 黄焖鸡米饭 驴肉火烧 川菜 麻辣香锅 火锅 酸菜鱼 烤串 披萨 烤鸭 汉堡 炸鸡 寿司 蟹黄包 煎饼果子 生煎 炒年糕'
+      '糖醋里脊 馄饨 拉面 烩面 热干面 刀削面 油泼面 炸酱面 炒面 重庆小面 米线 酸辣粉 土豆粉 螺狮粉 凉皮儿 麻辣烫 肉夹馍 ' +
+      '羊肉汤 炒饭 盖浇饭 卤肉饭 烤肉饭 黄焖鸡米饭 驴肉火烧 川菜 麻辣香锅 火锅 酸菜鱼 烤串 披萨 烤鸭 ' +
+      '汉堡 炸鸡 寿司 蟹黄包 煎饼果子 生煎 炒年糕'
   const foodArr = foods.split(' ')
   myFood.value = foodArr.at(random(0, foodArr.length - 1)) ?? '糖醋里脊'
 }
@@ -26,7 +27,7 @@ updateMyFood()
 function getRowProp(data: any) {
   return {
     class: 'bg-' + frontendChannel(data.item.frontendVersion).color + '-lighten-5',
-    key:data.item.deviceId
+    key: data.item.deviceId
   }
 }
 
@@ -36,9 +37,8 @@ const headers = ref([
     title: 'DeviceId',
     key: 'deviceId',
   },
-  {title: 'cli', key: 'cliVersion', align: 'end'},
-  {title: '后端', key: 'backendVersion', align: 'end'},
-  {title: '前端', key: 'frontendVersion', align: 'end'},
+  {title: 'versionInfo', key: 'version', align: 'end'},
+  {title: '磁盘情况', key: 'diskUsage', align: 'end'},
   {title: '最后一次报告时间', key: 'timestamp', align: 'end'},
 ])
 
@@ -46,9 +46,9 @@ function formatRestaurantInfo(restaurantInfoString: { name?: string }): string {
   return (restaurantInfoString?.name ?? '').substring(0, 24)
 }
 
-function canUpdateBackend(backendVersion:string) :boolean{
+function canUpdateBackend(backendVersion: string): boolean {
   return deviceEchoLog.currentBackendVersion !== backendVersion
-      && backendVersion>"1.7.853"
+      && backendVersion > "1.7.853"
 }
 
 deviceEchoLog.updateDeviceLog()
@@ -77,7 +77,10 @@ deviceEchoLog.updateDeviceLog()
           color="green-darken-4"
           class="pa-4"
         >
-          最新版本后端:{{ deviceEchoLog.currentBackendVersion }}({{ deviceEchoLog.activeDeviceLogs.filter(it => it.backendVersion === deviceEchoLog.currentBackendVersion).length }})
+          最新版本后端:{{ deviceEchoLog.currentBackendVersion }}
+          ({{
+            deviceEchoLog.activeDeviceLogs.filter(it => it.backendVersion === deviceEchoLog.currentBackendVersion).length
+          }})
         </v-sheet>
         <v-text-field
           v-model="deviceEchoLog.search"
@@ -93,7 +96,7 @@ deviceEchoLog.updateDeviceLog()
         :headers="headers"
       >
         <template #[`item.timestamp`]="{ item }">
-          {{ dayjs(item.timestamp).fromNow() }}
+          {{ fromNowTimestamp(item.timestamp) }}
         </template>
         <template #[`item.restaurantInfo`]="{ item }">
           <span
@@ -103,13 +106,11 @@ deviceEchoLog.updateDeviceLog()
             {{ formatRestaurantInfo(item.restaurantInfo) }}
           </span>
         </template>
-        <template #[`item.taxOk`]="{ item }">
-          <template v-if="item.taxOk">
-            OK
-          </template>
-          <template v-else>
-            🙅‍
-          </template>
+        <template #[`item.version`]="{ item }">
+          {{ item.cliVersion }}/{{ item.backendVersion }}
+        </template>
+        <template #[`item.diskUsage`]="{ item }">
+          {{ item.diskUsage }}
         </template>
         <template #[`item.action`]="{ item }">
           <template v-if="item.loading">

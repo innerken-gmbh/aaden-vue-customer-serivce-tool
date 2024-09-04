@@ -84,3 +84,7 @@ export function frontendChannel(version: string): { name: string, color: string 
         return ChannelsInfo.Candidate
     }
 }
+
+export function fromNowTimestamp(timestamp) {
+    return dayjs(timestamp).fromNow()
+}
