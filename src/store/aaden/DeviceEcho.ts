@@ -3,24 +3,15 @@ import {getDeviceStatus, getEndPointUrl} from '@/old/utils/firebase'
 import hillo from 'hillo'
 import dayjs from 'dayjs'
 
-interface DeviceEchoType {
-    deviceLogs: any[],
-    loading: boolean,
-    currentBackendVersion: string
-    lastUpdateTimestamp: string,
-    activeChannelName: string,
-    channels: any[],
-    search:string,
-}
-
 
 export const useDeviceEchoLog = defineStore('deviceLog', {
-    state: (): DeviceEchoType => {
+    state: (): any => {
         return {
             loading: false,
             deviceLogs: [],
-            search:'',
+            search: '',
             currentBackendVersion: '',
+            cliVersion: '',
             lastUpdateTimestamp: '',
             channels: Object.values(ChannelsInfo),
             activeChannelName: ''
@@ -28,30 +19,35 @@ export const useDeviceEchoLog = defineStore('deviceLog', {
     },
     getters: {
         activeDeviceLogs(): any[] {
-
-                return this.deviceLogs.filter(it=>!this.search||it.deviceId.startsWith(this.search))
-
+            return this.deviceLogs.filter(it => !this.search || it.deviceId.startsWith(this.search))
         }
     },
     actions: {
-        toggleActiveChannel(channel) {
-            this.activeChannelName = this.activeChannelName === channel ? '' : channel
-        },
         async updateDeviceLog() {
             this.loading = true
-            console.time('1')
             this.deviceLogs = (await getDeviceStatus()).map(it => {
                 it.channelInfo = frontendChannel(it.frontendVersion)
                 return it
             })
-            console.timeEnd('1')
             const {version} = await hillo.get(
                 'https://api.aaden.online/proxy.php?url=https://aaden-backend.s3.eu-central-1.amazonaws.com/raw/package.json',
                 {}
             )
+            const {"dist-tags": cliInfo} = await hillo.get("https://registry.npmjs.org/aaden-cli")
+            console.log(cliInfo.latest)
+            this.cliVersion = cliInfo.latest
             this.currentBackendVersion = version
             this.lastUpdateTimestamp = dayjs().format('HH:mm:ss')
             this.loading = false
+        },
+        cliVersionOk(log: any) {
+            return log.cliVersion === this.cliVersion
+        },
+        backgroundVersionOk(log: any) {
+            return log.backendVersion === this.currentBackendVersion
+        },
+        diskOk(log: any) {
+            return log.diskUsage < "75%"
         },
         async updateBackend(item: { deviceId: string; loading: boolean }) {
             console.log(item)

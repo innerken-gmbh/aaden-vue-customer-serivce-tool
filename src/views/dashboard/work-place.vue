@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import {onBeforeUnmount, onMounted, ref} from 'vue'
 import {random} from 'lodash-es'
-import {fromNowTimestamp, frontendChannel, useDeviceEchoLog} from '@/store/aaden/DeviceEcho'
+import {fromNowTimestamp, useDeviceEchoLog} from '@/store/aaden/DeviceEcho'
 
 const deviceEchoLog = useDeviceEchoLog()
 const myFood = ref('糖醋里脊')
@@ -25,10 +25,13 @@ onMounted(() => {
 updateMyFood()
 
 function getRowProp(data: any) {
-  return {
-    class: 'bg-' + frontendChannel(data.item.frontendVersion).color + '-lighten-5',
+  const props= {
     key: data.item.deviceId
   }
+  if(deviceEchoLog.cliVersionOk(data)&&deviceEchoLog.backgroundVersionOk(data)&&deviceEchoLog.diskOk(data)){
+    props.class="bg-green-lighten-5"
+  }
+  return props
 }
 
 const headers = ref([
@@ -59,28 +62,45 @@ deviceEchoLog.updateDeviceLog()
   <div class="main-container">
     <v-card class="mt-4">
       <div
-        class="text-h6"
-        style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr))"
+        class="text-body-2 d-flex"
       >
         <v-sheet
-          color="blue-darken-4"
+          color="grey-lighten-4"
           class="pa-4"
         >
           上次刷新时间:{{ deviceEchoLog.lastUpdateTimestamp }}
         </v-sheet>
         <v-sheet
-          color="pink-darken-4"
+          color="grey-lighten-3"
           class="pa-4"
         >
           结果总数:{{ deviceEchoLog.activeDeviceLogs.length }}
         </v-sheet>
         <v-sheet
-          color="green-darken-4"
           class="pa-4"
+          color="grey-lighten-4"
         >
           最新版本后端:{{ deviceEchoLog.currentBackendVersion }}
           ({{
-            deviceEchoLog.activeDeviceLogs.filter(it => it.backendVersion === deviceEchoLog.currentBackendVersion).length
+            deviceEchoLog.activeDeviceLogs.filter(deviceEchoLog.backgroundVersionOk).length
+          }})
+        </v-sheet>
+        <v-sheet
+          class="pa-4"
+          color="grey-lighten-3"
+        >
+          Cli版本:{{ deviceEchoLog.cliVersion }}
+          ({{
+            deviceEchoLog.activeDeviceLogs.filter(deviceEchoLog.cliVersionOk).length
+          }})
+        </v-sheet>
+        <v-sheet
+          color="yellow-darken-4"
+          class="pa-4"
+        >
+          磁盘警告:
+          ({{
+            deviceEchoLog.activeDeviceLogs.filter(it=>!deviceEchoLog.diskOk(it)).length
           }})
         </v-sheet>
         <v-text-field
@@ -107,8 +127,12 @@ deviceEchoLog.updateDeviceLog()
             {{ formatRestaurantInfo(item.restaurantInfo) }}
           </span>
         </template>
-        <template #[`item.version`]="{ item }">
-          {{ item.cliVersion }}/{{ item.backendVersion }}
+        <template #[`item.cliVersion`]="{ item }">
+          <div>
+            <v-sheet :color="deviceEchoLog.cliVersionOk(item)?'green':'red'">
+              {{ item.cliVersion }}
+            </v-sheet>
+          </div>
         </template>
         <template #[`item.diskUsage`]="{ item }">
           {{ item.diskUsage }}
