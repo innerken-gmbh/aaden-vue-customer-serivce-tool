@@ -37,7 +37,8 @@ const headers = ref([
     title: 'DeviceId',
     key: 'deviceId',
   },
-  {title: 'versionInfo', key: 'version', align: 'end'},
+  {title: 'cliVersion', key: 'cliVersion', align: 'end'},
+  {title: 'backendVersion', key: 'backendVersion', align: 'end'},
   {title: '磁盘情况', key: 'diskUsage', align: 'end'},
   {title: '最后一次报告时间', key: 'timestamp', align: 'end'},
 ])
