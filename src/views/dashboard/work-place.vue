@@ -25,11 +25,11 @@ onMounted(() => {
 updateMyFood()
 
 function getRowProp(data: any) {
-  const props= {
+  const props = {
     key: data.item.deviceId
   }
-  if(deviceEchoLog.cliVersionOk(data)&&deviceEchoLog.backgroundVersionOk(data)&&deviceEchoLog.diskOk(data)){
-    props.class="bg-green-lighten-5"
+  if (deviceEchoLog.cliVersionOk(data.item) && deviceEchoLog.backgroundVersionOk(data.item) && deviceEchoLog.diskOk(data.item)) {
+    props.class = "bg-green-lighten-5"
   }
   return props
 }
@@ -100,7 +100,7 @@ deviceEchoLog.updateDeviceLog()
         >
           磁盘警告:
           ({{
-            deviceEchoLog.activeDeviceLogs.filter(it=>!deviceEchoLog.diskOk(it)).length
+            deviceEchoLog.activeDeviceLogs.filter(it => !deviceEchoLog.diskOk(it)).length
           }})
         </v-sheet>
         <v-text-field
@@ -128,14 +128,46 @@ deviceEchoLog.updateDeviceLog()
           </span>
         </template>
         <template #[`item.cliVersion`]="{ item }">
-          <div>
-            <v-sheet :color="deviceEchoLog.cliVersionOk(item)?'green':'red'">
+          <div
+            class="d-flex justify-end"
+            style="width: 100%;"
+          >
+            <v-sheet
+              class="pa-1"
+              style="width: fit-content"
+              :color="deviceEchoLog.cliVersionOk(item)?'green':'red'"
+            >
               {{ item.cliVersion }}
             </v-sheet>
           </div>
         </template>
+        <template #[`item.backendVersion`]="{ item }">
+          <div
+            class="d-flex justify-end"
+            style="width: 100%;"
+          >
+            <v-sheet
+              class="pa-1"
+              style="width: fit-content"
+              :color="deviceEchoLog.backgroundVersionOk(item)?'green':'red'"
+            >
+              {{ item.backendVersion }}
+            </v-sheet>
+          </div>
+        </template>
         <template #[`item.diskUsage`]="{ item }">
-          {{ item.diskUsage }}
+          <div
+            class="d-flex justify-end"
+            style="width: 100%;"
+          >
+            <v-sheet
+              class="pa-1"
+              style="width: fit-content"
+              :color="deviceEchoLog.diskOk(item)?'green':'red'"
+            >
+              {{ item.diskUsage }}
+            </v-sheet>
+          </div>
         </template>
         <template #[`item.action`]="{ item }">
           <template v-if="item.loading">
