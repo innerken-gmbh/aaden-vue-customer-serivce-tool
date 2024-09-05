@@ -48,8 +48,10 @@ export function downloadFile(url: string) {
     window.open(url, '_blank')
 }
 
+const url="https://cloud-v2.aaden.io"
+
 export async function getDeviceStatus() {
-    const res = await hillo.get("https://cloud-v2.aaden.io/deviceLog/list")
+    const res = await hillo.get(url+"/deviceLog/list")
     return res
 }
 
