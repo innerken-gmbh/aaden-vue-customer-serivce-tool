@@ -2,6 +2,7 @@
 import {onBeforeUnmount, onMounted, ref} from 'vue'
 import {random} from 'lodash-es'
 import {fromNowTimestamp, useDeviceEchoLog} from '@/store/aaden/DeviceEcho'
+import DashboardLabel from "@/views/jh-widget/dashboard-label.vue";
 
 const deviceEchoLog = useDeviceEchoLog()
 const myFood = ref('糖醋里脊')
@@ -19,7 +20,13 @@ function updateMyFood() {
 }
 
 onMounted(() => {
-  const clear = setInterval(deviceEchoLog.updateDeviceLog, 10 * 1000)
+  const clear = setInterval(() => {
+    if(autoRefresh.value){
+      deviceEchoLog.updateDeviceLog()
+    }
+
+    updateMyFood()
+  }, 10 * 1000)
   onBeforeUnmount(() => {
     clearInterval(clear)
   })
@@ -53,15 +60,12 @@ function formatRestaurantInfo(restaurantInfoString) {
   return (restaurantInfoString?.name ?? '').substring(0, 24)
 }
 
-function canUpdateBackend(backendVersion) {
-  return deviceEchoLog.currentBackendVersion !== backendVersion
-      && backendVersion > "1.7.853"
-}
+const autoRefresh=ref(true)
 
 deviceEchoLog.updateDeviceLog()
 
 function showNgrokForDevice(device) {
-  window.open(rawNgrokUrl + '1' + device.deviceId.toString().padStart(4,'0'))
+  window.open(rawNgrokUrl + '1' + device.deviceId.toString().padStart(4, '0'))
 }
 </script>
 
@@ -71,45 +75,52 @@ function showNgrokForDevice(device) {
       <div
         class="text-body-2 d-flex"
       >
-        <v-sheet
-          color="grey-lighten-4"
-          class="pa-4"
-        >
-          上次刷新时间:{{ deviceEchoLog.lastUpdateTimestamp }}
-        </v-sheet>
-        <v-sheet
-          color="grey-lighten-3"
-          class="pa-4"
-        >
-          结果总数:{{ deviceEchoLog.activeDeviceLogs.length }}
-        </v-sheet>
-        <v-sheet
-          class="pa-4"
-          color="grey-lighten-4"
-        >
-          最新版本后端:{{ deviceEchoLog.currentBackendVersion }}
+        <dashboard-label color="purple-lighten-4">
+          <template #label>
+            🌃😋今天可以吃
+          </template>
+          {{ myFood }}
+        </dashboard-label>
+        <dashboard-label :color="autoRefresh?'green-lighten-4':'grey-lighten-4'">
+          <template #label>
+            上次刷新时间
+          </template>
+          <div @click="autoRefresh=!autoRefresh">
+            {{ deviceEchoLog.lastUpdateTimestamp }}
+          </div>
+        </dashboard-label>
+        <dashboard-label color="blue-lighten-4">
+          <template #label>
+            结果总数
+          </template>
+          {{ deviceEchoLog.activeDeviceLogs.length }}
+        </dashboard-label>
+        <dashboard-label color="grey-lighten-4">
+          <template #label>
+            最新版本后端
+          </template>
+          {{ deviceEchoLog.currentBackendVersion }}
           ({{
             deviceEchoLog.activeDeviceLogs.filter(deviceEchoLog.backgroundVersionOk).length
           }})
-        </v-sheet>
-        <v-sheet
-          class="pa-4"
-          color="grey-lighten-3"
-        >
-          Cli版本:{{ deviceEchoLog.cliVersion }}
+        </dashboard-label>
+        <dashboard-label color="grey-lighten-3">
+          <template #label>
+            Cli版本
+          </template>
+          {{ deviceEchoLog.cliVersion }}
           ({{
             deviceEchoLog.activeDeviceLogs.filter(deviceEchoLog.cliVersionOk).length
           }})
-        </v-sheet>
-        <v-sheet
-          color="yellow-darken-4"
-          class="pa-4"
-        >
-          磁盘警告:
-          ({{
+        </dashboard-label>
+        <dashboard-label color="yellow-lighten-4">
+          <template #label>
+            磁盘警告
+          </template>
+          {{
             deviceEchoLog.activeDeviceLogs.filter(it => !deviceEchoLog.diskOk(it)).length
-          }})
-        </v-sheet>
+          }}
+        </dashboard-label>
         <v-text-field
           v-model="deviceEchoLog.search"
           hide-details
