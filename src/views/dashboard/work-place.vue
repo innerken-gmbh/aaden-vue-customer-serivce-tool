@@ -1,10 +1,13 @@
-<script lang="ts" setup>
+<script setup>
 import {onBeforeUnmount, onMounted, ref} from 'vue'
 import {random} from 'lodash-es'
 import {fromNowTimestamp, useDeviceEchoLog} from '@/store/aaden/DeviceEcho'
 
 const deviceEchoLog = useDeviceEchoLog()
 const myFood = ref('糖醋里脊')
+
+const rawNgrokUrl = "https://ngrok.aaden.io:4433?hostname=localhost&&username=aaden&&password=SW5uZXJrZW4zMjIu&&port="
+
 
 function updateMyFood() {
   const foods =
@@ -24,7 +27,7 @@ onMounted(() => {
 
 updateMyFood()
 
-function getRowProp(data: any) {
+function getRowProp(data) {
   const props = {
     key: data.item.deviceId
   }
@@ -46,16 +49,20 @@ const headers = ref([
   {title: '最后一次报告时间', key: 'timestamp', align: 'end'},
 ])
 
-function formatRestaurantInfo(restaurantInfoString: { name?: string }): string {
+function formatRestaurantInfo(restaurantInfoString) {
   return (restaurantInfoString?.name ?? '').substring(0, 24)
 }
 
-function canUpdateBackend(backendVersion: string): boolean {
+function canUpdateBackend(backendVersion) {
   return deviceEchoLog.currentBackendVersion !== backendVersion
       && backendVersion > "1.7.853"
 }
 
 deviceEchoLog.updateDeviceLog()
+
+function showNgrokForDevice(device) {
+  window.open(rawNgrokUrl + '1' + device.deviceId.toString().padStart(4,'0'))
+}
 </script>
 
 <template>
@@ -170,74 +177,18 @@ deviceEchoLog.updateDeviceLog()
           </div>
         </template>
         <template #[`item.action`]="{ item }">
-          <template v-if="item.loading">
-            <v-progress-circular indeterminate />
-          </template>
-          <v-btn
-            v-else
-            :disabled="!canUpdateBackend(item.backendVersion)"
-            color="primary"
-            elevation="0"
-            variant="tonal"
-            @click="deviceEchoLog.updateBackend(item)"
-          >
-            更新后端
-          </v-btn>
+          <div class="d-flex">
+            <v-card
+              elevation="0"
+              class="pa-1 font-weight-black"
+              style="font-size: 10px"
+              @click="showNgrokForDevice(item)"
+            >
+              Ngrok
+            </v-card>
+          </div>
         </template>
       </v-data-table>
     </v-card>
   </div>
 </template>
-
-<style lang="scss" scoped>
-.avatar-wrapper {
-  width: 3rem;
-  height: 3rem;
-  max-width: 3rem;
-  max-height: 3rem;
-  min-width: 3rem;
-  min-height: 3rem;
-
-  & > img {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    border: 2px solid var(--primary-color);
-  }
-}
-
-.item-action {
-  position: relative;
-  padding: 0 30px;
-}
-
-.item-action::after {
-  position: absolute;
-  top: 20%;
-  right: 0;
-  height: 60%;
-  content: '';
-  display: block;
-  width: 1px;
-  background-color: #e0e0e0;
-}
-
-div.item-action:last-child::after {
-  width: 0;
-}
-
-.fast-item-wrapper {
-  border-right: 1px solid #f7f7f7;
-  border-bottom: 1px solid #f7f7f7;
-  height: 80px;
-}
-
-.fast-item-wrapper:hover {
-  cursor: pointer;
-  box-shadow: 0px 0px 10px #ddd;
-}
-
-.el-link + .el-link {
-  margin-bottom: 10px;
-}
-</style>
