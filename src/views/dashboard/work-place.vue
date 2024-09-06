@@ -192,6 +192,7 @@ function showNgrokForDevice(device) {
         <template #[`item.action`]="{ item }">
           <div class="d-flex">
             <v-card
+              color="grey-lighten-3"
               elevation="0"
               class="pa-1 font-weight-black"
               style="font-size: 10px"
