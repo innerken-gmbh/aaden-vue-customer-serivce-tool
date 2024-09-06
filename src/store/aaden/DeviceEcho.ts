@@ -47,7 +47,7 @@ export const useDeviceEchoLog = defineStore('deviceLog', {
             return log.backendVersion === this.currentBackendVersion
         },
         diskOk(log: any) {
-            return parseInt(log.diskUsage.replace('%','')) < 75
+            return parseInt(log?.diskUsage?.replace('%','')) < 75
         },
         async updateBackend(item: { deviceId: string; loading: boolean }) {
             console.log(item)
