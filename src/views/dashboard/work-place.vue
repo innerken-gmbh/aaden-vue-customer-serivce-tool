@@ -86,7 +86,9 @@ function showNgrokForDevice(device) {
             上次刷新时间
           </template>
           <div @click="autoRefresh=!autoRefresh">
-            {{ deviceEchoLog.lastUpdateTimestamp }}
+            {{ deviceEchoLog.lastUpdateTimestamp }}<template v-if="autoRefresh">
+              ✔
+            </template>
           </div>
         </dashboard-label>
         <dashboard-label color="blue-lighten-4">

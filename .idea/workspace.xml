@@ -5,7 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1777049f-9f7a-4424-9005-71635bd2b339" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/views/jh-widget/dashboard-label.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/dashboard/work-place.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/dashboard/work-place.vue" afterDir="false" />
     </list>
@@ -160,7 +159,7 @@
       <workItem from="1725518554144" duration="643000" />
       <workItem from="1725523702238" duration="556000" />
       <workItem from="1725524456587" duration="2531000" />
-      <workItem from="1725608070360" duration="2583000" />
+      <workItem from="1725608070360" duration="2670000" />
     </task>
     <servers />
   </component>
