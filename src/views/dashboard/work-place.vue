@@ -84,7 +84,7 @@ function getRowProp(data) {
 const headers = ref([
   {title: '操作', key: 'action', align: 'start'},
   {
-    title: 'DeviceId',
+    title: 'DeviceId/Note',
     key: 'deviceId',
   },
   {
@@ -107,6 +107,20 @@ deviceEchoLog.updateDeviceLog()
 
 function showNgrokForDevice(device) {
   window.open(rawNgrokUrl + '1' + device.deviceId.toString().padStart(4, '0'))
+}
+
+function displayAddress(address) {
+  // 将字符串按换行符分割
+  const parts = address?.split(',');
+  if (parts)
+
+      // 将每一部分用HTML标签包裹起来
+    return `<div class="pa-2">
+                    <strong>${parts[0]}</strong><br>
+                    ${parts[1]}<br>
+                    ${parts[2]}
+                </div>`;
+  else return ""
 }
 </script>
 
@@ -178,8 +192,17 @@ function showNgrokForDevice(device) {
         :items="deviceEchoLog.activeDeviceLogs"
         :headers="headers"
       >
+        <template #[`item.deviceId`]="{ item }">
+          {{ item.deviceId }}
+          <template v-if="item.deviceGroup">
+            / {{ item.deviceGroup }}
+          </template>
+        </template>
         <template #[`item.timestamp`]="{ item }">
           {{ fromNowTimestamp(item.timestamp) }}
+        </template>
+        <template #[`item.deviceName`]="{ item }">
+          <div v-html="displayAddress(item.deviceName)" />
         </template>
         <template #[`item.restaurantInfo`]="{ item }">
           <span

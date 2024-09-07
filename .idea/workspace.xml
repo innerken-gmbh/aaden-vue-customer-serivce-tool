@@ -6,7 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="1777049f-9f7a-4424-9005-71635bd2b339" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/store/aaden/DeviceEcho.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/aaden/DeviceEcho.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/dashboard/work-place.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/dashboard/work-place.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -165,7 +164,7 @@
       <workItem from="1725524456587" duration="2531000" />
       <workItem from="1725608070360" duration="3743000" />
       <workItem from="1725615243252" duration="49000" />
-      <workItem from="1725698275837" duration="2104000" />
+      <workItem from="1725698275837" duration="2447000" />
     </task>
     <servers />
   </component>
