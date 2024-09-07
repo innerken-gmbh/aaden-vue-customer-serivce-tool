@@ -5,9 +5,45 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1777049f-9f7a-4424-9005-71635bd2b339" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/store/aaden/dialogStore.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/BaseWidget/GridContainer.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/BaseWidget/basic/BaseContainer.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/BaseWidget/basic/JSpace.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/BaseWidget/basic/OutlineBaseContainer.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/BaseWidget/basic/PageSubHeader.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/BaseWidget/basic/button/BackButton.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/BaseWidget/basic/button/BaseIconButton.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/BaseWidget/basic/button/CloseButton.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/BaseWidget/basic/button/MenuIconButton.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/BaseWidget/basic/button/MiniActionButton.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/BaseWidget/basic/button/PrimaryButton.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/BaseWidget/basic/button/SecondaryBackButton.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/BaseWidget/basic/button/SecondaryButton.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/BaseWidget/basic/button/SeondaryInlineButton.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/BaseWidget/basic/button/ToggleButton.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/BaseWidget/basic/dialog/BaseDialog.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/BaseWidget/basic/premade/LoadingProvider.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/BaseWidget/form/BaseForm.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/BaseWidget/form/BaseFormDialog.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/BaseWidget/form/baseFormUtils.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/BaseWidget/form/formItems/ColorPicker.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/BaseWidget/form/formItems/DateSelector.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/BaseWidget/form/formItems/ImageUpload/ImageUpload.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/BaseWidget/form/formItems/ImageUpload/ImgWithLoading.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/BaseWidget/form/formItems/ResourceEditor.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/BaseWidget/form/formItems/SignField.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/BaseWidget/form/formItems/TimeSelector.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/BaseWidget/form/formItems/UnitEditor.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/BaseWidget/form/formItems/emojiPicker/EmojiPicker.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/BaseWidget/form/formItems/emojiPicker/emojis.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/BaseWidget/tree/TreeList.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/BaseWidget/tree/TreeNode.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/store/aaden/DeviceEcho.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/aaden/DeviceEcho.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/dashboard/work-place.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/dashboard/work-place.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,43 +81,46 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowPanel.toolwindow.highlight.mappings&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowPanel.toolwindow.highlight.symlinks&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowPanel.toolwindow.show.date&quot;: &quot;false&quot;,
-    &quot;WebServerToolWindowPanel.toolwindow.show.permissions&quot;: &quot;false&quot;,
-    &quot;WebServerToolWindowPanel.toolwindow.show.size&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Volumes/Code/Github/aaden-vue-customer-serivce-tool&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.standard&quot;: &quot;&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;npm.build.executor&quot;: &quot;Run&quot;,
-    &quot;npm.dev.executor&quot;: &quot;Run&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;actions.on.save&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\juhao\\Documents\\GitHub\\aaden-vue-customer-serivce-tool\\node_modules\\typescript\\lib&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "true",
+    "WebServerToolWindowPanel.toolwindow.highlight.mappings": "true",
+    "WebServerToolWindowPanel.toolwindow.highlight.symlinks": "true",
+    "WebServerToolWindowPanel.toolwindow.show.date": "false",
+    "WebServerToolWindowPanel.toolwindow.show.permissions": "false",
+    "WebServerToolWindowPanel.toolwindow.show.size": "false",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/Users/juhao/Documents/GitHub/aaden-vue-customer-serivce-tool/src/store/aaden",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.standard": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.standard": "",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "npm.build.executor": "Run",
+    "npm.dev.executor": "Run",
+    "settings.editor.selected.configurable": "actions.on.save",
+    "ts.external.directory.path": "C:\\Users\\juhao\\Documents\\GitHub\\aaden-vue-customer-serivce-tool\\node_modules\\typescript\\lib",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;vue.recent.templates&quot;: [
-      &quot;Vue Options API Component&quot;,
-      &quot;Vue Composition API Component&quot;
+  "keyToStringList": {
+    "vue.recent.templates": [
+      "Vue Options API Component",
+      "Vue Composition API Component"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\juhao\Documents\GitHub\aaden-vue-customer-serivce-tool\src\store\aaden" />
+      <recent name="C:\Users\juhao\Documents\GitHub\aaden-vue-customer-serivce-tool\src\views" />
+      <recent name="C:\Users\juhao\Documents\GitHub\aaden-vue-customer-serivce-tool\src\views\jh-widget" />
       <recent name="$PROJECT_DIR$/src/views/list" />
       <recent name="$PROJECT_DIR$/src/assets" />
     </key>
@@ -162,7 +201,7 @@
       <workItem from="1725524456587" duration="2531000" />
       <workItem from="1725608070360" duration="3743000" />
       <workItem from="1725615243252" duration="49000" />
-      <workItem from="1725698275837" duration="436000" />
+      <workItem from="1725698275837" duration="1996000" />
     </task>
     <servers />
   </component>

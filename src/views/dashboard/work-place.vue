@@ -3,6 +3,9 @@ import {onBeforeUnmount, onMounted, ref} from 'vue'
 import {random} from 'lodash-es'
 import {fromNowTimestamp, useDeviceEchoLog} from '@/store/aaden/DeviceEcho'
 import DashboardLabel from "@/views/jh-widget/dashboard-label.vue";
+import {useDialogStore} from "@/store/aaden/dialogStore";
+import MiniActionButton from "@/views/BaseWidget/basic/button/MiniActionButton.vue";
+import JSpace from "@/views/BaseWidget/basic/JSpace.vue";
 
 const deviceEchoLog = useDeviceEchoLog()
 const myFood = ref('糖醋里脊')
@@ -32,6 +35,39 @@ onMounted(() => {
   })
 })
 
+function getSchema() {
+  return {
+    title: '修改设备信息',
+    subtitle: '可要好好修改，不要改错了',
+    schemas: [
+      {
+        key: 'deviceGroup',
+        name: '备注',
+        required:false,
+        default: "",
+        hint:'设备的备注'
+      },
+      {
+        key: 'maxVersion',
+        name: 'maxVersion',
+        hint: '-1 为不限制任何更新，请注意，如果更新时一次性跳过了多个版本，那么不能保证该机器一定会停止在某个版本',
+        default: "-1",
+      },
+    ]
+  }
+}
+
+const dialogStore = useDialogStore()
+
+async function updateInfo(item) {
+  const info = await dialogStore.editItem(getSchema(), item)
+  console.log(info)
+  await dialogStore.waitFor(async () => {
+        await deviceEchoLog.updateDeviceLogInfo(info.deviceId, info.deviceGroup, info.maxVersion)
+      }
+  )
+}
+
 updateMyFood()
 
 function getRowProp(data) {
@@ -49,6 +85,10 @@ const headers = ref([
   {
     title: 'DeviceId',
     key: 'deviceId',
+  },
+  {
+    title: '门店名称',
+    key: 'deviceName',
   },
   {title: 'cliVersion', key: 'cliVersion', align: 'end'},
   {title: 'backendVersion', key: 'backendVersion', align: 'end'},
@@ -174,7 +214,7 @@ function showNgrokForDevice(device) {
             >
               {{ item.backendVersion }}
               <template v-if="item.maxVersion!=='-1'">
-                {{ item.maxVersion }}
+                / {{ item.maxVersion }}
               </template>
             </v-sheet>
           </div>
@@ -194,17 +234,16 @@ function showNgrokForDevice(device) {
           </div>
         </template>
         <template #[`item.action`]="{ item }">
-          <div class="d-flex">
-            <v-card
-              color="grey-lighten-3"
-              elevation="0"
-              class="pa-1 font-weight-black"
-              style="font-size: 10px"
+          <j-space>
+            <mini-action-button
+              text="Ngrok"
               @click="showNgrokForDevice(item)"
-            >
-              Ngrok
-            </v-card>
-          </div>
+            />
+            <mini-action-button
+              text="修改信息"
+              @click="updateInfo(item)"
+            />
+          </j-space>
         </template>
       </v-data-table>
     </v-card>

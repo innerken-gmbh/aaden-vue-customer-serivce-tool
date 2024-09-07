@@ -65,7 +65,7 @@ export const useDeviceEchoLog = defineStore('deviceLog', {
                     deviceGroup,
                     maxVersion
                 }
-                const response = await hillo.post('/deviceLog/update', dto)
+                const response = await hillo.post('https://cloud-v2.aaden.io/deviceLog/update', dto)
                 console.log('Update Device Log Info:', response)
                 // 更新 deviceLogs 数据
                 await this.updateDeviceLog()
