@@ -111,7 +111,7 @@ function showNgrokForDevice(device) {
 
 function displayAddress(address) {
   // 将字符串按换行符分割
-  const parts = address?.split(',');
+  const parts = address?.split('\n');
   if (parts)
 
       // 将每一部分用HTML标签包裹起来

@@ -4,7 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1777049f-9f7a-4424-9005-71635bd2b339" name="Changes" comment="" />
+    <list default="true" id="1777049f-9f7a-4424-9005-71635bd2b339" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/dashboard/work-place.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/dashboard/work-place.vue" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -55,7 +58,7 @@
     &quot;WebServerToolWindowPanel.toolwindow.show.size&quot;: &quot;false&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/juhao/Documents/GitHub/aaden-vue-customer-serivce-tool/src/store/aaden&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/juhao/Documents/GitHub/aaden-vue-customer-serivce-tool/src/assets&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -78,11 +81,11 @@
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\juhao\Documents\GitHub\aaden-vue-customer-serivce-tool\src\assets" />
       <recent name="C:\Users\juhao\Documents\GitHub\aaden-vue-customer-serivce-tool\src\store\aaden" />
       <recent name="C:\Users\juhao\Documents\GitHub\aaden-vue-customer-serivce-tool\src\views" />
       <recent name="C:\Users\juhao\Documents\GitHub\aaden-vue-customer-serivce-tool\src\views\jh-widget" />
       <recent name="$PROJECT_DIR$/src/views/list" />
-      <recent name="$PROJECT_DIR$/src/assets" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src" />
@@ -162,6 +165,8 @@
       <workItem from="1725608070360" duration="3743000" />
       <workItem from="1725615243252" duration="49000" />
       <workItem from="1725698275837" duration="2684000" />
+      <workItem from="1725703486810" duration="129000" />
+      <workItem from="1725703756616" duration="14000" />
     </task>
     <servers />
   </component>
