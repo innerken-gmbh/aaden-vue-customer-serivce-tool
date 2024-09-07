@@ -21,7 +21,7 @@ function updateMyFood() {
 
 onMounted(() => {
   const clear = setInterval(() => {
-    if(autoRefresh.value){
+    if (autoRefresh.value) {
       deviceEchoLog.updateDeviceLog()
     }
 
@@ -60,7 +60,7 @@ function formatRestaurantInfo(restaurantInfoString) {
   return (restaurantInfoString?.name ?? '').substring(0, 24)
 }
 
-const autoRefresh=ref(true)
+const autoRefresh = ref(true)
 
 deviceEchoLog.updateDeviceLog()
 
@@ -86,7 +86,8 @@ function showNgrokForDevice(device) {
             上次刷新时间
           </template>
           <div @click="autoRefresh=!autoRefresh">
-            {{ deviceEchoLog.lastUpdateTimestamp }}<template v-if="autoRefresh">
+            {{ deviceEchoLog.lastUpdateTimestamp }}
+            <template v-if="autoRefresh">
               ✔
             </template>
           </div>
@@ -172,6 +173,9 @@ function showNgrokForDevice(device) {
               :color="deviceEchoLog.backgroundVersionOk(item)?'green':'red'"
             >
               {{ item.backendVersion }}
+              <template v-if="item.maxVersion!=='-1'">
+                {{ item.maxVersion }}
+              </template>
             </v-sheet>
           </div>
         </template>

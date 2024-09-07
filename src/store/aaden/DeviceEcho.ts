@@ -58,6 +58,21 @@ export const useDeviceEchoLog = defineStore('deviceLog', {
             await this.updateDeviceLog()
             item.loading = false
         },
+        async updateDeviceLogInfo(deviceId: string, deviceGroup: string, maxVersion: string) {
+            try {
+                const dto = {
+                    deviceId,
+                    deviceGroup,
+                    maxVersion
+                }
+                const response = await hillo.post('/deviceLog/update', dto)
+                console.log('Update Device Log Info:', response)
+                // 更新 deviceLogs 数据
+                await this.updateDeviceLog()
+            } catch (error) {
+                console.error('Error updating device log info:', error)
+            }
+        }
     },
 })
 
