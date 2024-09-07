@@ -47,7 +47,7 @@ export const useDeviceEchoLog = defineStore('deviceLog', {
             return log.backendVersion === this.currentBackendVersion
         },
         diskOk(log: any) {
-            return parseInt(log?.diskUsage?.replace('%','')) < 75
+            return parseInt(log?.diskUsage?.replace('%', '')) < 75
         },
         async updateBackend(item: { deviceId: string; loading: boolean }) {
             console.log(item)
@@ -62,10 +62,10 @@ export const useDeviceEchoLog = defineStore('deviceLog', {
             try {
                 const dto = {
                     deviceId,
-                    deviceGroup,
+                    deviceGroup: deviceGroup ?? "",
                     maxVersion
                 }
-                const response = await hillo.post('https://cloud-v2.aaden.io/deviceLog/update', dto)
+                const response = await hillo.jsonPost('https://cloud-v2.aaden.io/deviceLog/update', dto)
                 console.log('Update Device Log Info:', response)
                 // 更新 deviceLogs 数据
                 await this.updateDeviceLog()

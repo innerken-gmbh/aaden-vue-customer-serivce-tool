@@ -43,9 +43,9 @@ function getSchema() {
       {
         key: 'deviceGroup',
         name: '备注',
-        required:false,
+        required: false,
         default: "",
-        hint:'设备的备注'
+        hint: '设备的备注'
       },
       {
         key: 'maxVersion',
@@ -62,6 +62,7 @@ const dialogStore = useDialogStore()
 async function updateInfo(item) {
   const info = await dialogStore.editItem(getSchema(), item)
   console.log(info)
+  info.deviceGroup = info.deviceGroup ?? ""
   await dialogStore.waitFor(async () => {
         await deviceEchoLog.updateDeviceLogInfo(info.deviceId, info.deviceGroup, info.maxVersion)
       }
