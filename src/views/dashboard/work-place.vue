@@ -94,7 +94,7 @@ const headers = ref([
   {title: 'cliVersion', key: 'cliVersion', align: 'end'},
   {title: 'backendVersion', key: 'backendVersion', align: 'end'},
   {title: '磁盘情况', key: 'diskUsage', align: 'end'},
-  {title: '最后一次报告时间', key: 'timestamp', align: 'end'},
+  {title: '报告时间', key: 'timestamp', align: 'end'},
   {title: '开机时间', key: 'lastUptime', align: 'end'},
 ])
 
@@ -200,9 +200,6 @@ function displayAddress(address) {
           </template>
         </template>
         <template #[`item.timestamp`]="{ item }">
-          <template v-if="item.ngrokOk">
-            ✔
-          </template>
           {{ fromNowTimestamp(item.timestamp) }}
         </template>
         <template #[`item.deviceName`]="{ item }">
@@ -224,9 +221,12 @@ function displayAddress(address) {
             <v-sheet
               class="pa-1"
               style="width: fit-content"
-              :color="deviceEchoLog.cliVersionOk(item)?'green':'red'"
+              :color="deviceEchoLog.cliVersionOk(item)&&item.ngrokOk?'green-darken-4':'red-darken-4'"
             >
               {{ item.cliVersion }}
+              <span v-if="!item.ngrokOk">
+                ⚠
+              </span>
             </v-sheet>
           </div>
         </template>
@@ -253,9 +253,9 @@ function displayAddress(address) {
             style="width: 100%;"
           >
             <v-sheet
-              class="pa-1"
+              :class="deviceEchoLog.diskOk(item)?'':'pa-1'"
               style="width: fit-content"
-              :color="deviceEchoLog.diskOk(item)?'green':'red'"
+              :color="deviceEchoLog.diskOk(item)?'transparent':'red'"
             >
               {{ item.diskUsage }}
             </v-sheet>
