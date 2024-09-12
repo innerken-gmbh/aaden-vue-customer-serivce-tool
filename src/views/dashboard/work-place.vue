@@ -100,7 +100,6 @@ const headers = ref([
   {title: 'backendVersion', key: 'backendVersion', align: 'end'},
   {title: '磁盘情况', key: 'diskUsage', align: 'end'},
   {title: '报告时间', key: 'timestamp', align: 'end'},
-  {title: '开机时间', key: 'lastUptime', align: 'end'},
 ])
 
 function formatRestaurantInfo(restaurantInfoString) {
