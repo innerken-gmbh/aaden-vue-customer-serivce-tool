@@ -1,11 +1,12 @@
 import {defineStore} from 'pinia'
-import {getDeviceStatus, getEndPointUrl} from '@/old/utils/firebase'
+import {getDeviceStatus, getEndPointUrl, getEventListForDeviceId} from '@/old/utils/firebase'
 import hillo from 'hillo'
 import dayjs from 'dayjs'
 
+const baseUrl = "https://cloud-v2.aaden.io/"
 
 export const useDeviceEchoLog = defineStore('deviceLog', {
-    state: (): any => {
+    state: () => {
         return {
             loading: false,
             deviceLogs: [],
@@ -14,15 +15,27 @@ export const useDeviceEchoLog = defineStore('deviceLog', {
             cliVersion: '',
             lastUpdateTimestamp: '',
             channels: Object.values(ChannelsInfo),
-            activeChannelName: ''
+            activeChannelName: '',
+            activeDevice: null,
+            showDetail: false,
+            eventLogs: [],
         }
     },
     getters: {
-        activeDeviceLogs(): any[] {
+        activeDeviceLogs() {
             return this.deviceLogs.filter(it => !this.search || it.deviceId.startsWith(this.search))
         }
     },
     actions: {
+        async selectDevice(deviceLog) {
+            this.activeDevice = deviceLog
+            this.showDetail = true
+            await this.updateEventLogs()
+
+        },
+        async updateEventLogs() {
+            this.eventLogs = await getEventListForDeviceId(this.activeDevice.deviceId)
+        },
         async updateDeviceLog() {
             this.loading = true
             this.deviceLogs = (await getDeviceStatus()).map(it => {
@@ -40,16 +53,16 @@ export const useDeviceEchoLog = defineStore('deviceLog', {
             this.lastUpdateTimestamp = dayjs().format('HH:mm:ss')
             this.loading = false
         },
-        cliVersionOk(log: any) {
+        cliVersionOk(log) {
             return log.cliVersion === this.cliVersion
         },
-        backgroundVersionOk(log: any) {
+        backgroundVersionOk(log) {
             return log.backendVersion === this.currentBackendVersion
         },
-        diskOk(log: any) {
+        diskOk(log) {
             return parseInt(log?.diskUsage?.replace('%', '')) < 75
         },
-        async updateBackend(item: { deviceId: string; loading: boolean }) {
+        async updateBackend(item) {
             console.log(item)
             const url = getEndPointUrl(item.deviceId) + 'UpdateSelf.php?op=doUpdate'
             item.loading = true
@@ -58,17 +71,27 @@ export const useDeviceEchoLog = defineStore('deviceLog', {
             await this.updateDeviceLog()
             item.loading = false
         },
-        async updateDeviceLogInfo(deviceId: string, deviceGroup: string, maxVersion: string) {
+        async updateDeviceLogInfo(deviceId, deviceGroup, maxVersion) {
             try {
                 const dto = {
                     deviceId,
                     deviceGroup: deviceGroup ?? "",
                     maxVersion
                 }
-                const response = await hillo.jsonPost('https://cloud-v2.aaden.io/deviceLog/update', dto)
+                const response =
+                    await hillo.jsonPost('https://cloud-v2.aaden.io/deviceLog/update', dto)
                 console.log('Update Device Log Info:', response)
                 // 更新 deviceLogs 数据
                 await this.updateDeviceLog()
+            } catch (error) {
+                console.error('Error updating device log info:', error)
+            }
+        },
+        async addEventLog(logInfo) {
+            try {
+                await hillo.jsonPost('https://cloud-v2.aaden.io/deviceLog/createEvent',
+                    logInfo);
+                await this.updateEventLogs()
             } catch (error) {
                 console.error('Error updating device log info:', error)
             }
@@ -83,7 +106,7 @@ export const ChannelsInfo = {
     Beta: {name: 'Beta', color: 'yellow'},
 }
 
-export function frontendChannel(version: string): { name: string, color: string } {
+export function frontendChannel(version) {
     const [major, minor] = version.split('.')
     if (major === '1') {
         return ChannelsInfo.Stable

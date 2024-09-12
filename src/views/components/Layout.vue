@@ -29,7 +29,7 @@
             class="mobile-shadow"
             :class="[appConfig.isCollapse ? 'close-shadow' : 'show-shadow']"
             @click="closeMenu"
-          ></div>
+          />
         </n-el>
       </n-dialog-provider>
     </n-loading-bar-provider>
@@ -43,9 +43,14 @@
   import { DeviceType, ThemeMode } from '@/store/types'
   import useAxios from '@/old/hooks/useAxios'
   import CustomRequestInterceptor from '@/old/api/interceptors/CustomRequestInterceptor'
+  import VAWHeader from "@/views/components/header/index.vue";
+  import MainLayout from "@/views/components/MainLayout.vue";
+  import TabSplitSideBar from "@/views/components/sidebar/TabSplitSideBar.vue";
+  import SideBar from "@/views/components/sidebar/SideBar.vue";
 
   export default defineComponent({
     name: 'Layout',
+    components: {SideBar, TabSplitSideBar, MainLayout, VAWHeader},
     setup() {
       const appConfig = useAppConfigStore()
       const axios = useAxios()

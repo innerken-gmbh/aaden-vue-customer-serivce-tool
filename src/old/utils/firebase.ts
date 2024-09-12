@@ -2,9 +2,7 @@
 import {initializeApp} from 'firebase/app'
 import {getAnalytics} from 'firebase/analytics'
 import {DocumentData, getDoc, getDocs, getFirestore, Query, QuerySnapshot,} from 'firebase/firestore'
-import firebase from 'firebase/compat'
 import hillo from "hillo";
-import DocumentReference = firebase.firestore.DocumentReference;
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -33,7 +31,7 @@ function getDocContentWithId(docs: QuerySnapshot<DocumentData>): any[] {
     return docs.docs.map(docContent)
 }
 
-export async function getDocContent(docRef: DocumentReference<any>) {
+export async function getDocContent(docRef) {
     return docContent(await getDoc(docRef))
 }
 
@@ -48,11 +46,14 @@ export function downloadFile(url: string) {
     window.open(url, '_blank')
 }
 
-const url="https://cloud-v2.aaden.io"
+const url = "https://cloud-v2.aaden.io"
 
 export async function getDeviceStatus() {
-    const res = await hillo.get(url+"/deviceLog/list")
-    return res
+    return await hillo.get(url + "/deviceLog/list")
+}
+
+export async function getEventListForDeviceId(deviceId) {
+    return await hillo.get(url + "/deviceLog/eventList/" + deviceId)
 }
 
 export function getNgrokUrl(deviceId: string) {

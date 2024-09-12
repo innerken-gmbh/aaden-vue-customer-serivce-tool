@@ -1,7 +1,17 @@
 <template>
-  <n-drawer v-model:show="opened" placement="right" :auto-focus="false">
-    <n-drawer-content title="系统设置" closable class="wrapper">
-      <n-divider dashed>主题设置</n-divider>
+  <n-drawer
+    v-model:show="opened"
+    placement="right"
+    :auto-focus="false"
+  >
+    <n-drawer-content
+      title="系统设置"
+      closable
+      class="wrapper"
+    >
+      <n-divider dashed>
+        主题设置
+      </n-divider>
       <n-grid>
         <n-grid-item
           v-for="(item, index) of themeList"
@@ -19,7 +29,9 @@
           />
         </n-grid-item>
       </n-grid>
-      <n-divider dashed>侧边栏样式</n-divider>
+      <n-divider dashed>
+        侧边栏样式
+      </n-divider>
       <n-grid>
         <n-grid-item
           v-for="(item, index) of sideExampleList"
@@ -36,7 +48,9 @@
           />
         </n-grid-item>
       </n-grid>
-      <n-divider dashed>布局模式</n-divider>
+      <n-divider dashed>
+        布局模式
+      </n-divider>
       <n-grid>
         <n-grid-item
           v-for="(item, index) of layoutExampleList"
@@ -55,7 +69,9 @@
           />
         </n-grid-item>
       </n-grid>
-      <n-divider dashed>主题颜色</n-divider>
+      <n-divider dashed>
+        主题颜色
+      </n-divider>
       <n-grid class="colors-wrapper">
         <n-grid-item
           v-for="(item, index) of primartyColorList"
@@ -67,15 +83,27 @@
           @click="colorClick(item)"
         />
       </n-grid>
-      <div style="height: 20px"></div>
-      <n-divider dashed>菜单设置</n-divider>
+      <div style="height: 20px" />
+      <n-divider dashed>
+        菜单设置
+      </n-divider>
       <div class="setting-item-wrapper">
         <span style="width: 150px">菜单宽度</span>
-        <n-input-number v-model:value="menuWidth" size="small" :min="200" :max="400" :step="10">
-          <template #suffix>px</template>
+        <n-input-number
+          v-model:value="menuWidth"
+          size="small"
+          :min="200"
+          :max="400"
+          :step="10"
+        >
+          <template #suffix>
+            px
+          </template>
         </n-input-number>
       </div>
-      <n-divider dashed>页面切换动画</n-divider>
+      <n-divider dashed>
+        页面切换动画
+      </n-divider>
       <div class="setting-item-wrapper">
         <span style="width: 100px">动画效果</span>
         <n-select
@@ -84,7 +112,9 @@
           @update:value="onAnimUpdate"
         />
       </div>
-      <n-divider dashed>按钮显示</n-divider>
+      <n-divider dashed>
+        按钮显示
+      </n-divider>
       <div class="setting-item-wrapper">
         <span>固定顶部导航</span>
         <n-switch
@@ -119,9 +149,11 @@
   import LeftBg from '@/assets/bg_img.webp'
   import useAppConfigStore from '@/store/modules/app-config'
   import { PageAnim } from '@/store/types'
+  import StyleExample from "@/views/components/setting/components/StyleExample.vue";
 
   export default defineComponent({
     name: 'Setting',
+    components: {StyleExample},
     setup() {
       const appInfoDialog = ref<ModalDialogType | null>()
       const opened = ref(false)

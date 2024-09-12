@@ -12,48 +12,9 @@ export default [
     children: [
       {
         parentPath: '/dashboard',
-        menuUrl: '/dashboard/home',
-        menuName: '主控台',
-        routeName: 'home',
-      },
-      {
-        parentPath: '/dashboard',
         menuUrl: '/dashboard/work-place',
         menuName: '工作台',
         routeName: 'workPlace',
-      },
-    ],
-  },
-  {
-    menuUrl: '/system',
-    menuName: '系统管理',
-    icon: 'icon-settings',
-    parentPath: '',
-    routeName: 'system',
-    children: [
-      {
-        parentPath: '/system',
-        menuUrl: '/system/department',
-        menuName: '部门管理',
-        routeName: 'department',
-        localFilePath: '/system/local-path/department',
-      },
-      {
-        parentPath: '/system',
-        menuUrl: '/system/user',
-        menuName: '用户管理',
-        routeName: 'user',
-        isRootPath: true,
-      },
-      {
-        parentPath: '/system',
-        menuUrl: '/system/role',
-        menuName: '角色管理',
-      },
-      {
-        parentPath: '/system',
-        menuUrl: '/system/menu',
-        menuName: '菜单管理',
       },
     ],
   },

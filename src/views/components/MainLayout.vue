@@ -5,8 +5,8 @@
       layoutMode === 'ttb'
         ? 'main-layout-ttb-status'
         : !appConfig.isCollapse
-        ? 'main-layout-open-status'
-        : 'main-layout-close-status',
+          ? 'main-layout-open-status'
+          : 'main-layout-close-status',
       appConfig.isFixedNavBar ? 'main-layout_fixed-nav-bar' : 'main-layout',
     ]"
   >
@@ -15,8 +15,8 @@
         layoutMode === 'ttb'
           ? 'nav-bar-ttb-status'
           : !appConfig.isCollapse
-          ? 'nav-bar-open-status'
-          : 'nav-bar-close-status',
+            ? 'nav-bar-open-status'
+            : 'nav-bar-close-status',
         appConfig.isFixedNavBar ? 'fixed-nav-bar' : '',
         !showNavBar ? 'tab-bar-top' : '',
       ]"
@@ -24,9 +24,12 @@
       <NavBar v-if="showNavBar" />
       <TabBar />
     </section>
-    <div class="main-base-style scrollbar" :class="[mainClass]">
+    <div
+      class="main-base-style scrollbar"
+      :class="[mainClass]"
+    >
       <section class="main-section">
-        <Main />
+        <MainPart />
       </section>
       <section class="footer-wrapper">
         <Footer />
@@ -43,8 +46,12 @@
   import { useLoadingBar } from 'naive-ui'
   import { computed, defineComponent, onMounted, ref } from 'vue'
   import { useRouter } from 'vue-router'
+  import MainPart from "@/views/components/Main.vue"
+  import NavBar from "@/views/components/navbar/NavBar.vue";
+  import TabBar from "@/views/components/tabbar/index.vue";
   export default defineComponent({
     name: 'MainLayout',
+    components: {TabBar, NavBar,MainPart},
     props: {
       showNavBar: {
         type: Boolean,

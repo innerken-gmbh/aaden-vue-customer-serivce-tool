@@ -6,8 +6,11 @@
     <div style="flex: 1; overflow: hidden; padding: 0 10px">
       <HorizontalScrollerMenu :routes="permissionStore.getPermissionSideBar" />
     </div>
-    <div v-if="appConfig.deviceType !== 'mobile'" class="right-wrapper">
-      <ActionItems />
+    <div
+      v-if="appConfig.deviceType !== 'mobile'"
+      class="right-wrapper"
+    >
+      tems />
     </div>
     <div class="avatar-wrapper">
       <VAWAvatar />
@@ -19,8 +22,13 @@
   import useAppConfigStore from '@/store/modules/app-config'
   import usePermissionStore from '@/store/modules/permission'
   import { defineComponent } from 'vue'
+  import Logo from "@/views/components/logo/index.vue";
+  import HorizontalScrollerMenu from "@/views/components/sidebar/components/HorizontalScrollerMenu.vue";
+  import ActionItems from "@/views/components/actions/index.vue";
+  import VAWAvatar from "@/views/components/avatar/VAWAvatar.vue";
   export default defineComponent({
     name: 'VAWHeader',
+    components: {VAWAvatar, ActionItems, HorizontalScrollerMenu, Logo},
     setup() {
       const appConfig = useAppConfigStore()
       const permissionStore = usePermissionStore()

@@ -6,6 +6,7 @@ import DashboardLabel from "@/views/jh-widget/dashboard-label.vue";
 import {useDialogStore} from "@/store/aaden/dialogStore";
 import MiniActionButton from "@/views/BaseWidget/basic/button/MiniActionButton.vue";
 import JSpace from "@/views/BaseWidget/basic/JSpace.vue";
+import DeviceDetailPage from "@/views/dashboard/DeviceDetailPage.vue";
 
 const deviceEchoLog = useDeviceEchoLog()
 const myFood = ref('糖醋里脊')
@@ -116,10 +117,8 @@ function displayAddress(address) {
   if (parts)
 
       // 将每一部分用HTML标签包裹起来
-    return `<div class="pa-2">
-                    <strong>${parts[0]}</strong><br>
-                    ${parts[1]}<br>
-                    ${parts[2]}
+    return `<div class="pa-2 font-weight-black">
+                    ${parts[0]}
                 </div>`;
   else return ""
 }
@@ -271,9 +270,14 @@ function displayAddress(address) {
               text="修改信息"
               @click="updateInfo(item)"
             />
+            <mini-action-button
+              text="详情"
+              @click="deviceEchoLog.selectDevice(item)"
+            />
           </j-space>
         </template>
       </v-data-table>
     </v-card>
+    <device-detail-page />
   </div>
 </template>

@@ -1,11 +1,19 @@
 <template>
   <div class="action-items-wrapper">
-    <span v-if="appConfig.actionBar.isShowSearch" class="action-item" @click="onShowSearch">
+    <span
+      v-if="appConfig.actionBar.isShowSearch"
+      class="action-item"
+      @click="onShowSearch"
+    >
       <n-icon size="18">
         <SearchIcon />
       </n-icon>
     </span>
-    <n-popover placement="bottom" trigger="click" :width="300">
+    <n-popover
+      placement="bottom"
+      trigger="click"
+      :width="300"
+    >
       <template #trigger>
         <n-badge
           v-if="appConfig.actionBar.isShowMessage"
@@ -16,21 +24,32 @@
             <NotificationsIcon />
           </n-icon>
         </n-badge>
-        <div v-else></div>
+        <div v-else />
       </template>
       <PopoverMessage @clear="badgeValue = 0" />
     </n-popover>
-    <span v-if="appConfig.actionBar.isShowRefresh" class="action-item" @click="onRefrehRoute">
+    <span
+      v-if="appConfig.actionBar.isShowRefresh"
+      class="action-item"
+      @click="onRefrehRoute"
+    >
       <n-icon size="18">
         <RefreshIcon />
       </n-icon>
     </span>
-    <span v-if="appConfig.actionBar.isShowFullScreen" class="action-item" @click="onScreenFull">
+    <span
+      v-if="appConfig.actionBar.isShowFullScreen"
+      class="action-item"
+      @click="onScreenFull"
+    >
       <n-icon size="18">
         <ExpandIcon />
       </n-icon>
     </span>
-    <span class="action-item" @click="onShowSetting">
+    <span
+      class="action-item"
+      @click="onShowSetting"
+    >
       <n-icon size="18">
         <SettingIcon />
       </n-icon>
@@ -55,10 +74,16 @@
   } from '@vicons/ionicons5'
   import useAppConfigStore from '@/store/modules/app-config'
   import { useDebounceFn } from '@vueuse/core'
+  import PopoverMessage from "@/views/components/common/PopoverMessage.vue";
+  import SearchContent from "@/views/components/common/SearchContent.vue";
+  import Setting from "@/views/components/setting/index.vue";
 
   export default defineComponent({
     name: 'ActionItems',
     components: {
+      Setting,
+      SearchContent,
+      PopoverMessage,
       SearchIcon,
       SettingIcon,
       ExpandIcon,

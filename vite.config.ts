@@ -4,6 +4,7 @@ import path from 'path'
 import vitePluginCompression from 'vite-plugin-compression'
 import ViteComponents from 'unplugin-vue-components/vite'
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
+import Components from 'unplugin-vue-components/vite'
 
 import vueJsx from '@vitejs/plugin-vue-jsx'
 
@@ -11,6 +12,7 @@ export default () => {
   return {
     base: '/',
     plugins: [
+      Components({ /* options */ }),
       vue(),
       viteSvgIcons({
         iconDirs: [path.resolve(process.cwd(), 'src/icons')],

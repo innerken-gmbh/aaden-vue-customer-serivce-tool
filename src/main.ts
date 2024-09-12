@@ -16,7 +16,8 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 import zh from 'dayjs/locale/zh'
 
 import {aliases, mdi} from 'vuetify/iconsets/mdi'
-import '@mdi/font/css/materialdesignicons.min.css' // Ensure you are using css-loader
+import '@mdi/font/css/materialdesignicons.min.css'
+import naive from "naive-ui"; // Ensure you are using css-loader
 const vuetify = createVuetify({
   components,
   directives,
@@ -38,6 +39,7 @@ function vawBoot() {
   useRouterGuard()
   useMock()
   app.use(vuetify)
+  app.use(naive)
   app.mount('#app')
 }
 
