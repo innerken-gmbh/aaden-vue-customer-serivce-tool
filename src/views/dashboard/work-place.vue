@@ -70,6 +70,10 @@ async function updateInfo(item) {
   )
 }
 
+function clickItem(e,row) {
+  deviceEchoLog.selectDevice(row.item)
+}
+
 updateMyFood()
 
 function getRowProp(data) {
@@ -191,6 +195,7 @@ function displayAddress(address) {
         :items-per-page="-1"
         :items="deviceEchoLog.activeDeviceLogs"
         :headers="headers"
+        @click:row="clickItem"
       >
         <template #[`item.deviceId`]="{ item }">
           {{ item.deviceId }}
@@ -269,10 +274,6 @@ function displayAddress(address) {
             <mini-action-button
               text="修改信息"
               @click="updateInfo(item)"
-            />
-            <mini-action-button
-              text="详情"
-              @click="deviceEchoLog.selectDevice(item)"
             />
           </j-space>
         </template>

@@ -32,6 +32,7 @@ const schema = {
     },
   ]
 }
+const tab = ref(0)
 const dialogStore = useDialogStore()
 
 async function addInfo() {
@@ -56,7 +57,7 @@ function displayAddress(address) {
   if (parts)
 
       // 将每一部分用HTML标签包裹起来
-    return `<div class="pa-2">
+    return `<div class="">
                     <b>${parts[0]}</b><br>
                     ${parts[1]}<br>
                     ${parts[2]}
@@ -73,73 +74,127 @@ function displayAddress(address) {
   >
     <v-card
       v-if="store.showDetail"
-      class="pa-4"
     >
-      <page-sub-header>
-        机器详情
-        <template #subtitle>
-          #{{ store.activeDevice.deviceId }}/最后一次报告 {{ fromNowTimestamp(store.activeDevice.timestamp) }}
-        </template>
-        <template #action>
-          <primary-button
-            text="增加记录"
-            icon="mdi-plus"
-            @click="addInfo"
-          />
-        </template>
-      </page-sub-header>
-      <j-space gap="24">
-        <div v-html="displayAddress(store.activeDevice.deviceName)" />
-        <div>
-          <j-space class="text-body-2">
-            <div class="text-caption">
-              Cli版本
-            </div>
-            {{ store.activeDevice.cliVersion }}
-          </j-space>
-          <j-space class="text-body-2">
-            <div class="text-caption">
-              后端版本
-            </div>
-            {{ store.activeDevice.backendVersion }}
-          </j-space>
-          <j-space class="text-body-2">
-            <div class="text-caption">
-              Ngrok
-            </div>
-            {{ store.activeDevice.ngrokOk }}
-          </j-space>
-        </div>
-        <div>
-          <j-space class="text-body-2">
-            <div class="text-caption">
-              磁盘情况
-            </div>
-            {{ store.activeDevice.diskUsage }}
-          </j-space>
-          <j-space class="text-body-2">
-            <div class="text-caption">
-              开机时间
-            </div>
-            {{ store.activeDevice.lastUptime }}
-          </j-space>
-          <j-space class="text-body-2">
-            <div class="text-caption">
-              备注
-            </div>
-            {{ store.activeDevice.note }}
-          </j-space>
-        </div>
-      </j-space>
-
-      <v-data-table
-        :headers="headers"
-        :items="store.eventLogs"
+      <v-card
+        variant="flat"
+        color="grey-lighten-4"
+        class="pa-4 pb-0"
       >
-        <template #[`item.createTimestamp`]="{ item }">
-          {{ fromNowTimestamp(item.createTimestamp) }}
-        </template>
-      </v-data-table>
+        <page-sub-header>
+          机器详情
+          <template #subtitle>
+            #{{ store.activeDevice.deviceId }}/最后一次报告 {{ fromNowTimestamp(store.activeDevice.timestamp) }}
+          </template>
+          <template #action>
+            <primary-button
+              text="增加记录"
+              icon="mdi-plus"
+              @click="addInfo"
+            />
+          </template>
+        </page-sub-header>
+        <v-tabs v-model="tab">
+          <v-tab>操作记录</v-tab>
+          <v-tab>详情</v-tab>
+        </v-tabs>
+      </v-card>
+      <v-card
+        flat
+        class="pa-4"
+      >
+        <v-tabs-window
+          v-model="tab"
+          style="width: 100%"
+        >
+          <v-tabs-window-item>
+            <v-data-table
+              :headers="headers"
+              :items="store.eventLogs"
+            >
+              <template #[`item.createTimestamp`]="{ item }">
+                {{ fromNowTimestamp(item.createTimestamp) }}
+              </template>
+            </v-data-table>
+          </v-tabs-window-item>
+          <v-tabs-window-item style="width: 100%">
+            <div
+              class="d-flex mb-2"
+              style="width: 100%"
+            >
+              <div class="text-body-2">
+                餐厅信息
+              </div>
+              <v-spacer />
+              <div
+                class="text-right"
+                v-html="displayAddress(store.activeDevice.deviceName)"
+              />
+            </div>
+            <div
+              class="d-flex mb-2"
+              style="width: 100%"
+            >
+              <div class="text-body-2">
+                Cli版本
+              </div>
+              <v-spacer />
+              <div>{{ store.activeDevice.cliVersion }}</div>
+            </div>
+            <div
+              class="d-flex mb-2"
+              style="width: 100%"
+            >
+              <div class="text-body-2">
+                后端版本
+              </div>
+              <v-spacer />
+              <div>{{ store.activeDevice.backendVersion }}</div>
+            </div>
+            <div
+              class="d-flex mb-2"
+              style="width: 100%"
+            >
+              <div class="text-body-2">
+                Ngrok
+              </div>
+              <v-spacer />
+              <div>{{ store.activeDevice.ngrokOk }}</div>
+            </div>
+
+            <div
+              class="d-flex mb-2"
+              style="width: 100%"
+            >
+              <div class="text-body-2">
+                磁盘情况
+              </div>
+              <v-spacer />
+              <div>{{ store.activeDevice.diskUsage }}</div>
+            </div>
+
+            <div
+              class="d-flex mb-2"
+              style="width: 100%"
+            >
+              <div class="text-body-2">
+                开机时间
+              </div>
+              <v-spacer />
+              <div>{{ store.activeDevice.lastUptime }}</div>
+            </div>
+            <div
+              class="d-flex mb-2"
+              style="width: 100%"
+            >
+              <div class="text-body-2">
+                备注
+              </div>
+              <v-spacer />
+              <div>{{ store.activeDevice.note ?? '-' }}</div>
+            </div>
+          </v-tabs-window-item>
+        </v-tabs-window>
+      </v-card>
     </v-card>
   </v-dialog>
 </template>
