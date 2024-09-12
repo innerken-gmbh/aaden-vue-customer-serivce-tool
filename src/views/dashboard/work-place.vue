@@ -95,6 +95,7 @@ const headers = ref([
   {title: 'backendVersion', key: 'backendVersion', align: 'end'},
   {title: '磁盘情况', key: 'diskUsage', align: 'end'},
   {title: '最后一次报告时间', key: 'timestamp', align: 'end'},
+  {title: '开机时间', key: 'lastUptime', align: 'end'},
 ])
 
 function formatRestaurantInfo(restaurantInfoString) {
@@ -199,6 +200,9 @@ function displayAddress(address) {
           </template>
         </template>
         <template #[`item.timestamp`]="{ item }">
+          <template v-if="item.ngrokOk">
+            ✔
+          </template>
           {{ fromNowTimestamp(item.timestamp) }}
         </template>
         <template #[`item.deviceName`]="{ item }">

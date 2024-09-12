@@ -94,7 +94,7 @@
       <recent name="$PROJECT_DIR$/src/views/list" />
     </key>
   </component>
-  <component name="RunManager" selected="npm.build">
+  <component name="RunManager" selected="npm.dev">
     <configuration name="build" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/package.json" />
       <command value="run" />
@@ -117,8 +117,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="npm.build" />
         <item itemvalue="npm.dev" />
+        <item itemvalue="npm.build" />
       </list>
     </recent_temporary>
   </component>
@@ -167,6 +167,7 @@
       <workItem from="1725698275837" duration="2684000" />
       <workItem from="1725703486810" duration="129000" />
       <workItem from="1725703756616" duration="26000" />
+      <workItem from="1726132690263" duration="1080000" />
     </task>
     <servers />
   </component>
