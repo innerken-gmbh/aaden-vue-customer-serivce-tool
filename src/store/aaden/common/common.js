@@ -19,7 +19,7 @@ export function getCRUDActions(name, listTransform = null) {
     }
 }
 
-export function getNormalStore(Manager) {
+export function getNormalStore(Manager, reloadHook) {
     const list = ref([])
     const loading = ref(false)
     const expand = ref(false)
@@ -44,6 +44,7 @@ export function getNormalStore(Manager) {
 
     async function reload() {
         await asyncAction(load)
+        await reloadHook()
     }
 
 

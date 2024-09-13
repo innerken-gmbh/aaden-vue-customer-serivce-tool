@@ -11,5 +11,9 @@ export async function saveImageInfo(deviceId, imagePath, dishesId) {
 
 
 export async function getFrontendLogInfo() {
-    return await hillo.get(baseUrl+"api/frontend-logs")
+    return await hillo.get(baseUrl + "api/frontend-logs")
+}
+
+export async function getFrontendTypes() {
+    return await hillo.get(baseUrl + "api/frontend-logs/frontend-types")
 }
