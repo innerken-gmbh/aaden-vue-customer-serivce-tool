@@ -10,6 +10,7 @@ export default [
     icon: 'icon-dashboard',
     parentPath: '',
     children: [
+
       {
         parentPath: '/dashboard',
         menuUrl: '/dashboard/work-place',
@@ -26,6 +27,12 @@ export default [
     icon: 'detail',
     parentPath: '',
     children: [
+      {
+        parentPath: '/dashboard',
+        menuUrl: '/dashboard/frontend-dashboard',
+        menuName: '前端监控',
+        routeName: 'frontend-dashboard',
+      },
       {
         parentPath: '/store-management',
         menuUrl: '/store-management/manage-store',

@@ -8,3 +8,8 @@ export async function saveImageInfo(deviceId, imagePath, dishesId) {
         deviceId, imagePath, dishesId
     })
 }
+
+
+export async function getFrontendLogInfo() {
+    return await hillo.get(baseUrl+"api/frontend-logs")
+}
