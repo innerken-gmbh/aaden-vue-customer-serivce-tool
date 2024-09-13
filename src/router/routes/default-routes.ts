@@ -15,6 +15,68 @@ export default [
         menuUrl: '/dashboard/work-place',
         menuName: '工作台',
         routeName: 'workPlace',
+        isRootPath: true,
+      },
+    ],
+  },
+  {
+    menuUrl: '/store-management',
+    menuName: '门店管理',
+    iconPrefix: 'iconfont',
+    icon: 'detail',
+    parentPath: '',
+    children: [
+      {
+        parentPath: '/store-management',
+        menuUrl: '/store-management/manage-store',
+        menuName: '查看门店界面',
+      },
+      {
+        parentPath: '/store-management',
+        menuUrl: '/store-management/upload',
+        menuName: '商品批量上传(敬请期待)',
+      },
+      {
+        parentPath: '/store-management',
+        menuUrl: '/store-management/copy',
+        menuName: '商品复制',
+      },
+      {
+        parentPath: '/store-management',
+        menuUrl: '/store-management/image-upload',
+        menuName: '批量上图(敬请期待)',
+      },
+      {
+        parentPath: '/store-management',
+        menuUrl: '/store-management/sync-group',
+        menuName: '修改商品同步组(敬请期待)',
+      },
+    ],
+  },
+  {
+    menuUrl: '/form',
+    menuName: '外卖/扫码相关',
+    badge: 'dot',
+    iconPrefix: 'iconfont',
+    icon: 'file-text',
+    parentPath: '',
+    children: [
+      {
+        parentPath: '/form',
+        menuUrl: '/form/manage',
+        menuName: '图片上云',
+        cacheable: false,
+      },
+      {
+        parentPath: '/form',
+        menuUrl: '/form/advance-form',
+        menuName: '外卖订单查询(敬请期待)',
+        cacheable: true,
+      },
+      {
+        parentPath: '/form',
+        menuUrl: '/form/step-form',
+        menuName: '-',
       },
     ],
   },
