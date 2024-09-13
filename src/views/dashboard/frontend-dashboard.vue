@@ -53,7 +53,7 @@ const autoRefresh = ref(true)
           <template #label>
             结果总数
           </template>
-          {{ store.list.length }}
+          {{ store.displayList.length }}
         </dashboard-label>
         <j-space>
           <v-card
