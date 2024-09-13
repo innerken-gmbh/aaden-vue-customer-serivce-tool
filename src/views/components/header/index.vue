@@ -10,7 +10,7 @@
       v-if="appConfig.deviceType !== 'mobile'"
       class="right-wrapper"
     >
-      tems />
+      <action-items />
     </div>
     <div class="avatar-wrapper">
       <VAWAvatar />

@@ -2,6 +2,7 @@ import {defineStore} from 'pinia'
 import {getDeviceStatus, getEndPointUrl, getEventListForDeviceId} from '@/old/utils/firebase'
 import hillo from 'hillo'
 import dayjs from 'dayjs'
+import {getAllSubscriptionForStore} from "../../old/utils/firebase";
 
 const baseUrl = "https://cloud-v2.aaden.io/"
 
@@ -15,6 +16,7 @@ export const useDeviceEchoLog = defineStore('deviceLog', {
             cliVersion: '',
             lastUpdateTimestamp: '',
             channels: Object.values(ChannelsInfo),
+            subscriptions: [],
             activeChannelName: '',
             activeDevice: null,
             showDetail: false,
@@ -35,6 +37,8 @@ export const useDeviceEchoLog = defineStore('deviceLog', {
         },
         async updateEventLogs() {
             this.eventLogs = await getEventListForDeviceId(this.activeDevice.deviceId)
+            this.subscriptions = await getAllSubscriptionForStore(this.activeDevice.deviceId)
+            console.log(this.subscriptions)
         },
         async updateDeviceLog() {
             this.loading = true

@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import {initializeApp} from 'firebase/app'
 import {getAnalytics} from 'firebase/analytics'
-import {DocumentData, getDoc, getDocs, getFirestore, Query, QuerySnapshot,} from 'firebase/firestore'
+import {DocumentData, getDoc, getDocs, getFirestore, Query, QuerySnapshot,collection,query} from 'firebase/firestore'
 import hillo from "hillo";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -62,4 +62,17 @@ export function getNgrokUrl(deviceId: string) {
 
 export function getEndPointUrl(deviceId: string) {
     return 'https://' + getNgrokUrl(deviceId) + '/PHP/'
+}
+
+export async function getAllSubscriptionForStore (deviceId) {
+    return await resultOf(query(collection(db, 'saas-store-subscription', deviceId.toString(), 'subscriptions')))
+}
+
+export async function resultOf (query, logLabel = '') {
+    const res = (await getDocs(query)).docs
+        .map(docContent)
+    if (logLabel) {
+        console.log(res, logLabel)
+    }
+    return res
 }

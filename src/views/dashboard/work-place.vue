@@ -70,7 +70,7 @@ async function updateInfo(item) {
   )
 }
 
-function clickItem(e,row) {
+function clickItem(e, row) {
   deviceEchoLog.selectDevice(row.item)
 }
 
@@ -278,6 +278,6 @@ function displayAddress(address) {
         </template>
       </v-data-table>
     </v-card>
-    <device-detail-page />
+    <device-detail-page @ngrok="showNgrokForDevice(deviceEchoLog.activeDevice)" />
   </div>
 </template>

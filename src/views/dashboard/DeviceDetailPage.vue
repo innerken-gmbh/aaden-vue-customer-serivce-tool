@@ -1,10 +1,11 @@
 <script setup>
 import {fromNowTimestamp, useDeviceEchoLog} from "@/store/aaden/DeviceEcho";
 import PrimaryButton from "@/views/BaseWidget/basic/button/PrimaryButton.vue";
-import JSpace from "@/views/BaseWidget/basic/JSpace.vue";
 import {useDialogStore} from "@/store/aaden/dialogStore";
 import {ref} from "vue";
 import PageSubHeader from "@/views/BaseWidget/basic/PageSubHeader.vue";
+import SecondaryButton from "@/views/BaseWidget/basic/button/SecondaryButton.vue";
+import JSpace from "@/views/BaseWidget/basic/JSpace.vue";
 
 const store = useDeviceEchoLog()
 const schema = {
@@ -50,6 +51,7 @@ const headers = ref([
   {title: '操作类型', key: 'type'},
   {title: '记录内容', key: 'content', align: 'end'},
 ])
+const emit = defineEmits(['ngrok'])
 
 function displayAddress(address) {
   // 将字符串按换行符分割
@@ -86,16 +88,25 @@ function displayAddress(address) {
             #{{ store.activeDevice.deviceId }}/最后一次报告 {{ fromNowTimestamp(store.activeDevice.timestamp) }}
           </template>
           <template #action>
-            <primary-button
-              text="增加记录"
-              icon="mdi-plus"
-              @click="addInfo"
-            />
+            <j-space>
+              <secondary-button
+                icon="mdi-wifi"
+                @click="emit('ngrok')"
+              >
+                Ngrok
+              </secondary-button>
+              <primary-button
+                text="增加记录"
+                icon="mdi-plus"
+                @click="addInfo"
+              />
+            </j-space>
           </template>
         </page-sub-header>
         <v-tabs v-model="tab">
           <v-tab>操作记录</v-tab>
           <v-tab>详情</v-tab>
+          <v-tab>订阅</v-tab>
         </v-tabs>
       </v-card>
       <v-card
@@ -192,6 +203,9 @@ function displayAddress(address) {
               <v-spacer />
               <div>{{ store.activeDevice.note ?? '-' }}</div>
             </div>
+          </v-tabs-window-item>
+          <v-tabs-window-item>
+            <v-data-table :items="store.subscriptions" />
           </v-tabs-window-item>
         </v-tabs-window>
       </v-card>
