@@ -24,6 +24,10 @@ onMounted(() => {
 
 const headers = ref([
   {
+    title: '',
+    key: 'id',
+  },
+  {
     title: 'DeviceId/Note',
     key: 'deviceId',
   },
