@@ -5,13 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1777049f-9f7a-4424-9005-71635bd2b339" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/store/aaden/common/common.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/store/aaden/common/const.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/store/aaden/frontendStore.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/views/dashboard/frontend-dashboard.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/router/routes/default-routes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/router/routes/default-routes.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/store/aaden/cloud-v2-api.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/aaden/cloud-v2-api.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/form/image-to-cloud.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/form/image-to-cloud.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -192,7 +187,7 @@
       <workItem from="1726146452257" duration="1207000" />
       <workItem from="1726148160032" duration="4000" />
       <workItem from="1726157187977" duration="2126000" />
-      <workItem from="1726213460030" duration="10630000" />
+      <workItem from="1726213460030" duration="11708000" />
     </task>
     <servers />
   </component>

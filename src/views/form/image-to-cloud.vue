@@ -43,7 +43,7 @@
 </template>
 
 <script setup>
-import {computed, ref} from "vue";
+import {computed, ref, watch} from "vue";
 import {getEndPointUrl} from "@/old/utils/firebase";
 import hillo from "hillo";
 import {getImageFile, getNgrokResourceUrl, uploadFile} from "@/store/aaden/utils";
@@ -57,6 +57,8 @@ const startId = ref(1)
 const endId = ref(1)
 
 async function start() {
+  errors = []
+  logs.value = []
   for (const deviceId of targetDeviceIds.value) {
     try {
       await toCloudOne(deviceId)
@@ -77,6 +79,10 @@ const progressDisplay = ref("尚未开始");
 const logs = ref([]);
 let id = 0;
 let errors = [];
+
+watch(startId, () => {
+  endId.value = startId.value
+})
 
 function updateLog(dishName, progress, message, isError = false) {
   const existingLog = logs.value.find(log => log.dishName === dishName);
