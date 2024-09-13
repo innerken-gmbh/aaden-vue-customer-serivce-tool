@@ -3,8 +3,8 @@ import {getDeviceStatus, getEndPointUrl, getEventListForDeviceId} from '@/old/ut
 import hillo from 'hillo'
 import dayjs from 'dayjs'
 import {getAllSubscriptionForStore} from "../../old/utils/firebase";
+import {baseUrl} from "./cloud-v2-api";
 
-const baseUrl = "https://cloud-v2.aaden.io/"
 
 export const useDeviceEchoLog = defineStore('deviceLog', {
     state: () => {
@@ -82,10 +82,7 @@ export const useDeviceEchoLog = defineStore('deviceLog', {
                     deviceGroup: deviceGroup ?? "",
                     maxVersion
                 }
-                const response =
-                    await hillo.jsonPost('https://cloud-v2.aaden.io/deviceLog/update', dto)
-                console.log('Update Device Log Info:', response)
-                // 更新 deviceLogs 数据
+                await hillo.jsonPost(baseUrl + 'deviceLog/update', dto);
                 await this.updateDeviceLog()
             } catch (error) {
                 console.error('Error updating device log info:', error)
@@ -93,8 +90,7 @@ export const useDeviceEchoLog = defineStore('deviceLog', {
         },
         async addEventLog(logInfo) {
             try {
-                await hillo.jsonPost('https://cloud-v2.aaden.io/deviceLog/createEvent',
-                    logInfo);
+                await hillo.jsonPost(baseUrl + 'deviceLog/createEvent', logInfo);
                 await this.updateEventLogs()
             } catch (error) {
                 console.error('Error updating device log info:', error)

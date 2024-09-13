@@ -57,7 +57,7 @@ export async function getEventListForDeviceId(deviceId) {
 }
 
 export function getNgrokUrl(deviceId: string) {
-    return 'ik' + deviceId.padStart(4, '0') + '.ngrok.aaden.io'
+    return 'ik' + deviceId.toString().padStart(4, '0') + '.ngrok.aaden.io'
 }
 
 export function getEndPointUrl(deviceId: string) {

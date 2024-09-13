@@ -63,7 +63,7 @@ export default [
     children: [
       {
         parentPath: '/form',
-        menuUrl: '/form/manage',
+        menuUrl: '/form/image-to-cloud',
         menuName: '图片上云',
         cacheable: false,
       },
