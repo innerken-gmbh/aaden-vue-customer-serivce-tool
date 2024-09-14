@@ -1,6 +1,6 @@
 <script setup>
 import {onBeforeUnmount, onMounted, ref} from 'vue'
-import {random} from 'lodash-es'
+import {random,values} from 'lodash-es'
 import {fromNowTimestamp, useDeviceEchoLog} from '@/store/aaden/DeviceEcho'
 import DashboardLabel from "@/views/jh-widget/dashboard-label.vue";
 import {useDialogStore} from "@/store/aaden/dialogStore";
@@ -23,7 +23,7 @@ function updateMyFood() {
   myFood.value = foodArr.at(random(0, foodArr.length - 1)) ?? '糖醋里脊'
 }
 
-onMounted(() => {
+onMounted(async () => {
   const clear = setInterval(() => {
     if (autoRefresh.value) {
       deviceEchoLog.updateDeviceLog()
@@ -34,6 +34,10 @@ onMounted(() => {
   onBeforeUnmount(() => {
     clearInterval(clear)
   })
+  updateMyFood()
+  await deviceEchoLog.updateDeviceLog()
+  await deviceEchoLog.checkNgrok()
+
 })
 
 function getSchema() {
@@ -74,7 +78,7 @@ function clickItem(e, row) {
   deviceEchoLog.selectDevice(row.item)
 }
 
-updateMyFood()
+
 
 function getRowProp(data) {
   const props = {
@@ -108,7 +112,7 @@ function formatRestaurantInfo(restaurantInfoString) {
 
 const autoRefresh = ref(true)
 
-deviceEchoLog.updateDeviceLog()
+
 
 function showNgrokForDevice(device) {
   window.open(rawNgrokUrl + '1' + device.deviceId.toString().padStart(4, '0'))
@@ -181,6 +185,18 @@ function displayAddress(address) {
           {{
             deviceEchoLog.activeDeviceLogs.filter(it => !deviceEchoLog.diskOk(it)).length
           }}
+        </dashboard-label>
+        <dashboard-label
+          :loading="deviceEchoLog.ngrokLoading"
+          color="blue-lighten-4"
+          @click="deviceEchoLog.checkNgrok"
+        >
+          <template #label>
+            Ngrok状态(点这里手动刷新)
+          </template>
+          貌似开启了{{
+            values(deviceEchoLog.ngrokStatus).filter(it=>it).length
+          }}个
         </dashboard-label>
         <v-text-field
           v-model="deviceEchoLog.search"
@@ -267,6 +283,7 @@ function displayAddress(address) {
         <template #[`item.action`]="{ item }">
           <j-space>
             <mini-action-button
+              :color="deviceEchoLog.ngrokStatus[item.deviceId]?'green-darken-4':'grey-lighten-4'"
               text="Ngrok"
               @click="showNgrokForDevice(item)"
             />

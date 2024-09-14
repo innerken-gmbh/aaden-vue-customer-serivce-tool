@@ -1,5 +1,6 @@
 <script setup>
-defineProps(['color'])
+defineProps(['color','loading'])
+const emit=defineEmits(['click'])
 
 </script>
 
@@ -7,15 +8,28 @@ defineProps(['color'])
   <v-sheet
     :color="color"
     class="pa-2 px-4"
+    @click="emit('click')"
   >
-    <div>
-      <div class="text-caption font-weight-light">
-        <slot name="label" />
+    <template v-if="loading">
+      <div>
+        <div class="text-caption font-weight-light">
+          <slot name="label" />
+        </div>
+        <div class="text-body-2 font-weight-black">
+          正在加载中🚶‍.....
+        </div>
       </div>
-      <div class="text-body-2 font-weight-black">
-        <slot name="default" />
+    </template>
+    <template v-else>
+      <div>
+        <div class="text-caption font-weight-light">
+          <slot name="label" />
+        </div>
+        <div class="text-body-2 font-weight-black">
+          <slot name="default" />
+        </div>
       </div>
-    </div>
+    </template>
   </v-sheet>
 </template>
 

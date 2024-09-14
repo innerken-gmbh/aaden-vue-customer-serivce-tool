@@ -1,4 +1,6 @@
 import hillo from "hillo";
+import {getEndPointUrl} from "../../old/utils/firebase";
+import {keyBy, mapValues} from "lodash-es";
 
 function generateCorsUrl(url) {
     return "https://aaden.online/jsonProxy.php?chaos=" + new Date().getTime() + "&url=" + url
@@ -32,3 +34,40 @@ export async function uploadFile(file) {
 }
 
 
+async function isNgrokEnabled(deviceId) {
+
+    try {
+        const result = await hillo.get(getEndPointUrl(deviceId) + 'AccessLog.php?op=deviceId', {}, {
+            timeout: 5 * 1000
+        })
+        if (result) {
+            return true
+        }
+    } catch (e) {
+
+    }
+    return false
+
+
+}
+
+export async function checkNgrokStatus(deviceIds) {
+    // 创建一个包含所有promise的数组
+    const promises = deviceIds.map(async deviceId => {
+        const isEnabled = await isNgrokEnabled(deviceId);
+        return {deviceId, isEnabled};
+    });
+
+    // 等待所有promise完成，无论成功还是失败
+    const results = await Promise.allSettled(promises);
+
+    // 只保留fulfilled状态的结果，并通过lodash的keyBy转化为对象
+    const fulfilledResults = results
+        .filter(result => result.status === 'fulfilled')
+        .map(result => result.value);
+
+    const statusMap = keyBy(fulfilledResults, 'deviceId');
+
+    // 转化为仅包含布尔值的对象
+    return mapValues(statusMap, 'isEnabled');
+}
