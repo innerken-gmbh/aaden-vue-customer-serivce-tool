@@ -38,7 +38,7 @@ async function isNgrokEnabled(deviceId) {
 
     try {
         const result = await hillo.get(getEndPointUrl(deviceId) + 'AccessLog.php?op=deviceId', {}, {
-            timeout: 5 * 1000
+            timeout: 20 * 1000
         })
         if (result) {
             return true
