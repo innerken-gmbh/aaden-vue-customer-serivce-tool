@@ -6,7 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="1777049f-9f7a-4424-9005-71635bd2b339" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/store/aaden/utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/aaden/utils.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/aaden/DeviceEcho.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/aaden/DeviceEcho.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/dashboard/work-place.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/dashboard/work-place.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -194,7 +195,8 @@
       <workItem from="1726299752373" duration="42000" />
       <workItem from="1726304306152" duration="255000" />
       <workItem from="1726304575444" duration="1154000" />
-      <workItem from="1726306108110" duration="1237000" />
+      <workItem from="1726306108110" duration="1860000" />
+      <workItem from="1726386691312" duration="4807000" />
     </task>
     <servers />
   </component>

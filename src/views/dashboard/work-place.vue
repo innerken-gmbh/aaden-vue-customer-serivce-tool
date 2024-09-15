@@ -36,7 +36,6 @@ onMounted(async () => {
   })
   updateMyFood()
   await deviceEchoLog.updateDeviceLog()
-  await deviceEchoLog.checkNgrok()
 
 })
 
@@ -158,7 +157,8 @@ function displayAddress(address) {
           <template #label>
             结果总数
           </template>
-          {{ deviceEchoLog.activeDeviceLogs.length }}
+          {{ deviceEchoLog.activeDeviceLogs.length }}(
+          {{ deviceEchoLog.activeDeviceLogs.filter(it => it.deviceOnline).length }})
         </dashboard-label>
         <dashboard-label color="grey-lighten-4">
           <template #label>
@@ -192,11 +192,11 @@ function displayAddress(address) {
           @click="deviceEchoLog.checkNgrok"
         >
           <template #label>
-            Ngrok状态(点这里手动刷新)
+            Ngrok状态
           </template>
-          貌似开启了{{
-            values(deviceEchoLog.ngrokStatus).filter(it=>it).length
-          }}个
+          {{
+            deviceEchoLog.activeDeviceLogs.filter(it => it.ngrokOnline).length
+          }}
         </dashboard-label>
         <v-text-field
           v-model="deviceEchoLog.search"
@@ -283,7 +283,7 @@ function displayAddress(address) {
         <template #[`item.action`]="{ item }">
           <j-space>
             <mini-action-button
-              :color="deviceEchoLog.ngrokStatus[item.deviceId]?'green-darken-4':'grey-lighten-4'"
+              :color="item.ngrokOnline?'green-darken-4':'grey-lighten-4'"
               text="Ngrok"
               @click="showNgrokForDevice(item)"
             />

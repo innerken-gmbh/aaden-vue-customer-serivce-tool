@@ -18,8 +18,6 @@ export const useDeviceEchoLog = defineStore('deviceLog', {
             lastUpdateTimestamp: '',
             channels: Object.values(ChannelsInfo),
             subscriptions: [],
-            ngrokStatus: {},
-            ngrokLoading: false,
             activeChannelName: '',
             activeDevice: null,
             showDetail: false,
@@ -32,12 +30,6 @@ export const useDeviceEchoLog = defineStore('deviceLog', {
         }
     },
     actions: {
-        async checkNgrok() {
-            this.ngrokLoading = true
-            this.ngrokStatus = await checkNgrokStatus(this.deviceLogs.map(it => it.deviceId))
-            console.log(this.ngrokStatus,'load ok')
-            this.ngrokLoading = false
-        },
         async selectDevice(deviceLog) {
             this.activeDevice = deviceLog
             this.showDetail = true
