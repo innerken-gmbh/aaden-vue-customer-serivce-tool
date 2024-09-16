@@ -6,6 +6,7 @@ import {ref} from "vue";
 import PageSubHeader from "@/views/BaseWidget/basic/PageSubHeader.vue";
 import SecondaryButton from "@/views/BaseWidget/basic/button/SecondaryButton.vue";
 import JSpace from "@/views/BaseWidget/basic/JSpace.vue";
+import LoadingProvider from "@/views/BaseWidget/basic/premade/LoadingProvider.vue";
 
 const store = useDeviceEchoLog()
 const schema = {
@@ -77,138 +78,159 @@ function displayAddress(address) {
     <v-card
       v-if="store.showDetail"
     >
-      <v-card
-        variant="flat"
-        color="grey-lighten-4"
-        class="pa-4 pb-0"
-      >
-        <page-sub-header>
-          机器详情
-          <template #subtitle>
-            #{{ store.activeDevice.deviceId }}/最后一次报告 {{ fromNowTimestamp(store.activeDevice.timestamp) }}
-          </template>
-          <template #action>
-            <j-space>
-              <secondary-button
-                icon="mdi-wifi"
-                @click="emit('ngrok')"
-              >
-                Ngrok
-              </secondary-button>
-              <primary-button
-                text="增加记录"
-                icon="mdi-plus"
-                @click="addInfo"
-              />
-            </j-space>
-          </template>
-        </page-sub-header>
-        <v-tabs v-model="tab">
-          <v-tab>操作记录</v-tab>
-          <v-tab>详情</v-tab>
-          <v-tab>订阅</v-tab>
-        </v-tabs>
-      </v-card>
-      <v-card
-        flat
-        class="pa-4"
-      >
-        <v-tabs-window
-          v-model="tab"
-          style="width: 100%"
+      <loading-provider :loading="store.detailLoading">
+        <v-card
+          variant="flat"
+          color="grey-lighten-4"
+          class="pa-4 pb-0"
         >
-          <v-tabs-window-item>
-            <v-data-table
-              :headers="headers"
-              :items="store.eventLogs"
-            >
-              <template #[`item.createTimestamp`]="{ item }">
-                {{ fromNowTimestamp(item.createTimestamp) }}
-              </template>
-            </v-data-table>
-          </v-tabs-window-item>
-          <v-tabs-window-item style="width: 100%">
-            <div
-              class="d-flex mb-2"
-              style="width: 100%"
-            >
-              <div class="text-body-2">
-                餐厅信息
-              </div>
-              <v-spacer />
+          <page-sub-header>
+            机器详情
+            <template #subtitle>
+              #{{ store.activeDevice.deviceId }}/最后一次报告 {{ fromNowTimestamp(store.activeDevice.timestamp) }}
+            </template>
+            <template #action>
+              <j-space>
+                <secondary-button
+                  icon="mdi-wifi"
+                  @click="emit('ngrok')"
+                >
+                  Ngrok
+                </secondary-button>
+                <primary-button
+                  text="增加记录"
+                  icon="mdi-plus"
+                  @click="addInfo"
+                />
+              </j-space>
+            </template>
+          </page-sub-header>
+          <v-tabs v-model="tab">
+            <v-tab>操作记录</v-tab>
+            <v-tab>详情</v-tab>
+            <v-tab>Ngrok连接情况</v-tab>
+          </v-tabs>
+        </v-card>
+        <v-card
+          flat
+          class="pa-4"
+        >
+          <v-tabs-window
+            v-model="tab"
+            style="width: 100%"
+          >
+            <v-tabs-window-item>
+              <v-data-table
+                :headers="headers"
+                :items="store.eventLogs"
+              >
+                <template #[`item.createTimestamp`]="{ item }">
+                  {{ fromNowTimestamp(item.createTimestamp) }}
+                </template>
+              </v-data-table>
+            </v-tabs-window-item>
+            <v-tabs-window-item style="width: 100%">
               <div
-                class="text-right"
-                v-html="displayAddress(store.activeDevice.deviceName)"
-              />
-            </div>
-            <div
-              class="d-flex mb-2"
-              style="width: 100%"
-            >
-              <div class="text-body-2">
-                Cli版本
+                class="d-flex mb-2"
+                style="width: 100%"
+              >
+                <div class="text-body-2">
+                  餐厅信息
+                </div>
+                <v-spacer />
+                <div
+                  class="text-right"
+                  v-html="displayAddress(store.activeDevice.deviceName)"
+                />
               </div>
-              <v-spacer />
-              <div>{{ store.activeDevice.cliVersion }}</div>
-            </div>
-            <div
-              class="d-flex mb-2"
-              style="width: 100%"
-            >
-              <div class="text-body-2">
-                后端版本
+              <div
+                class="d-flex mb-2"
+                style="width: 100%"
+              >
+                <div class="text-body-2">
+                  Cli版本
+                </div>
+                <v-spacer />
+                <div>{{ store.activeDevice.cliVersion }}</div>
               </div>
-              <v-spacer />
-              <div>{{ store.activeDevice.backendVersion }}</div>
-            </div>
-            <div
-              class="d-flex mb-2"
-              style="width: 100%"
-            >
-              <div class="text-body-2">
-                Ngrok
+              <div
+                class="d-flex mb-2"
+                style="width: 100%"
+              >
+                <div class="text-body-2">
+                  后端版本
+                </div>
+                <v-spacer />
+                <div>{{ store.activeDevice.backendVersion }}</div>
               </div>
-              <v-spacer />
-              <div>{{ store.activeDevice.ngrokOk }}</div>
-            </div>
+              <div
+                class="d-flex mb-2"
+                style="width: 100%"
+              >
+                <div class="text-body-2">
+                  Ngrok
+                </div>
+                <v-spacer />
+                <div>{{ store.activeDevice.ngrokOk }}</div>
+              </div>
 
-            <div
-              class="d-flex mb-2"
-              style="width: 100%"
-            >
-              <div class="text-body-2">
-                磁盘情况
+              <div
+                class="d-flex mb-2"
+                style="width: 100%"
+              >
+                <div class="text-body-2">
+                  磁盘情况
+                </div>
+                <v-spacer />
+                <div>{{ store.activeDevice.diskUsage }}</div>
               </div>
-              <v-spacer />
-              <div>{{ store.activeDevice.diskUsage }}</div>
-            </div>
 
-            <div
-              class="d-flex mb-2"
-              style="width: 100%"
-            >
-              <div class="text-body-2">
-                开机时间
+              <div
+                class="d-flex mb-2"
+                style="width: 100%"
+              >
+                <div class="text-body-2">
+                  开机时间
+                </div>
+                <v-spacer />
+                <div>{{ store.activeDevice.lastUptime }}</div>
               </div>
-              <v-spacer />
-              <div>{{ store.activeDevice.lastUptime }}</div>
-            </div>
-            <div
-              class="d-flex mb-2"
-              style="width: 100%"
-            >
-              <div class="text-body-2">
-                备注
+              <div
+                class="d-flex mb-2"
+                style="width: 100%"
+              >
+                <div class="text-body-2">
+                  备注
+                </div>
+                <v-spacer />
+                <div>{{ store.activeDevice.note ?? '-' }}</div>
               </div>
-              <v-spacer />
-              <div>{{ store.activeDevice.note ?? '-' }}</div>
-            </div>
-          </v-tabs-window-item>
-          <v-tabs-window-item>
-            <v-data-table :items="store.subscriptions" />
-          </v-tabs-window-item>
-        </v-tabs-window>
-      </v-card>
+            </v-tabs-window-item>
+            <v-tabs-window-item>
+              每一格代表15分钟,由新到旧
+              <div style="display: grid;grid-template-columns: repeat(24,minmax(0,1fr));grid-gap: 2px">
+                <v-tooltip
+                  v-for="ng in store.recentNgrokStatus"
+                  :key="ng.id"
+                  :text="ng.createTimestamp"
+                >
+                  <template #activator="{ props }">
+                    <v-card
+
+                      v-bind="props"
+                      rounded="0"
+                      flat
+                      :color="ng.ngrokOk?'green-darken-4':'red-darken-4'"
+                    >
+                      <v-responsive :aspect-ratio="1" />
+                    </v-card>
+                  </template>
+                </v-tooltip>
+              </div>
+            </v-tabs-window-item>
+          </v-tabs-window>
+        </v-card>
+      </loading-provider>
     </v-card>
   </v-dialog>
 </template>

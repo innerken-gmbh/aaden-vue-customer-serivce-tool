@@ -17,3 +17,7 @@ export async function getFrontendLogInfo() {
 export async function getFrontendTypes() {
     return await hillo.get(baseUrl + "api/frontend-logs/frontend-types")
 }
+
+export async function getRecentNgrokStatus(deviceId) {
+    return await hillo.get(baseUrl + "ngrok/" + deviceId + '/recent')
+}

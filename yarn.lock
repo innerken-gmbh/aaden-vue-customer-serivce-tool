@@ -3143,10 +3143,10 @@ highlight.js@^11.8.0:
   resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-11.10.0.tgz#6e3600dc4b33d6dc23d5bd94fbf72405f5892b92"
   integrity sha512-SYVnVFswQER+zu1laSya563s+F8VDGt7o35d4utbamowvUNLLMovFqwCLSocpZTz3MgaSRA1IbqRWZv97dtErQ==
 
-hillo@^2.0.36:
-  version "2.0.36"
-  resolved "https://registry.yarnpkg.com/hillo/-/hillo-2.0.36.tgz#17c8f14b7d693b0659987523625b688b859fee86"
-  integrity sha512-XY1Exdd94Y/YAAeBujzgDh8luEZIgoT7WMQYS2wLClKEU/rt7gx8FykHHygsORAX1E/nm9lB86X7tcgx5VXCVQ==
+hillo@^2.0.37:
+  version "2.0.37"
+  resolved "https://registry.yarnpkg.com/hillo/-/hillo-2.0.37.tgz#c349674bf674636c975eed7900024fb392886893"
+  integrity sha512-3J/gkiTgAP3kkxYytklZ4J52rtUCDmsIsv0h82xYteVm8ubRXcWHEWUJLQnjA4KDp3r5WKYyF07b6WrUx8exTw==
   dependencies:
     "@sweetalert2/theme-material-ui" "^3.1.4"
     axios "^0.19.2"
