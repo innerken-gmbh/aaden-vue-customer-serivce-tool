@@ -284,15 +284,9 @@ function displayAddress(address) {
         <template #[`item.action`]="{ item }">
           <j-space>
             <mini-action-button
-              :color="item.ngrokOnline?'green-darken-4':'grey-lighten-4'"
+              :color="item.ngrokOnline?'green-darken-4':(item.deviceOnline?'pink-darken-4':'grey-lighten-4')"
               text="Ngrok"
               @click="showNgrokForDevice(item)"
-            />
-
-            <mini-action-button
-              v-if="item.deviceOnline&&!item.ngrokOnline"
-              :color="item.deviceOnline?'yellow-darken-4':'grey-lighten-4'"
-              text="在线"
             />
             <mini-action-button
               text="修改信息"
