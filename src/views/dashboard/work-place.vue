@@ -200,6 +200,7 @@ function displayAddress(address) {
         </dashboard-label>
         <v-text-field
           v-model="deviceEchoLog.search"
+          clearable
           hide-details
           prepend-inner-icon="mdi-magnify"
         />
@@ -207,7 +208,7 @@ function displayAddress(address) {
 
       <v-data-table
         :row-props="getRowProp"
-        :items-per-page="-1"
+        :items-per-page="50"
         :items="deviceEchoLog.activeDeviceLogs"
         :headers="headers"
         @click:row="clickItem"

@@ -207,7 +207,7 @@ function displayAddress(address) {
               </div>
             </v-tabs-window-item>
             <v-tabs-window-item>
-              每一格代表15分钟,由新到旧
+              每一格代表15分钟,由新到旧,每一行代表6个小时
               <div style="display: grid;grid-template-columns: repeat(24,minmax(0,1fr));grid-gap: 2px">
                 <v-tooltip
                   v-for="ng in store.recentNgrokStatus"
