@@ -288,6 +288,12 @@ function displayAddress(address) {
               text="Ngrok"
               @click="showNgrokForDevice(item)"
             />
+
+            <mini-action-button
+              v-if="item.deviceOnline&&!item.ngrokOnline"
+              :color="item.deviceOnline?'yellow-darken-4':'grey-lighten-4'"
+              text="在线"
+            />
             <mini-action-button
               text="修改信息"
               @click="updateInfo(item)"
