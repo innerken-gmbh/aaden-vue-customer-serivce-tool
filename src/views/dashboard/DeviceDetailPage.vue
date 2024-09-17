@@ -200,6 +200,16 @@ function displayAddress(address) {
                 style="width: 100%"
               >
                 <div class="text-body-2">
+                  注册时间
+                </div>
+                <v-spacer />
+                <div>{{ fromNowTimestamp(store.activeDevice.createTimestamp) }}</div>
+              </div>
+              <div
+                class="d-flex mb-2"
+                style="width: 100%"
+              >
+                <div class="text-body-2">
                   备注
                 </div>
                 <v-spacer />
