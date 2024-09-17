@@ -335,6 +335,8 @@ function displayAddress(address) {
           正在显示： {{ iframeUrl }}
           <v-spacer />
           <a
+            target="_blank"
+            rel="noopener noreferrer"
             class="underline d-flex align-center text-blue"
             :href="iframeUrl"
           >打开
