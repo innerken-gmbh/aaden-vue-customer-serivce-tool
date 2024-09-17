@@ -1,12 +1,13 @@
 <script setup>
 import {onBeforeUnmount, onMounted, ref} from 'vue'
-import {random,values} from 'lodash-es'
+import {random} from 'lodash-es'
 import {fromNowTimestamp, useDeviceEchoLog} from '@/store/aaden/DeviceEcho'
 import DashboardLabel from "@/views/jh-widget/dashboard-label.vue";
 import {useDialogStore} from "@/store/aaden/dialogStore";
 import MiniActionButton from "@/views/BaseWidget/basic/button/MiniActionButton.vue";
 import JSpace from "@/views/BaseWidget/basic/JSpace.vue";
 import DeviceDetailPage from "@/views/dashboard/DeviceDetailPage.vue";
+import {getNgrokUrl} from "@/old/utils/firebase";
 
 const deviceEchoLog = useDeviceEchoLog()
 const myFood = ref('糖醋里脊')
@@ -77,6 +78,25 @@ function clickItem(e, row) {
   deviceEchoLog.selectDevice(row.item)
 }
 
+const iframeUrl = ref("")
+const showIframe = ref(false)
+
+function showIframePageForUrl(url) {
+  iframeUrl.value = url
+  showIframe.value = true
+}
+
+function showFrontendForDeviceId(item) {
+  const ngrokUrl = getNgrokUrl(item.deviceId)
+  const url = "https://aaden-app.vercel.app/?Base=" + ngrokUrl
+  showIframePageForUrl(url)
+}
+
+function showAdminForDeviceId(item) {
+  const ngrokUrl = getNgrokUrl(item.deviceId)
+  const url = "https://admin.aaden.io/?Base=" + ngrokUrl
+  showIframePageForUrl(url)
+}
 
 
 function getRowProp(data) {
@@ -90,7 +110,7 @@ function getRowProp(data) {
 }
 
 const headers = ref([
-  {title: '操作', key: 'action', align: 'start'},
+  {title: '操作', key: 'action', align: 'start', width: 100},
   {
     title: 'DeviceId/Note',
     key: 'deviceId',
@@ -110,7 +130,6 @@ function formatRestaurantInfo(restaurantInfoString) {
 }
 
 const autoRefresh = ref(true)
-
 
 
 function showNgrokForDevice(device) {
@@ -289,7 +308,17 @@ function displayAddress(address) {
               @click="showNgrokForDevice(item)"
             />
             <mini-action-button
-              text="修改信息"
+              :color="item.ngrokOnline?'blue':'grey-lighten-4'"
+              text="中台"
+              @click="showAdminForDeviceId(item)"
+            />
+            <mini-action-button
+              :color="item.ngrokOnline?'indigo':'grey-lighten-4'"
+              text="前端"
+              @click="showFrontendForDeviceId(item)"
+            />
+            <mini-action-button
+              text="信息"
               @click="updateInfo(item)"
             />
           </j-space>
@@ -297,5 +326,32 @@ function displayAddress(address) {
       </v-data-table>
     </v-card>
     <device-detail-page @ngrok="showNgrokForDevice(deviceEchoLog.activeDevice)" />
+    <v-dialog
+      v-model="showIframe"
+      max-width="1600"
+    >
+      <v-card color="black">
+        <div class="pa-2 d-flex">
+          正在显示： {{ iframeUrl }}
+          <v-spacer />
+          <a
+            class="underline d-flex align-center text-blue"
+            :href="iframeUrl"
+          >打开
+            <v-icon
+              size="16"
+              class="ml-2 mb-1"
+            >mdi-open-in-new
+            </v-icon>
+          </a>
+        </div>
+        <iframe
+          v-if="showIframe"
+          height="900"
+          width="1600"
+          :src="iframeUrl"
+        />
+      </v-card>
+    </v-dialog>
   </div>
 </template>
