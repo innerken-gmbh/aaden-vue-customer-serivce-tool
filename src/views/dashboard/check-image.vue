@@ -1,6 +1,7 @@
 <script setup>
 import {onMounted, ref, watch} from 'vue'
 import {getDishImages} from "@/store/aaden/cloud-v2-api";
+import LoadingProvider from "@/views/BaseWidget/basic/premade/LoadingProvider.vue";
 
 
 onMounted(async () => {
@@ -9,10 +10,13 @@ onMounted(async () => {
 let allImgList = ref([])
 let searchDeviceId = ref('')
 let currentList = ref([])
+let loading = ref(false)
 
 async function reload() {
+  loading.value = true
   allImgList.value = await getDishImages()
   currentList.value = allImgList.value
+  loading.value = false
 }
 
 
@@ -30,43 +34,46 @@ watch((searchDeviceId),async (value) => {
 </script>
 
 <template>
-  <div class="main-container">
-    <div
-      class="d-flex mt-2"
-    >
-      <div />
-      <v-spacer />
-      <v-text-field
-        v-model="searchDeviceId"
-        hide-details
-        label="DeviceId"
-        variant="outlined"
-        prepend-inner-icon="mdi-magnify"
-        style="max-width: 300px"
-      />
-    </div>
-    <div
-      style="display: grid;grid-template-columns: repeat(8,minmax(0,1fr))"
-    >
+  <div>
+    <loading-provider :loading="loading">
       <div
-        v-for="(img,index) in currentList"
-        :key="index"
-        class="pa-2"
+        class="d-flex mt-2"
       >
-        <v-card
-          out-lined
-          elevation="0"
-          class="d-flex align-center justify-center flex-column"
-        >
-          <v-img
-            aspect-ratio="1"
-            :width="300"
-            :src="img.imagePath"
-          />
-          <div>DeviceId: {{ img.deviceId }}</div>
-          <div>DishId: {{ img.dishesId }}</div>
-        </v-card>
+        <div />
+        <v-spacer />
+        <v-text-field
+          v-model="searchDeviceId"
+          hide-details
+          label="DeviceId"
+          variant="outlined"
+          prepend-inner-icon="mdi-magnify"
+          style="max-width: 300px"
+        />
       </div>
-    </div>
+
+      <div
+        style="display: grid;grid-template-columns: repeat(8,minmax(0,1fr))"
+      >
+        <div
+          v-for="(img,index) in currentList"
+          :key="index"
+          class="pa-2"
+        >
+          <v-card
+            out-lined
+            elevation="0"
+            class="d-flex align-center justify-center flex-column"
+          >
+            <v-img
+              aspect-ratio="1"
+              :width="300"
+              :src="img.imagePath"
+            />
+            <div>DeviceId: {{ img.deviceId }}</div>
+            <div>DishId: {{ img.dishesId }}</div>
+          </v-card>
+        </div>
+      </div>
+    </loading-provider>
   </div>
 </template>

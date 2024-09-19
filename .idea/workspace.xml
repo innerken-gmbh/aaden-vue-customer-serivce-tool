@@ -5,11 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1777049f-9f7a-4424-9005-71635bd2b339" name="Changes" comment="Changes">
-      <change afterPath="$PROJECT_DIR$/src/views/dashboard/check-image.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/components.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/router/routes/default-routes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/router/routes/default-routes.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/store/aaden/cloud-v2-api.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/aaden/cloud-v2-api.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/dashboard/check-image.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/dashboard/check-image.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -212,7 +209,7 @@
       <workItem from="1726494493483" duration="3000" />
       <workItem from="1726561506065" duration="2190000" />
       <workItem from="1726565404003" duration="66000" />
-      <workItem from="1726725648343" duration="2524000" />
+      <workItem from="1726725648343" duration="3635000" />
     </task>
     <servers />
   </component>
