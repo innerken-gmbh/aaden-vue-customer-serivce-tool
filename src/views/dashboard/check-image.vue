@@ -96,6 +96,7 @@ watch((searchDeviceId),async (value) => {
         <v-btn
           v-if="!editMode"
           color="info"
+          class="ml-2"
           variant="outlined"
           @click="changeMode('1')"
         >

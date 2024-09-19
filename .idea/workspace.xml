@@ -4,14 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1777049f-9f7a-4424-9005-71635bd2b339" name="Changes" comment="Changes">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/store/aaden/cloud-v2-api.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/aaden/cloud-v2-api.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/store/aaden/utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/aaden/utils.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/dashboard/check-image.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/dashboard/check-image.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
-    </list>
+    <list default="true" id="1777049f-9f7a-4424-9005-71635bd2b339" name="Changes" comment="Changes" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -213,7 +206,7 @@
       <workItem from="1726494493483" duration="3000" />
       <workItem from="1726561506065" duration="2190000" />
       <workItem from="1726565404003" duration="66000" />
-      <workItem from="1726725648343" duration="11705000" />
+      <workItem from="1726725648343" duration="11879000" />
     </task>
     <servers />
   </component>
