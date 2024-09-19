@@ -2,7 +2,7 @@ import hillo from "hillo";
 import {getEndPointUrl} from "../../old/utils/firebase";
 import {keyBy, mapValues} from "lodash-es";
 
-function generateCorsUrl(url) {
+export function generateCorsUrl(url) {
     return "https://aaden.online/jsonProxy.php?chaos=" + new Date().getTime() + "&url=" + url
 }
 
