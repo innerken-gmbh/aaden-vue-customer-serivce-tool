@@ -21,3 +21,7 @@ export async function getFrontendTypes() {
 export async function getRecentNgrokStatus(deviceId) {
     return await hillo.get(baseUrl + "ngrok/" + deviceId + '/recent')
 }
+
+export async function getDishImages() {
+    return await hillo.get(baseUrl + "api/dish-images")
+}

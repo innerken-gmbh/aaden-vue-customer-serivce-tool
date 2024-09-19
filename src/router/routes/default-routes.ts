@@ -34,6 +34,11 @@ export default [
         routeName: 'frontend-dashboard',
       },
       {
+        parentPath: '/dashboard',
+        menuUrl: '/dashboard/check-image',
+        menuName: '图库',
+      },
+      {
         parentPath: '/store-management',
         menuUrl: '/store-management/manage-store',
         menuName: '查看门店界面',
