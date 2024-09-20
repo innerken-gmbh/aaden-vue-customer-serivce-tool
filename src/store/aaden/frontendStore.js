@@ -1,7 +1,7 @@
 import {getFrontendLogInfo, getFrontendTypes} from "./cloud-v2-api";
 import {defineStore} from "pinia";
 import {getNormalStore} from "./common/common";
-import {computed, ref} from "vue";
+import {computed, ref, watch} from "vue";
 
 const FrontendLogManager = {
     list: async function () {
@@ -13,6 +13,7 @@ const FrontendLogManager = {
 export const useFrontendStore = defineStore("frontend-logs", () => {
     const frontendTypes = ref([])
     const selectedFrontendTypes = ref([])
+    const search = ref('')
 
     async function loadTypes() {
         frontendTypes.value = await getFrontendTypes()
@@ -25,6 +26,9 @@ export const useFrontendStore = defineStore("frontend-logs", () => {
     } = getNormalStore(FrontendLogManager, loadTypes)
 
     const displayList = computed(() => {
+        if (search.value) {
+            list.value = list.value.filter(it => it.deviceId.toString() === search.value.toString())
+        }
         if (selectedFrontendTypes.value.length === 0) {
             return list.value
         } else {
@@ -33,6 +37,6 @@ export const useFrontendStore = defineStore("frontend-logs", () => {
     })
     return {
         displayList,
-        list, loading, reload, frontendTypes, selectedFrontendTypes
+        list, loading, reload, frontendTypes, selectedFrontendTypes, search
     }
 })

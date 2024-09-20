@@ -94,6 +94,7 @@ export const useDeviceEchoLog = defineStore('deviceLog', {
             }
         },
         async addEventLog(logInfo) {
+            logInfo.type = '人工操作'
             try {
                 await hillo.jsonPost(baseUrl + 'deviceLog/createEvent', logInfo);
                 await this.updateEventLogs()

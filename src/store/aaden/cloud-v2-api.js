@@ -42,3 +42,7 @@ export async function editDish (id,item) {
         },
         {showLoading: false})
 }
+
+export async function getLogsByDeviceId (id) {
+    return await hillo.get(baseUrl+'api/frontend-logs/by-device/' + id)
+}

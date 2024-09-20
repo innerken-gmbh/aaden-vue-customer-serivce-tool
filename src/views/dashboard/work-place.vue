@@ -8,6 +8,7 @@ import MiniActionButton from "@/views/BaseWidget/basic/button/MiniActionButton.v
 import JSpace from "@/views/BaseWidget/basic/JSpace.vue";
 import DeviceDetailPage from "@/views/dashboard/DeviceDetailPage.vue";
 import {getNgrokUrl} from "@/old/utils/firebase";
+import {recordSchema} from "@/old/utils/recordSchema";
 
 const deviceEchoLog = useDeviceEchoLog()
 const myFood = ref('糖醋里脊')
@@ -63,6 +64,7 @@ function getSchema() {
 }
 
 const dialogStore = useDialogStore()
+const store = useDeviceEchoLog()
 
 async function updateInfo(item) {
   const info = await dialogStore.editItem(getSchema(), item)
@@ -72,6 +74,14 @@ async function updateInfo(item) {
         await deviceEchoLog.updateDeviceLogInfo(info.deviceId, info.deviceGroup, info.maxVersion)
       }
   )
+}
+
+async function createNewNote (item) {
+  const info = await dialogStore.editItem(recordSchema)
+  info.deviceId = item.deviceId
+  await dialogStore.waitFor(async () => {
+    await store.addEventLog(info)
+  })
 }
 
 function clickItem(e, row) {
@@ -112,8 +122,12 @@ function getRowProp(data) {
 const headers = ref([
   {title: '操作', key: 'action', align: 'start', width: 100},
   {
-    title: 'DeviceId/Note',
+    title: 'DeviceId',
     key: 'deviceId',
+  },
+  {
+    title: '最新动态',
+    key: 'deviceGroup',
   },
   {
     title: '门店名称',
@@ -318,8 +332,8 @@ function displayAddress(address) {
               @click="showFrontendForDeviceId(item)"
             />
             <mini-action-button
-              text="信息"
-              @click="updateInfo(item)"
+              text="备注"
+              @click="createNewNote(item)"
             />
           </j-space>
         </template>

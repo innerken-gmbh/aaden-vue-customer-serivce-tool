@@ -2,43 +2,25 @@
 import {fromNowTimestamp, useDeviceEchoLog} from "@/store/aaden/DeviceEcho";
 import PrimaryButton from "@/views/BaseWidget/basic/button/PrimaryButton.vue";
 import {useDialogStore} from "@/store/aaden/dialogStore";
-import {ref} from "vue";
+import {computed, onMounted, ref} from "vue";
 import PageSubHeader from "@/views/BaseWidget/basic/PageSubHeader.vue";
 import SecondaryButton from "@/views/BaseWidget/basic/button/SecondaryButton.vue";
 import JSpace from "@/views/BaseWidget/basic/JSpace.vue";
 import LoadingProvider from "@/views/BaseWidget/basic/premade/LoadingProvider.vue";
+import {recordSchema} from "@/old/utils/recordSchema";
+import {getLogsByDeviceId} from "@/store/aaden/cloud-v2-api";
 
 const store = useDeviceEchoLog()
-const schema = {
-  title: '新增事件记录',
-  subtitle: '可要好好修改，不要改错了',
-  schemas: [
-    {
-      key: 'content',
-      name: '记录内容',
-      required: true,
-      default: "",
-      hint: '发生什么事了'
-    },
-    {
-      key: 'type',
-      name: '记录类型',
-      hint: '想写什么写什么',
-      default: "人工操作",
-    },
-    {
-      key: 'operator',
-      name: '操作人员',
-      hint: '是谁干的好事',
-      default: "刘畅",
-    },
-  ]
-}
 const tab = ref(0)
 const dialogStore = useDialogStore()
+const logInfo = ref([])
+
+onMounted(async () => {
+  logInfo.value = await getLogsByDeviceId(store.activeDevice.deviceId)
+})
 
 async function addInfo() {
-  const info = await dialogStore.editItem(schema)
+  const info = await dialogStore.editItem(recordSchema)
   console.log(info)
   info.deviceId = store.activeDevice.deviceId
   await dialogStore.waitFor(async () => {
@@ -46,11 +28,35 @@ async function addInfo() {
   })
 }
 
+async function stopAutoUpdate (value) {
+  let info = {}
+  if (value === '1') {
+    info.maxVersion = '1.1.1'
+  } else {
+    info.maxVersion = '-1'
+  }
+  info.deviceId = store.activeDevice.deviceId
+  info.deviceGroup = store.activeDevice.deviceGroup
+  await store.updateDeviceLogInfo(info.deviceId, info.deviceGroup, info.maxVersion)
+  store.showDetail = false
+
+}
+
+const currentMaxVersion = computed(() => {
+  return store.activeDevice.maxVersion
+})
+
 const headers = ref([
   {title: '记录时间', key: 'createTimestamp',},
   {title: '操作员', key: 'operator'},
   {title: '操作类型', key: 'type'},
   {title: '记录内容', key: 'content', align: 'end'},
+])
+
+const logHeader = ref([
+  {title: '前端类型', key: 'frontendType',},
+  {title: '域名', key: 'uuid'},
+  {title: '版本', key: 'version', align: 'end', width: 100},
 ])
 const emit = defineEmits(['ngrok'])
 
@@ -91,6 +97,20 @@ function displayAddress(address) {
             </template>
             <template #action>
               <j-space>
+                <primary-button
+                  v-if="currentMaxVersion === '1.1.1'"
+                  text="继续更新"
+                  color="green"
+                  icon="mdi-check"
+                  @click="stopAutoUpdate('0')"
+                />
+                <primary-button
+                  v-else
+                  text="暂停更新"
+                  color="red"
+                  icon="mdi-close"
+                  @click="stopAutoUpdate('1')"
+                />
                 <secondary-button
                   icon="mdi-wifi"
                   @click="emit('ngrok')"
@@ -109,6 +129,7 @@ function displayAddress(address) {
             <v-tab>操作记录</v-tab>
             <v-tab>详情</v-tab>
             <v-tab>Ngrok连接情况</v-tab>
+            <v-tab>前端情况</v-tab>
           </v-tabs>
         </v-card>
         <v-card
@@ -237,6 +258,12 @@ function displayAddress(address) {
                   </template>
                 </v-tooltip>
               </div>
+            </v-tabs-window-item>
+            <v-tabs-window-item>
+              <v-data-table
+                :headers="logHeader"
+                :items="logInfo"
+              />
             </v-tabs-window-item>
           </v-tabs-window>
         </v-card>

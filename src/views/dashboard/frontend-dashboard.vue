@@ -1,6 +1,6 @@
 <script setup>
 import {onBeforeUnmount, onMounted, ref} from 'vue'
-import {fromNowTimestamp} from '@/store/aaden/DeviceEcho'
+import {fromNowTimestamp, useDeviceEchoLog} from '@/store/aaden/DeviceEcho'
 import DashboardLabel from "@/views/jh-widget/dashboard-label.vue";
 import DeviceDetailPage from "@/views/dashboard/DeviceDetailPage.vue";
 import {useFrontendStore} from "@/store/aaden/frontendStore";
@@ -43,7 +43,14 @@ const headers = ref([
 
 
 const autoRefresh = ref(true)
+const deviceEchoLog = useDeviceEchoLog()
 
+function clickItem(e, row) {
+  const res = deviceEchoLog.activeDeviceLogs.find(it => it.deviceId.toString() === row.item.deviceId.toString())
+  if (res) {
+    deviceEchoLog.selectDevice(res)
+  }
+}
 
 </script>
 
@@ -59,28 +66,30 @@ const autoRefresh = ref(true)
           </template>
           {{ store.displayList.length }}
         </dashboard-label>
-        <j-space>
-          <v-card
-            v-for="type in store.frontendTypes"
-            :key="type"
-            class="px-4"
-            color="grey-lighten-3"
-            flat
-          >
-            <v-checkbox
-              v-model="store.selectedFrontendTypes"
-              :value="type"
-              hide-details
-              :label="type"
-            />
-          </v-card>
-        </j-space>
+        <v-select
+          v-model="store.selectedFrontendTypes"
+          label="前端类型"
+          clearable
+          multiple
+          hide-details
+          :items="store.frontendTypes"
+        />
+        <v-text-field
+          v-model="store.search"
+          clearable
+          class="mx-2"
+          hide-details
+          label="DeviceId"
+          prepend-inner-icon="mdi-magnify"
+          @keydown="handleKeyDown"
+        />
       </div>
 
       <v-data-table
         :headers="headers"
         :items-per-page="-1"
         :items="store.displayList"
+        @click:row="clickItem"
       >
         <template #[`item.timestamp`]="{ item }">
           {{ fromNowTimestamp(item.timestamp) }}
