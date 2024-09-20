@@ -29,3 +29,16 @@ export async function getDishImages() {
 export async function getDishList (id) {
     return (await hillo.get('https://ik' + id.padStart(4,'0') + '.ngrok.aaden.io/PHP/Dishes.php',{})).content
 }
+
+export async function editDish (id,item) {
+    const updateItem = item
+    updateItem.id = item.dishId
+    if (updateItem.file) {
+        updateItem.imageExt = updateItem.file.name.split('.')[1]
+    }
+    return await hillo.postWithUploadFile('https://ik' + id.padStart(4, '0') + '.ngrok.aaden.io/PHP/Dishes.php?op=update', {
+            ...updateItem,
+            params: JSON.stringify(updateItem)
+        },
+        {showLoading: false})
+}

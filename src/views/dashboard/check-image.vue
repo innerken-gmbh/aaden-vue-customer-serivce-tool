@@ -1,11 +1,12 @@
 <script setup>
 import {computed, onMounted, ref, watch} from 'vue'
-import {getDishImages, getDishList} from "@/store/aaden/cloud-v2-api";
+import {editDish, getDishImages, getDishList} from "@/store/aaden/cloud-v2-api";
 import LoadingProvider from "@/views/BaseWidget/basic/premade/LoadingProvider.vue";
-import {groupBy} from "lodash-es";
+import {groupBy, keyBy} from "lodash-es";
 import JSZip from 'jszip'
 import FileSaver from 'file-saver'
 import {generateCorsUrl} from "@/store/aaden/utils";
+import IKUtils from "innerken-js-utils";
 
 
 onMounted(async () => {
@@ -18,6 +19,10 @@ let loading = ref(false)
 let editMode = ref(false)
 let selectedImgList = ref([])
 let loadingDialog = ref(false)
+let imgUploadDialog = ref(false)
+let files = ref([])
+let editDeviceId = ref('')
+let log = ref('')
 
 async function reload() {
   loading.value = true
@@ -27,7 +32,6 @@ async function reload() {
 }
 
 function selectedItem (value,item) {
-
   if (value === '1') {
     selectedImgList.value.push(item)
   } else {
@@ -73,6 +77,34 @@ async function downloadImg () {
   }
   loadingDialog.value = false
 }
+
+async function upload () {
+  log.value = ''
+  log.value += '你别急,正在用力的修改中,一个一个来！' + `<br>`
+  const dishList = await getDishList(editDeviceId.value)
+  const fileDict = keyBy(files.value, (f) => f.name.split('.')[0])
+  const needUploadDishes = Object.keys(fileDict)
+  const dishDict = keyBy(dishList, 'code')
+  for (const id of needUploadDishes) {
+    const newItem = IKUtils.deepCopy(dishDict[id])
+    if (newItem) {
+      newItem.file = fileDict[id]
+      const res = await editDish(editDeviceId.value,newItem)
+      log.value += id + ':' + res.status + '<br>'
+    }
+  }
+  log.value += '结束了!'
+}
+
+watch((imgUploadDialog), (value) => {
+  if (!value) {
+    editDeviceId.value = ''
+    files.value = []
+  }
+},{
+  deep:true,
+  immediate: true
+})
 
 watch((searchDeviceId),async (value) => {
   if (value) {
@@ -128,6 +160,14 @@ watch((searchDeviceId),async (value) => {
             下载
           </v-btn>
         </div>
+        <v-btn
+          color="info"
+          class="ml-2"
+          variant="outlined"
+          @click="imgUploadDialog = true"
+        >
+          上传图片
+        </v-btn>
 
         <v-spacer />
         <v-text-field
@@ -201,6 +241,40 @@ watch((searchDeviceId),async (value) => {
             </div>
           </div>
         </v-responsive>
+      </v-card>
+    </v-dialog>
+    <v-dialog
+      v-model="imgUploadDialog"
+      max-width="600px"
+    >
+      <v-card class="pa-6">
+        <div>
+          <v-text-field
+            v-model="editDeviceId"
+            hide-details
+            label="DeviceId"
+            variant="outlined"
+            prepend-inner-icon="mdi-home"
+          />
+          <v-file-input
+            v-model="files"
+            class="mt-4"
+            multiple
+          />
+          <div
+            class="pa-4"
+            v-html="log"
+          />
+          <v-btn
+            block
+            :disabled="!editDeviceId"
+            color="amber lighten-4 black--text"
+            elevation="0"
+            @click="upload"
+          >
+            上传
+          </v-btn>
+        </div>
       </v-card>
     </v-dialog>
   </div>
