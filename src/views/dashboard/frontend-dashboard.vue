@@ -7,10 +7,12 @@ import {useFrontendStore} from "@/store/aaden/frontendStore";
 import JSpace from "@/views/BaseWidget/basic/JSpace.vue";
 
 const store = useFrontendStore()
+const deviceEchoLog = useDeviceEchoLog()
 
 
 onMounted(() => {
   store.reload()
+
   const clear = setInterval(() => {
     if (autoRefresh.value) {
       store.reload()
@@ -20,6 +22,12 @@ onMounted(() => {
     clearInterval(clear)
   })
 })
+
+const rawNgrokUrl = "https://ngrok.aaden.io:4433?hostname=localhost&&username=aaden&&password=SW5uZXJrZW4zMjIu&&port="
+
+function showNgrokForDevice(device) {
+  window.open(rawNgrokUrl + '1' + device.deviceId.toString().padStart(4, '0'))
+}
 
 
 const headers = ref([
@@ -43,13 +51,10 @@ const headers = ref([
 
 
 const autoRefresh = ref(true)
-const deviceEchoLog = useDeviceEchoLog()
 
-function clickItem(e, row) {
-  const res = deviceEchoLog.activeDeviceLogs.find(it => it.deviceId.toString() === row.item.deviceId.toString())
-  if (res) {
-    deviceEchoLog.selectDevice(res)
-  }
+
+async function clickItem(e, row) {
+    await deviceEchoLog.selectLogByDeviceId(row.item.deviceId)
 }
 
 </script>

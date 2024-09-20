@@ -3,7 +3,7 @@ import {getDeviceStatus, getEndPointUrl, getEventListForDeviceId} from '@/old/ut
 import hillo from 'hillo'
 import dayjs from 'dayjs'
 import {getAllSubscriptionForStore} from "../../old/utils/firebase";
-import {baseUrl, getRecentNgrokStatus} from "./cloud-v2-api";
+import {baseUrl, getDeviceLogByDeviceId, getRecentNgrokStatus} from "./cloud-v2-api";
 
 
 export const useDeviceEchoLog = defineStore('deviceLog', {
@@ -39,6 +39,14 @@ export const useDeviceEchoLog = defineStore('deviceLog', {
             this.recentNgrokStatus = await getRecentNgrokStatus(deviceLog.deviceId)
             this.detailLoading = false
 
+        },
+        async selectLogByDeviceId(deviceId){
+            this.activeDevice = await getDeviceLogByDeviceId(deviceId)
+            this.showDetail = true
+            this.detailLoading = true
+            await this.updateEventLogs()
+            this.recentNgrokStatus = await getRecentNgrokStatus(deviceId)
+            this.detailLoading = false
         },
         async updateEventLogs() {
             this.eventLogs = await getEventListForDeviceId(this.activeDevice.deviceId)

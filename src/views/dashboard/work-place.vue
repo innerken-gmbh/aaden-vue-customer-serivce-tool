@@ -246,12 +246,6 @@ function displayAddress(address) {
         :headers="headers"
         @click:row="clickItem"
       >
-        <template #[`item.deviceId`]="{ item }">
-          {{ item.deviceId }}
-          <template v-if="item.deviceGroup">
-            / {{ item.deviceGroup }}
-          </template>
-        </template>
         <template #[`item.timestamp`]="{ item }">
           {{ fromNowTimestamp(item.timestamp) }}
         </template>

@@ -2,7 +2,7 @@
 import {fromNowTimestamp, useDeviceEchoLog} from "@/store/aaden/DeviceEcho";
 import PrimaryButton from "@/views/BaseWidget/basic/button/PrimaryButton.vue";
 import {useDialogStore} from "@/store/aaden/dialogStore";
-import {computed, onMounted, ref} from "vue";
+import {computed, onMounted, ref, watch} from "vue";
 import PageSubHeader from "@/views/BaseWidget/basic/PageSubHeader.vue";
 import SecondaryButton from "@/views/BaseWidget/basic/button/SecondaryButton.vue";
 import JSpace from "@/views/BaseWidget/basic/JSpace.vue";
@@ -15,8 +15,10 @@ const tab = ref(0)
 const dialogStore = useDialogStore()
 const logInfo = ref([])
 
-onMounted(async () => {
-  logInfo.value = await getLogsByDeviceId(store.activeDevice.deviceId)
+watch(store,async (value) => {
+  if (value) {
+    logInfo.value = await getLogsByDeviceId(store?.activeDevice?.deviceId)
+  }
 })
 
 async function addInfo() {
@@ -97,20 +99,20 @@ function displayAddress(address) {
             </template>
             <template #action>
               <j-space>
-                <primary-button
+                <secondary-button
                   v-if="currentMaxVersion === '1.1.1'"
-                  text="继续更新"
-                  color="green"
-                  icon="mdi-check"
+                  icon="mdi-reload"
                   @click="stopAutoUpdate('0')"
-                />
-                <primary-button
+                >
+                  继续更新
+                </secondary-button>
+                <secondary-button
                   v-else
-                  text="暂停更新"
-                  color="red"
-                  icon="mdi-close"
+                  icon="mdi-alert"
                   @click="stopAutoUpdate('1')"
-                />
+                >
+                  暂停更新
+                </secondary-button>
                 <secondary-button
                   icon="mdi-wifi"
                   @click="emit('ngrok')"
