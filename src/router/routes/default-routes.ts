@@ -39,6 +39,16 @@ export default [
         menuName: '图库',
       },
       {
+        parentPath: '/dashboard',
+        menuUrl: '/dashboard/subscription-statistics',
+        menuName: '订阅统计',
+      },
+      {
+        parentPath: '/dashboard',
+        menuUrl: '/dashboard/subscription-detail',
+        menuName: '订阅详情',
+      },
+      {
         parentPath: '/store-management',
         menuUrl: '/store-management/manage-store',
         menuName: '查看门店界面',

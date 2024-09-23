@@ -5,12 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1777049f-9f7a-4424-9005-71635bd2b339" name="Changes" comment="Changes">
+      <change afterPath="$PROJECT_DIR$/src/store/aaden/saasSubscription.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/dashboard/subscription-detail.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/dashboard/subscription-statistics.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/store/aaden/DeviceEcho.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/aaden/DeviceEcho.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/router/routes/default-routes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/router/routes/default-routes.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/store/aaden/cloud-v2-api.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/aaden/cloud-v2-api.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/dashboard/DeviceDetailPage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/dashboard/DeviceDetailPage.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/dashboard/frontend-dashboard.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/dashboard/frontend-dashboard.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/dashboard/work-place.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/dashboard/work-place.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,9 +26,9 @@
       <list>
         <option value="Vue Options API Component" />
         <option value="Vue Composition API Component" />
-        <option value="JavaScript File" />
-        <option value="Vue Single File Component" />
         <option value="TypeScript File" />
+        <option value="Vue Single File Component" />
+        <option value="JavaScript File" />
       </list>
     </option>
   </component>
@@ -63,7 +64,7 @@
     "WebServerToolWindowPanel.toolwindow.show.size": "false",
     "git-widget-placeholder": "master",
     "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/XinZhou/Desktop/Code/storagemanage-vue-pad",
+    "last_opened_file_path": "C:/Users/XinZhou/Desktop/Code/aaden-vue-admin",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.standard": "true",
     "node.js.detected.package.tslint": "true",
@@ -214,7 +215,11 @@
       <workItem from="1726561506065" duration="2190000" />
       <workItem from="1726565404003" duration="66000" />
       <workItem from="1726725648343" duration="19583000" />
-      <workItem from="1726810641102" duration="16275000" />
+      <workItem from="1726810641102" duration="16324000" />
+      <workItem from="1726833381863" duration="8000" />
+      <workItem from="1726835973648" duration="709000" />
+      <workItem from="1726837482727" duration="3611000" />
+      <workItem from="1727072705456" duration="19806000" />
     </task>
     <servers />
   </component>

@@ -1,5 +1,5 @@
 <script setup>
-import {onBeforeUnmount, onMounted, ref} from 'vue'
+import {onBeforeUnmount, onMounted, ref, watch} from 'vue'
 import {fromNowTimestamp, useDeviceEchoLog} from '@/store/aaden/DeviceEcho'
 import DashboardLabel from "@/views/jh-widget/dashboard-label.vue";
 import DeviceDetailPage from "@/views/dashboard/DeviceDetailPage.vue";
@@ -28,7 +28,6 @@ const rawNgrokUrl = "https://ngrok.aaden.io:4433?hostname=localhost&&username=aa
 function showNgrokForDevice(device) {
   window.open(rawNgrokUrl + '1' + device.deviceId.toString().padStart(4, '0'))
 }
-
 
 const headers = ref([
   {
@@ -86,7 +85,6 @@ async function clickItem(e, row) {
           hide-details
           label="DeviceId"
           prepend-inner-icon="mdi-magnify"
-          @keydown="handleKeyDown"
         />
       </div>
 

@@ -50,3 +50,11 @@ export async function getLogsByDeviceId (id) {
 export async function getDeviceLogByDeviceId(id) {
     return await hillo.get(baseUrl+'deviceLog/' + id)
 }
+
+export async function getAllSubscriptionList () {
+    return (await hillo.get(baseUrl + 'subscriptions/all')).filter(it => it.productCode).filter(it => it.deviceId)
+}
+
+export async function getDeviceSubscriptionList (id) {
+    return await hillo.get(baseUrl + 'subscriptions/by-device/' + id)
+}
