@@ -8,16 +8,20 @@ import SecondaryButton from "@/views/BaseWidget/basic/button/SecondaryButton.vue
 import JSpace from "@/views/BaseWidget/basic/JSpace.vue";
 import LoadingProvider from "@/views/BaseWidget/basic/premade/LoadingProvider.vue";
 import {recordSchema} from "@/old/utils/recordSchema";
-import {getLogsByDeviceId} from "@/store/aaden/cloud-v2-api";
+import {getDeviceSubscriptionList, getLogsByDeviceId} from "@/store/aaden/cloud-v2-api";
+import {getZHProductName,getDateProgressLinear,formatDate,formatPriceDisplay,showCurrentBillType} from "@/store/aaden/saasSubscription";
+
 
 const store = useDeviceEchoLog()
 const tab = ref(0)
 const dialogStore = useDialogStore()
 const logInfo = ref([])
+const subInfo = ref([])
 
 watch(store,async (value) => {
   if (value) {
     logInfo.value = await getLogsByDeviceId(store?.activeDevice?.deviceId)
+    subInfo.value = await getDeviceSubscriptionList(store?.activeDevice?.deviceId)
   }
 })
 
@@ -59,6 +63,13 @@ const logHeader = ref([
   {title: '前端类型', key: 'frontendType',},
   {title: '域名', key: 'uuid'},
   {title: '版本', key: 'version', align: 'end', width: 100},
+])
+
+const subHeader = ref([
+  {title: '邮箱', key: 'customerEmail',},
+  {title: '项目名称', key: 'productZHName'},
+  {title: '项目进度', key: 'subLinear'},
+  {title: '截止时间', key: 'subscriptionEndDate'},
 ])
 const emit = defineEmits(['ngrok'])
 
@@ -132,6 +143,7 @@ function displayAddress(address) {
             <v-tab>详情</v-tab>
             <v-tab>Ngrok连接情况</v-tab>
             <v-tab>前端情况</v-tab>
+            <v-tab>门店订阅</v-tab>
           </v-tabs>
         </v-card>
         <v-card
@@ -266,6 +278,33 @@ function displayAddress(address) {
                 :headers="logHeader"
                 :items="logInfo"
               />
+            </v-tabs-window-item>
+            <v-tabs-window-item>
+              <v-data-table
+                :headers="subHeader"
+                :items="subInfo"
+              >
+                <template #[`item.productZHName`]="{ item }">
+                  {{ getZHProductName(item.productCode) }}/{{ showCurrentBillType(item.billingCycle) }}
+                </template>
+                <template #[`item.subscriptionEndDate`]="{ item }">
+                  {{
+                    formatDate(item.subscriptionEndDate)
+                  }}
+                </template>
+                <template #[`item.subLinear`]="{ item }">
+                  <v-progress-linear
+                    :model-value="getDateProgressLinear(item.subscriptionStartDate,item.subscriptionEndDate)"
+                    height="20"
+                    color="info"
+                    rounded
+                  >
+                    <template #default="{ value }">
+                      <strong>{{ Math.ceil(value) }}%</strong>
+                    </template>
+                  </v-progress-linear>
+                </template>
+              </v-data-table>
             </v-tabs-window-item>
           </v-tabs-window>
         </v-card>

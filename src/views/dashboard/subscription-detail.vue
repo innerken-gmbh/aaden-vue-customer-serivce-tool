@@ -1,7 +1,9 @@
 <script setup>
-import {onBeforeUnmount, onMounted, ref} from 'vue'
+import {onMounted, ref} from 'vue'
 import {useSubscriptionStore,getZHProductName,getDateProgressLinear,formatDate,allProductCodeList,formatPriceDisplay,showCurrentBillType} from "@/store/aaden/saasSubscription";
 import IKUtils from "innerken-js-utils";
+import DeviceDetailPage from "@/views/dashboard/DeviceDetailPage.vue";
+import {useDeviceEchoLog} from "@/store/aaden/DeviceEcho";
 
 
 const storeSub = useSubscriptionStore()
@@ -17,6 +19,7 @@ const headers = ref([
   },
   {title: '项目名称', key: 'productZHName'},
   {title: '项目进度', key: 'subLinear',},
+  {title: '状态', key: 'status',},
   {
     title: '截止时间',
     key: 'subscriptionEndDate',
@@ -34,39 +37,72 @@ onMounted(async () => {
 })
 
 async function closeFilter() {
-  showSearchDialog.value = false
   storeSub.search = false
   storeSub.clearFilterInfo()
   await storeSub.getList()
 }
 
-const showSearchDialog = ref(false)
+const deviceEchoLog = useDeviceEchoLog()
+
+const currentDeviceId = ref('')
+
+async function clickItem(e, row) {
+  currentDeviceId.value = row.item.deviceId
+  await deviceEchoLog.selectLogByDeviceId(row.item.deviceId)
+}
 </script>
 
 <template>
   <div>
     <div
-      class="text-body-2 d-flex"
+      class="text-body-2 d-flex align-center justify-center"
     >
-      <v-card
-        v-if="storeSub.search"
-        variant="outlined"
-        class="d-flex align-center justify-center px-4"
-      >
-        {{ storeSub.allFilterInfo }}
-        <v-spacer />
-        <v-icon @click="closeFilter">
-          mdi-close
-        </v-icon>
-      </v-card>
-      <v-spacer />
+      <v-select
+        v-model="storeSub.selectedProductCode"
+        label="产品类型"
+        item-title="name"
+        item-value="value"
+        hide-details
+        :items="allProductCodeList"
+      />
+      <v-text-field
+        v-model="storeSub.deviceId"
+        label="DeviceId"
+        class="ml-2"
+        clearable
+        hide-details
+      />
+      <v-text-field
+        v-model="storeSub.email"
+        label="邮箱"
+        class="ml-2"
+        clearable
+        hide-details
+      />
+      <v-text-field
+        v-model="storeSub.openDate"
+        label="开通时间"
+        clearable
+        class="ml-2"
+        hide-details
+      />
       <v-btn
         elevation="0"
+        size="large"
+        class="ml-2"
         base-color="white"
-        icon
-        @click="showSearchDialog = true"
+        @click="closeFilter"
       >
-        <v-icon>mdi-tools</v-icon>
+        清空
+      </v-btn>
+      <v-btn
+        elevation="0"
+        size="large"
+        class="ml-2"
+        base-color="info"
+        @click="storeSub.search = true"
+      >
+        确定
       </v-btn>
     </div>
     <v-data-table
@@ -107,94 +143,6 @@ const showSearchDialog = ref(false)
         </v-progress-linear>
       </template>
     </v-data-table>
-    <v-dialog
-      v-model="showSearchDialog"
-      max-width="600px"
-    >
-      <v-card
-        rounded
-        class="pa-4"
-      >
-        <div class="d-flex align-center justify-center">
-          <div class="text-h5">
-            过滤
-          </div>
-          <v-spacer />
-          <div>
-            <v-icon
-              size="large"
-              @click="closeFilter"
-            >
-              mdi-close
-            </v-icon>
-          </div>
-        </div>
-        <div class="mt-4">
-          <div class="d-flex align-center justify-center">
-            <div>产品类型:</div>
-            <v-spacer />
-            <v-select
-              v-model="storeSub.selectedProductCode"
-              item-title="name"
-              item-value="value"
-              hide-details
-              :items="allProductCodeList"
-            />
-          </div>
-        </div>
-        <div class="mt-4">
-          <div class="d-flex align-center justify-center">
-            <div>设备Id:</div>
-            <v-spacer />
-            <v-text-field
-              v-model="storeSub.deviceId"
-              max-width="268px"
-              clearable
-              hide-details
-            />
-          </div>
-        </div>
-        <div class="mt-4">
-          <div class="d-flex align-center justify-center">
-            <div>邮箱:</div>
-            <v-spacer />
-            <v-text-field
-              v-model="storeSub.email"
-              max-width="268px"
-              clearable
-              hide-details
-            />
-          </div>
-        </div>
-        <div class="mt-4">
-          <div class="d-flex align-center justify-center">
-            <div class="d-flex flex-column">
-              <div>
-                开通时间:
-              </div>
-              <span class="text-caption">例如: YYYY-MM-DD</span>
-            </div>
-            <v-spacer />
-            <v-text-field
-              v-model="storeSub.openDate"
-              max-width="268px"
-              clearable
-              hide-details
-            />
-          </div>
-        </div>
-        <div class="mt-8">
-          <v-btn
-            variant="outlined"
-            color="info"
-            elevation="0"
-            width="100%"
-            @click="storeSub.search = true;showSearchDialog = false"
-          >
-            确定
-          </v-btn>
-        </div>
-      </v-card>
-    </v-dialog>
+    <device-detail-page />
   </div>
 </template>

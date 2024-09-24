@@ -23,12 +23,6 @@ onMounted(() => {
   })
 })
 
-const rawNgrokUrl = "https://ngrok.aaden.io:4433?hostname=localhost&&username=aaden&&password=SW5uZXJrZW4zMjIu&&port="
-
-function showNgrokForDevice(device) {
-  window.open(rawNgrokUrl + '1' + device.deviceId.toString().padStart(4, '0'))
-}
-
 const headers = ref([
   {
     title: 'ID',
@@ -104,6 +98,6 @@ async function reloadTable () {
         </template>
       </v-data-table>
     </v-card>
-    <device-detail-page @ngrok="showNgrokForDevice(store.activeDevice)" />
+    <device-detail-page />
   </div>
 </template>
