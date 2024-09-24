@@ -6,9 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="1777049f-9f7a-4424-9005-71635bd2b339" name="Changes" comment="Changes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/dashboard/DeviceDetailPage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/dashboard/DeviceDetailPage.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/dashboard/frontend-dashboard.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/dashboard/frontend-dashboard.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/aaden/saasSubscription.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/aaden/saasSubscription.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/dashboard/subscription-detail.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/dashboard/subscription-detail.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/dashboard/subscription-statistics.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/dashboard/subscription-statistics.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -218,7 +218,7 @@
       <workItem from="1726837482727" duration="3611000" />
       <workItem from="1727072705456" duration="21629000" />
       <workItem from="1727156743567" duration="1530000" />
-      <workItem from="1727178240625" duration="2477000" />
+      <workItem from="1727178240625" duration="4295000" />
     </task>
     <servers />
   </component>

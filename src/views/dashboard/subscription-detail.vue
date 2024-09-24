@@ -28,9 +28,11 @@ const headers = ref([
   {title: '付款时间', key: 'createTimestamp', align: 'end'},
 ])
 onMounted(async () => {
-  const res = IKUtils.getQueryString('Code')
-  if (res) {
-    storeSub.selectedProductCode = res
+  const code = IKUtils.getQueryString('Code') ?? ''
+  const status = IKUtils.getQueryString('Status') ?? ''
+  if (code || status) {
+    storeSub.selectedProductCode = code
+    storeSub.status = status
     storeSub.search = true
   }
   await storeSub.getList()
@@ -82,6 +84,13 @@ async function clickItem(e, row) {
       <v-text-field
         v-model="storeSub.openDate"
         label="开通时间"
+        clearable
+        class="ml-2"
+        hide-details
+      />
+      <v-text-field
+        v-model="storeSub.status"
+        label="状态"
         clearable
         class="ml-2"
         hide-details

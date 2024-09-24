@@ -13,26 +13,11 @@ export const useSubscriptionStore = defineStore("saas-subscription",{
             email: '',
             openDate: '',
             tag: '',
+            status: '',
             search: false
         }
     },
     getters: {
-        allFilterInfo() {
-            let res = ''
-            if (this.deviceId) {
-                res += '设备Id:' + this.deviceId + ','
-            }
-            if (this.selectedProductCode) {
-                res += '产品名称:' + allProductCodeList.find(it => it.value === this.selectedProductCode).name + ','
-            }
-            if (this.email) {
-                res += '客户邮箱:' + this.email + ','
-            }
-            if (this.openDate) {
-                res += '开通时间:' + this.openDate + ','
-            }
-            return res
-        },
         allSubscriptionList() {
             if (this.search) {
                 if (this.deviceId) {
@@ -47,6 +32,9 @@ export const useSubscriptionStore = defineStore("saas-subscription",{
                 if (this.openDate) {
                     this.list = this.list.filter(it => dayjs(it.createTimestamp).format('YYYY-MM-DD') === dayjs(this.openDate).format('YYYY-MM-DD'))
                 }
+                if (this.status) {
+                    this.list = this.list.filter(it => it.status === this.status)
+                }
             }
             return this.list
         }
@@ -56,6 +44,8 @@ export const useSubscriptionStore = defineStore("saas-subscription",{
             this.deviceId = ''
             this.selectedProductCode = ''
             this.email = ''
+            this.status  = ''
+            this.openDate = ''
         },
         async getList () {
             this.loading = true
