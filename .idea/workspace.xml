@@ -6,8 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="1777049f-9f7a-4424-9005-71635bd2b339" name="Changes" comment="Changes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/store/aaden/saasSubscription.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/aaden/saasSubscription.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/dashboard/subscription-detail.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/dashboard/subscription-detail.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/dashboard/frontend-dashboard.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/dashboard/frontend-dashboard.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -216,7 +215,7 @@
       <workItem from="1726835973648" duration="709000" />
       <workItem from="1726837482727" duration="3611000" />
       <workItem from="1727072705456" duration="21629000" />
-      <workItem from="1727156743567" duration="867000" />
+      <workItem from="1727156743567" duration="1307000" />
     </task>
     <servers />
   </component>

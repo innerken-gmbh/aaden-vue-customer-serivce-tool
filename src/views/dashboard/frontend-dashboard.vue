@@ -56,6 +56,10 @@ async function clickItem(e, row) {
     await deviceEchoLog.selectLogByDeviceId(row.item.deviceId)
 }
 
+async function reloadTable () {
+  await store.reload()
+}
+
 </script>
 
 <template>
@@ -85,6 +89,7 @@ async function clickItem(e, row) {
           hide-details
           label="DeviceId"
           prepend-inner-icon="mdi-magnify"
+          @update:modelValue="reloadTable"
         />
       </div>
 
