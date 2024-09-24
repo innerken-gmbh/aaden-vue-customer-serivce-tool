@@ -1,6 +1,6 @@
 <script setup>
 import {onBeforeUnmount, onMounted, ref} from 'vue'
-import {useSubscriptionStore,getZHProductName,getDateProgressLinear,formatDate,allProductCodeList} from "@/store/aaden/saasSubscription";
+import {useSubscriptionStore,getZHProductName,getDateProgressLinear,formatDate,allProductCodeList,formatPriceDisplay,showCurrentBillType} from "@/store/aaden/saasSubscription";
 import IKUtils from "innerken-js-utils";
 
 
@@ -21,7 +21,7 @@ const headers = ref([
     title: '截止时间',
     key: 'subscriptionEndDate',
   },
-  {title: '费用', key: 'priceId', align: 'end'},
+  {title: '费用', key: 'priceInfo', align: 'end'},
   {title: '付款时间', key: 'createTimestamp', align: 'end'},
 ])
 onMounted(async () => {
@@ -77,9 +77,7 @@ const showSearchDialog = ref(false)
       @click:row="clickItem"
     >
       <template #[`item.productZHName`]="{ item }">
-        {{
-          getZHProductName(item.productCode)
-        }}
+        {{ getZHProductName(item.productCode) }}/{{ showCurrentBillType(item.billingCycle) }}
       </template>
       <template #[`item.subscriptionEndDate`]="{ item }">
         {{
@@ -89,6 +87,11 @@ const showSearchDialog = ref(false)
       <template #[`item.createTimestamp`]="{ item }">
         {{
           formatDate(item.createTimestamp)
+        }}
+      </template>
+      <template #[`item.priceInfo`]="{ item }">
+        {{
+          formatPriceDisplay(item.priceInfo)
         }}
       </template>
       <template #[`item.subLinear`]="{ item }">

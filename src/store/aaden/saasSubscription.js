@@ -84,6 +84,20 @@ export function formatDate (date) {
     return dayjs(date).format('YYYY-MM-DD HH:mm:ss')
 }
 
+export function formatPriceDisplay (price) {
+    return price / 100 + ' €'
+}
+
+export function showCurrentBillType (type) {
+    return zhDate.find(it => it.value === type).name
+}
+
+const zhDate = [
+    {value: 'year',name:'年'},
+    {value: 'month',name:'月'},
+    {value: 'day',name:'日'},
+]
+
 export const allProductCodeList = [
     {value: 'base',name:'基础包'},
     {value: 'tse',name:'TSE'},
