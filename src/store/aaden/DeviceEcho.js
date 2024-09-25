@@ -42,11 +42,13 @@ export const useDeviceEchoLog = defineStore('deviceLog', {
         },
         async selectLogByDeviceId(deviceId){
             this.activeDevice = await getDeviceLogByDeviceId(deviceId)
-            this.showDetail = true
-            this.detailLoading = true
-            await this.updateEventLogs()
-            this.recentNgrokStatus = await getRecentNgrokStatus(deviceId)
-            this.detailLoading = false
+            if (this.activeDevice) {
+                this.showDetail = true
+                this.detailLoading = true
+                await this.updateEventLogs()
+                this.recentNgrokStatus = await getRecentNgrokStatus(deviceId)
+                this.detailLoading = false
+            }
         },
         async updateEventLogs() {
             this.eventLogs = await getEventListForDeviceId(this.activeDevice.deviceId)

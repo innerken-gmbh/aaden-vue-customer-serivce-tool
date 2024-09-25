@@ -1,6 +1,6 @@
 <script setup>
 import {onMounted, ref} from 'vue'
-import {useSubscriptionStore,getZHProductName,getDateProgressLinear,formatDate,allProductCodeList,formatPriceDisplay,showCurrentBillType} from "@/store/aaden/saasSubscription";
+import {useSubscriptionStore,getZHProductName,getDateProgressLinear,formatDate,allProductCodeList,formatPriceDisplay,showCurrentBillType,colorList} from "@/store/aaden/saasSubscription";
 import IKUtils from "innerken-js-utils";
 import DeviceDetailPage from "@/views/dashboard/DeviceDetailPage.vue";
 import {useDeviceEchoLog} from "@/store/aaden/DeviceEcho";
@@ -26,6 +26,7 @@ const headers = ref([
   },
   {title: '费用', key: 'priceInfo', align: 'end'},
   {title: '付款时间', key: 'createTimestamp', align: 'end'},
+  { title: 'Actions', key: 'actions', sortable: false },
 ])
 onMounted(async () => {
   const code = IKUtils.getQueryString('Code') ?? ''
@@ -41,16 +42,15 @@ onMounted(async () => {
 async function closeFilter() {
   storeSub.search = false
   storeSub.clearFilterInfo()
-  await storeSub.getList()
 }
 
 const deviceEchoLog = useDeviceEchoLog()
 
-const currentDeviceId = ref('')
-
 async function clickItem(e, row) {
-  currentDeviceId.value = row.item.deviceId
   await deviceEchoLog.selectLogByDeviceId(row.item.deviceId)
+}
+function goto(item) {
+  window.open(item.stripeLink)
 }
 </script>
 
@@ -95,6 +95,12 @@ async function clickItem(e, row) {
         class="ml-2"
         hide-details
       />
+      <v-checkbox
+        v-model="storeSub.show0Price"
+        class="ml-2"
+        hide-details
+        label="显示0元购"
+      />
       <v-btn
         elevation="0"
         size="large"
@@ -121,6 +127,14 @@ async function clickItem(e, row) {
       :items="storeSub.allSubscriptionList"
       @click:row="clickItem"
     >
+      <template #[`item.status`]="{ item }">
+        <v-chip
+          variant="flat"
+          :color="item.color"
+        >
+          {{ item.status }}
+        </v-chip>
+      </template>
       <template #[`item.productZHName`]="{ item }">
         {{ getZHProductName(item.productCode) }}/{{ showCurrentBillType(item.billingCycle) }}
       </template>
@@ -150,6 +164,17 @@ async function clickItem(e, row) {
             <strong>{{ Math.ceil(value) }}%</strong>
           </template>
         </v-progress-linear>
+      </template>
+      <template #[`item.actions`]="{ item }">
+        <v-btn
+          rounded
+          color="info"
+          variant="outlined"
+          elevation="0"
+          @click.stop="goto(item)"
+        >
+          跳转Stripe
+        </v-btn>
       </template>
     </v-data-table>
     <device-detail-page />

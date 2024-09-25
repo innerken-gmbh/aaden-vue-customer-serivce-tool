@@ -1,11 +1,13 @@
 import {getAllSubscriptionList, getDeviceSubscriptionList} from "./cloud-v2-api";
 import {defineStore} from "pinia";
 import dayjs from "dayjs";
+import {groupBy} from "lodash-es";
 
 
 export const useSubscriptionStore = defineStore("saas-subscription",{
     state: () => {
         return {
+            show0Price: false,
             loading: false,
             deviceId: '',
             list: [],
@@ -19,24 +21,29 @@ export const useSubscriptionStore = defineStore("saas-subscription",{
     },
     getters: {
         allSubscriptionList() {
+            let currentList = this.list
             if (this.search) {
                 if (this.deviceId) {
-                    this.list = this.list.filter(it => it.deviceId === this.deviceId)
+                    currentList = currentList.filter(it => it.deviceId === this.deviceId)
                 }
                 if (this.selectedProductCode) {
-                    this.list = this.list.filter(it => it.productCode === this.selectedProductCode)
+                    currentList = currentList.filter(it => it.productCode === this.selectedProductCode)
                 }
                 if (this.email) {
-                    this.list = this.list.filter(it => it.customerEmail === this.email)
+                    currentList = currentList.filter(it => it.customerEmail === this.email)
                 }
                 if (this.openDate) {
-                    this.list = this.list.filter(it => dayjs(it.createTimestamp).format('YYYY-MM-DD') === dayjs(this.openDate).format('YYYY-MM-DD'))
+                    currentList = currentList.filter(it => dayjs(it.createTimestamp).format('YYYY-MM-DD') === dayjs(this.openDate).format('YYYY-MM-DD'))
                 }
                 if (this.status) {
-                    this.list = this.list.filter(it => it.status === this.status)
+                    currentList = currentList.filter(it => it.status === this.status)
                 }
             }
-            return this.list
+
+            if (!this.show0Price) {
+                currentList = currentList.filter(it => it.priceInfo !== 0)
+            }
+            return currentList
         }
     },
     actions: {
@@ -49,7 +56,17 @@ export const useSubscriptionStore = defineStore("saas-subscription",{
         },
         async getList () {
             this.loading = true
-            this.list = (await getAllSubscriptionList())
+            const res = groupBy((await getAllSubscriptionList()),'status')
+            let currentList = []
+            let i = 0
+            for (const item in res) {
+                res[item].forEach(it => {
+                    it.color = colorList[i]
+                })
+                currentList.push(res[item])
+                i = i + 1
+            }
+            this.list = currentList.flat()
             this.loading = false
         },
         async getCurrentListByDeviceId (id) {
@@ -131,3 +148,7 @@ export const allProductCodeList = [
 export function getProductNameByCode (code) {
     return allProductCodeList.find(it => it.value === code).name
 }
+
+export const colorList = [
+    '#ffbe0b', '#fb5607', '#ff006e', '#8338ec', '#3a86ff'
+]
