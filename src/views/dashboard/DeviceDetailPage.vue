@@ -159,6 +159,14 @@ function displayAddress(address) {
                 :headers="headers"
                 :items="store.eventLogs"
               >
+                <template #[`item.type`]="{ item }">
+                  <v-chip
+                    variant="flat"
+                    :color="item.color"
+                  >
+                    {{ item.type }}
+                  </v-chip>
+                </template>
                 <template #[`item.createTimestamp`]="{ item }">
                   {{ fromNowTimestamp(item.createTimestamp) }}
                 </template>

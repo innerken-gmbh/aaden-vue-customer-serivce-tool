@@ -4,6 +4,8 @@ import hillo from 'hillo'
 import dayjs from 'dayjs'
 import {getAllSubscriptionForStore} from "../../old/utils/firebase";
 import {baseUrl, getDeviceLogByDeviceId, getRecentNgrokStatus} from "./cloud-v2-api";
+import {groupBy} from "lodash-es";
+import {colorList} from "@/store/aaden/saasSubscription";
 
 
 export const useDeviceEchoLog = defineStore('deviceLog', {
@@ -51,7 +53,17 @@ export const useDeviceEchoLog = defineStore('deviceLog', {
             }
         },
         async updateEventLogs() {
-            this.eventLogs = await getEventListForDeviceId(this.activeDevice.deviceId)
+            const res = groupBy((await getEventListForDeviceId(this.activeDevice.deviceId)),'type')
+            let currentList = []
+            let i = 0
+            for (const item in res) {
+                res[item].forEach(it => {
+                    it.color = colorList[i]
+                })
+                currentList.push(res[item])
+                i = i + 1
+            }
+            this.eventLogs = currentList.flat()
             this.subscriptions = await getAllSubscriptionForStore(this.activeDevice.deviceId)
             console.log(this.subscriptions)
         },

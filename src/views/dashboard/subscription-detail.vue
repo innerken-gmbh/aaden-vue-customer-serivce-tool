@@ -1,6 +1,6 @@
 <script setup>
 import {onMounted, ref} from 'vue'
-import {useSubscriptionStore,getZHProductName,getDateProgressLinear,formatDate,allProductCodeList,formatPriceDisplay,showCurrentBillType,colorList} from "@/store/aaden/saasSubscription";
+import {useSubscriptionStore,getZHProductName,getDateProgressLinear,formatDate,allProductCodeList,formatPriceDisplay,showCurrentBillType} from "@/store/aaden/saasSubscription";
 import IKUtils from "innerken-js-utils";
 import DeviceDetailPage from "@/views/dashboard/DeviceDetailPage.vue";
 import {useDeviceEchoLog} from "@/store/aaden/DeviceEcho";
@@ -18,7 +18,7 @@ const headers = ref([
     key: 'customerEmail',
   },
   {title: '项目名称', key: 'productZHName'},
-  {title: '项目进度', key: 'subLinear',},
+  {title: '项目进度', key: 'subLinear'},
   {title: '状态', key: 'status',},
   {
     title: '截止时间',
@@ -49,6 +49,10 @@ const deviceEchoLog = useDeviceEchoLog()
 async function clickItem(e, row) {
   await deviceEchoLog.selectLogByDeviceId(row.item.deviceId)
 }
+function onSort (value) {
+  console.log(value,'value')
+}
+
 function goto(item) {
   window.open(item.stripeLink)
 }
@@ -88,12 +92,12 @@ function goto(item) {
         class="ml-2"
         hide-details
       />
-      <v-text-field
+      <v-select
         v-model="storeSub.status"
         label="状态"
-        clearable
         class="ml-2"
         hide-details
+        :items="storeSub.allStatusList"
       />
       <v-checkbox
         v-model="storeSub.show0Price"
@@ -126,6 +130,7 @@ function goto(item) {
       :items-per-page="50"
       :items="storeSub.allSubscriptionList"
       @click:row="clickItem"
+      @update:sortBy="onSort"
     >
       <template #[`item.status`]="{ item }">
         <v-chip
@@ -155,7 +160,7 @@ function goto(item) {
       </template>
       <template #[`item.subLinear`]="{ item }">
         <v-progress-linear
-          :model-value="getDateProgressLinear(item.subscriptionStartDate,item.subscriptionEndDate)"
+          :model-value="item.subLinear"
           height="20"
           color="info"
           rounded

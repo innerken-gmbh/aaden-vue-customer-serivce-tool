@@ -1,7 +1,7 @@
 import {getAllSubscriptionList, getDeviceSubscriptionList} from "./cloud-v2-api";
 import {defineStore} from "pinia";
 import dayjs from "dayjs";
-import {groupBy} from "lodash-es";
+import {groupBy, uniq} from "lodash-es";
 
 
 export const useSubscriptionStore = defineStore("saas-subscription",{
@@ -16,7 +16,8 @@ export const useSubscriptionStore = defineStore("saas-subscription",{
             openDate: '',
             tag: '',
             status: '',
-            search: false
+            search: false,
+            allStatusList: []
         }
     },
     getters: {
@@ -67,6 +68,10 @@ export const useSubscriptionStore = defineStore("saas-subscription",{
                 i = i + 1
             }
             this.list = currentList.flat()
+            this.list.forEach(x => {
+                x.subLinear = getDateProgressLinear(x.subscriptionStartDate,x.subscriptionEndDate)
+            })
+            this.allStatusList = uniq(this.list.map(it => it.status))
             this.loading = false
         },
         async getCurrentListByDeviceId (id) {
@@ -84,7 +89,7 @@ export function getZHProductName (productCode) {
 export function getDateProgressLinear (startDate,endDate) {
     const usedDays = dayjs().diff(dayjs(startDate),'day')
     const allDays = dayjs(endDate).diff(dayjs(startDate),'day')
-    return (usedDays / allDays) * 100
+    return Math.ceil((usedDays / allDays) * 100)
 }
 
 export function formatDate (date) {
@@ -151,4 +156,9 @@ export function getProductNameByCode (code) {
 
 export const colorList = [
     '#ffbe0b', '#fb5607', '#ff006e', '#8338ec', '#3a86ff'
+]
+
+export const cardColorList = [
+    '#FFCDD2', '#F8BBD0', '#E1BEE7', '#D1C4E9', '#C5CAE9', '#BBDEFB', '#B3E5FC', '#B2EBF2', '#B2DFDB', '#C8E6C9',
+    '#DCEDC8', '#F0F4C3', '#FFF9C4', '#FFECB3', '#FFE0B2', '#FFCCBC', '#D7CCC8', '#CFD8DC'
 ]

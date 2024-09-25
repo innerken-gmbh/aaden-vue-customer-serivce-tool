@@ -8,7 +8,9 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/store/aaden/DeviceEcho.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/aaden/DeviceEcho.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/store/aaden/saasSubscription.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/aaden/saasSubscription.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/dashboard/DeviceDetailPage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/dashboard/DeviceDetailPage.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/dashboard/subscription-detail.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/dashboard/subscription-detail.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/dashboard/subscription-statistics.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/dashboard/subscription-statistics.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -219,7 +221,7 @@
       <workItem from="1727072705456" duration="21629000" />
       <workItem from="1727156743567" duration="1530000" />
       <workItem from="1727178240625" duration="4976000" />
-      <workItem from="1727264781900" duration="4917000" />
+      <workItem from="1727264781900" duration="8053000" />
     </task>
     <servers />
   </component>

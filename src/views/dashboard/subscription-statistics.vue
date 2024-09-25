@@ -5,6 +5,8 @@ import {getAllSubscriptionList} from "@/store/aaden/cloud-v2-api";
 import {groupBy} from "lodash-es";
 import {getProductNameByCode} from "@/store/aaden/saasSubscription";
 import router from "@/router";
+import {cardColorList} from "@/store/aaden/saasSubscription";
+
 
 
 onMounted(async () => {
@@ -49,6 +51,7 @@ function pushToDetailByStatus (item) {
   <div class="px-4">
     <loading-provider :loading="loading">
       <div
+        class="mt-4"
         style="display: grid;grid-gap: 20px;grid-template-columns: repeat(5,minmax(0,1fr))"
       >
         <div
@@ -56,6 +59,7 @@ function pushToDetailByStatus (item) {
           :key="index"
         >
           <v-card
+            :color="cardColorList[index % 18]"
             elevation="0"
             min-height="200px"
             class="pa-4"
@@ -76,11 +80,17 @@ function pushToDetailByStatus (item) {
             </div>
           </v-card>
         </div>
+      </div>
+      <div
+        class="mt-4"
+        style="display: grid;grid-gap: 20px;grid-template-columns: repeat(5,minmax(0,1fr))"
+      >
         <div
           v-for="(item,index) in groupByProducts"
           :key="index"
         >
           <v-card
+            :color="cardColorList[index % 18]"
             elevation="0"
             class="pa-4"
             min-height="200px"
