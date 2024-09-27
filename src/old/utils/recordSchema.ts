@@ -1,4 +1,4 @@
-import {VSelect} from "vuetify/components";
+import {VSelect,VFileInput} from "vuetify/components";
 
 export const recordSchema = {
     title: '新增事件记录',
@@ -29,5 +29,11 @@ export const recordSchema = {
             hint: '是谁干的好事',
             default: 'JHD',
         },
+        {
+            key: 'appendUrl',
+            name: '附件',
+            hint: '一条记录只能保存一个文件！',
+            component: VFileInput,
+        }
     ]
 }

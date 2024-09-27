@@ -5,6 +5,7 @@ import DashboardLabel from "@/views/jh-widget/dashboard-label.vue";
 import DeviceDetailPage from "@/views/dashboard/DeviceDetailPage.vue";
 import {useFrontendStore} from "@/store/aaden/frontendStore";
 import JSpace from "@/views/BaseWidget/basic/JSpace.vue";
+import {checkFileType} from "@/store/aaden/utils";
 
 const store = useFrontendStore()
 const deviceEchoLog = useDeviceEchoLog()

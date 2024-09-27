@@ -6,6 +6,7 @@ import {getAllSubscriptionForStore} from "../../old/utils/firebase";
 import {baseUrl, getDeviceLogByDeviceId, getRecentNgrokStatus} from "./cloud-v2-api";
 import {groupBy} from "lodash-es";
 import {colorList} from "@/store/aaden/saasSubscription";
+import {saveFiles} from "@/store/aaden/utils";
 
 
 export const useDeviceEchoLog = defineStore('deviceLog', {
@@ -117,6 +118,7 @@ export const useDeviceEchoLog = defineStore('deviceLog', {
         },
         async addEventLog(logInfo) {
             logInfo.type = '人工操作'
+            logInfo.appendUrl = await saveFiles(logInfo.appendUrl)
             try {
                 await hillo.jsonPost(baseUrl + 'deviceLog/createEvent', logInfo);
                 await this.updateEventLogs()

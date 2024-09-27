@@ -71,3 +71,15 @@ export async function checkNgrokStatus(deviceIds) {
     // 转化为仅包含布尔值的对象
     return mapValues(statusMap, 'isEnabled');
 }
+
+export async function saveFiles(file) {
+    return  await hillo.postWithUploadFile('https://cloud-v2.aaden.io/uploadFile', {
+        file: file,
+    });
+}
+
+export function checkFileType (file) {
+    return file.split('.').pop()
+}
+
+export const imageList = ['jepg','jpg','png','gif','svg','webp','bmp']
