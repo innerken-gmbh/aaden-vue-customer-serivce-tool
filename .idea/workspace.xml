@@ -6,11 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="1777049f-9f7a-4424-9005-71635bd2b339" name="Changes" comment="Changes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/old/utils/recordSchema.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/old/utils/recordSchema.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/store/aaden/DeviceEcho.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/aaden/DeviceEcho.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/store/aaden/utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/aaden/utils.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/dashboard/DeviceDetailPage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/dashboard/DeviceDetailPage.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/dashboard/frontend-dashboard.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/dashboard/frontend-dashboard.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/dashboard/work-place.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/dashboard/work-place.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,9 +20,9 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Vue Options API Component" />
-        <option value="Vue Composition API Component" />
         <option value="TypeScript File" />
         <option value="Vue Single File Component" />
+        <option value="Vue Composition API Component" />
         <option value="JavaScript File" />
       </list>
     </option>
@@ -63,7 +59,7 @@
     "WebServerToolWindowPanel.toolwindow.show.size": "false",
     "git-widget-placeholder": "master",
     "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/XinZhou/Desktop/Code/bolita-task-manage",
+    "last_opened_file_path": "C:/Users/XinZhou/Desktop/Code/aaden-vue-customer-serivce-tool",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.standard": "true",
     "node.js.detected.package.tslint": "true",
@@ -148,8 +144,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-7c0b70fcd90d-JavaScript-PS-242.21829.154" />
-        <option value="bundled-php-predefined-a98d8de5180a-4d9f4c849d09-com.jetbrains.php.sharedIndexes-PS-242.21829.154" />
+        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-PS-242.23339.16" />
+        <option value="bundled-php-predefined-a98d8de5180a-90914f2295cb-com.jetbrains.php.sharedIndexes-PS-242.23339.16" />
       </set>
     </attachedChunks>
   </component>
@@ -223,7 +219,8 @@
       <workItem from="1727178240625" duration="4976000" />
       <workItem from="1727264781900" duration="5646000" />
       <workItem from="1727272268379" duration="785000" />
-      <workItem from="1727443732099" duration="3622000" />
+      <workItem from="1727443732099" duration="5310000" />
+      <workItem from="1728627805585" duration="6342000" />
     </task>
     <servers />
   </component>

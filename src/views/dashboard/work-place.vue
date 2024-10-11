@@ -65,6 +65,31 @@ function getSchema() {
 
 const dialogStore = useDialogStore()
 const store = useDeviceEchoLog()
+const downloadSchema = ref({
+  title: '下载3合1',
+  subtitle: '提示：下载时可能会使目标卡顿，建议在老板不忙时下载',
+  schemas: [
+    {
+      key: 'deviceId',
+      name: '设备Id',
+    },
+    {
+      key: 'year',
+      name: '年份',
+    },
+    {
+      key: 'month',
+      name: '月份',
+    },
+  ]
+})
+async function download3In1() {
+  const info = await dialogStore.editItem(downloadSchema.value, null)
+  const url = 'https://ik' + info.deviceId.padStart(4,'0') + '.ngrok.aaden.io/PHP/BackendData.php?op=download3In1ForMonth&year=' + info.year + '&month=' + info.month
+  await dialogStore.waitFor(async () => {
+    window.open(url)
+      })
+}
 
 async function updateInfo(item) {
   const info = await dialogStore.editItem(getSchema(), item)
@@ -237,6 +262,15 @@ function displayAddress(address) {
           hide-details
           prepend-inner-icon="mdi-magnify"
         />
+        <dashboard-label
+          color="orange-lighten-4"
+          @click="download3In1"
+        >
+          <template #label>
+            数据下载
+          </template>
+          三合一
+        </dashboard-label>
       </div>
 
       <v-data-table
