@@ -202,6 +202,7 @@ import {
 import useAppInfo from '@/old/hooks/useAppInfo'
 import useUserStore from '@/store/modules/user'
 import useAppConfigStore from '@/store/modules/app-config'
+import {md5} from 'js-md5';
 
 export default defineComponent({
   name: 'Login',
@@ -227,7 +228,10 @@ export default defineComponent({
       function doLogin() {
         const baseData = {}
         const data = {}
-        if (username.value === 'admin') {
+        const hash = '88daa06eb3f7e4ecd6b1556441737b9b'
+        const inputAfterHash = md5(password.value)
+        console.log(inputAfterHash)
+        if (username.value === 'admin' && hash === inputAfterHash) {
           baseData.code = 200
           baseData.msg = '登录成功'
           data.nickName = '超级管理员'
