@@ -12,6 +12,7 @@ import {recordSchema} from "@/old/utils/recordSchema";
 
 const deviceEchoLog = useDeviceEchoLog()
 const myFood = ref('糖醋里脊')
+const totalStatusList = ref(['尚未上云','script not found','server error','unexpected error','not using TSE','template is null','already done','no TSE fragment','ready to replace','replace done'])
 
 const rawNgrokUrl = "https://ngrok.aaden.io:4433?hostname=localhost&&username=aaden&&password=SW5uZXJrZW4zMjIu&&port="
 
@@ -40,6 +41,16 @@ onMounted(async () => {
   await deviceEchoLog.updateDeviceLog()
 
 })
+
+function showCurrentColor(text) {
+  if (text === 'not using TSE' || text === 'script not found') {
+    return 'yellow'
+  } else if (text === 'already done' || text === 'replace done' || text === 'ready to replace') {
+    return 'green'
+  } else {
+    return 'red'
+  }
+}
 
 function getSchema() {
   return {
@@ -158,6 +169,10 @@ const headers = ref([
     title: '门店名称',
     key: 'deviceName',
   },
+  {
+    title: 'summaryStatus',
+    key: 'summaryStatus',
+  },
   {title: 'cliVersion', key: 'cliVersion', align: 'end'},
   {title: 'backendVersion', key: 'backendVersion', align: 'end'},
   {title: '磁盘情况', key: 'diskUsage', align: 'end'},
@@ -256,6 +271,13 @@ function displayAddress(address) {
             deviceEchoLog.activeDeviceLogs.filter(it => it.ngrokOnline).length
           }}
         </dashboard-label>
+        <v-select
+          v-model="deviceEchoLog.summaryStatus"
+          label="SummaryStatus"
+          clearable
+          hide-details
+          :items="totalStatusList"
+        />
         <v-text-field
           v-model="deviceEchoLog.search"
           clearable
@@ -293,6 +315,15 @@ function displayAddress(address) {
           >
             {{ formatRestaurantInfo(item.restaurantInfo) }}
           </span>
+        </template>
+        <template #[`item.summaryStatus`]="{ item }">
+          <v-card
+            elevation="0"
+            :color="showCurrentColor(item.summaryStatus)"
+            class="pa-2 d-flex justify-center align-center"
+          >
+            {{ item.summaryStatus }}
+          </v-card>
         </template>
         <template #[`item.cliVersion`]="{ item }">
           <div

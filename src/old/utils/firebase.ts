@@ -52,6 +52,10 @@ export async function getDeviceStatus() {
     return await hillo.get(url + "/deviceLog/list")
 }
 
+export async function getDeviceSummaryStatus() {
+    return await hillo.get(url + "/ensureTseQr2025/summaryCurrentStatus")
+}
+
 export async function getEventListForDeviceId(deviceId) {
     return await hillo.get(url + "/deviceLog/eventList/" + deviceId)
 }

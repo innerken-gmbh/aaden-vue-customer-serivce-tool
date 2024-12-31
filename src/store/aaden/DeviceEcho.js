@@ -1,5 +1,5 @@
 import {defineStore} from 'pinia'
-import {getDeviceStatus, getEndPointUrl, getEventListForDeviceId} from '@/old/utils/firebase'
+import {getDeviceStatus, getDeviceSummaryStatus, getEndPointUrl, getEventListForDeviceId} from '@/old/utils/firebase'
 import hillo from 'hillo'
 import dayjs from 'dayjs'
 import {getAllSubscriptionForStore} from "../../old/utils/firebase";
@@ -15,6 +15,7 @@ export const useDeviceEchoLog = defineStore('deviceLog', {
             loading: false,
             deviceLogs: [],
             search: '',
+            summaryStatus: '',
             currentBackendVersion: '',
             cliVersion: '',
             lastUpdateTimestamp: '',
@@ -30,7 +31,13 @@ export const useDeviceEchoLog = defineStore('deviceLog', {
     },
     getters: {
         activeDeviceLogs() {
-            return this.deviceLogs.filter(it => !this.search || it.deviceId.startsWith(this.search))
+            let currentList = this.deviceLogs.filter(it => !this.search || it.deviceId.startsWith(this.search))
+            if (this.summaryStatus) {
+                return currentList.filter(it => it.summaryStatus === this.summaryStatus)
+            } else {
+                return currentList
+            }
+
         }
     },
     actions: {
@@ -70,8 +77,16 @@ export const useDeviceEchoLog = defineStore('deviceLog', {
         },
         async updateDeviceLog() {
             this.loading = true
+            const res = (await getDeviceSummaryStatus())
+            let currentList = []
+            for (const item in res) {
+                res[item].forEach(x => {
+                    currentList.push({status: item, deviceId: x})
+                })
+            }
             this.deviceLogs = (await getDeviceStatus()).map(it => {
                 it.channelInfo = frontendChannel(it.frontendVersion)
+                it.summaryStatus = currentList.find(a => a.deviceId === it.deviceId)?.status ? currentList.find(a => a.deviceId === it.deviceId)?.status : '尚未上云'
                 return it
             })
             const {version} = await hillo.get(
@@ -79,7 +94,6 @@ export const useDeviceEchoLog = defineStore('deviceLog', {
                 {}
             )
             const {"dist-tags": cliInfo} = await hillo.get("https://registry.npmjs.org/aaden-cli")
-            console.log(cliInfo.latest)
             this.cliVersion = cliInfo.latest
             this.currentBackendVersion = version
             this.lastUpdateTimestamp = dayjs().format('HH:mm:ss')
