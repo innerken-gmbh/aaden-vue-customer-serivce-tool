@@ -6,10 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="1777049f-9f7a-4424-9005-71635bd2b339" name="Changes" comment="Changes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/old/utils/firebase.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/old/utils/firebase.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/store/aaden/DeviceEcho.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/aaden/DeviceEcho.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/dashboard/work-place.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/dashboard/work-place.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -224,7 +222,7 @@
       <workItem from="1727272268379" duration="785000" />
       <workItem from="1727443732099" duration="5310000" />
       <workItem from="1728627805585" duration="6342000" />
-      <workItem from="1735638608440" duration="4012000" />
+      <workItem from="1735638608440" duration="5148000" />
     </task>
     <servers />
   </component>

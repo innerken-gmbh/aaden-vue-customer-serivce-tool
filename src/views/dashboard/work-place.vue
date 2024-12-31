@@ -12,7 +12,7 @@ import {recordSchema} from "@/old/utils/recordSchema";
 
 const deviceEchoLog = useDeviceEchoLog()
 const myFood = ref('糖醋里脊')
-const totalStatusList = ref(['尚未上云','script not found','server error','unexpected error','not using TSE','template is null','already done','no TSE fragment','ready to replace','replace done'])
+const totalStatusList = ref([{name:'尚未上云',value:'尚未上云'},{name:'脚本未部署',value:'script not found'},{name:'服务器错误',value:'server error'},{name:'未知错误',value:'unexpected error'},{name:'不使用TSE',value:'not using TSE'},{name:'没有模板',value:'template is null'},{name:'无需替换',value:'already done'},{name:'模板上没有TSE片段',value:'no TSE fragment'},{name:'可以自动替换模板',value:'ready to replace'},{name:'模板替换完成',value:'replace done'}])
 
 const rawNgrokUrl = "https://ngrok.aaden.io:4433?hostname=localhost&&username=aaden&&password=SW5uZXJrZW4zMjIu&&port="
 
@@ -41,6 +41,10 @@ onMounted(async () => {
   await deviceEchoLog.updateDeviceLog()
 
 })
+
+function showZHName (text) {
+  return totalStatusList.value.find(it => it.value === text).name
+}
 
 function showCurrentColor(text) {
   if (text === 'not using TSE' || text === 'script not found') {
@@ -276,6 +280,8 @@ function displayAddress(address) {
           label="SummaryStatus"
           clearable
           hide-details
+          item-title="name"
+          item-value="value"
           :items="totalStatusList"
         />
         <v-text-field
@@ -322,7 +328,7 @@ function displayAddress(address) {
             :color="showCurrentColor(item.summaryStatus)"
             class="pa-2 d-flex justify-center align-center"
           >
-            {{ item.summaryStatus }}
+            {{ showZHName(item.summaryStatus) }}
           </v-card>
         </template>
         <template #[`item.cliVersion`]="{ item }">

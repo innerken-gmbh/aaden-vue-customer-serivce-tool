@@ -89,6 +89,8 @@ export const useDeviceEchoLog = defineStore('deviceLog', {
                 it.summaryStatus = currentList.find(a => a.deviceId === it.deviceId)?.status ? currentList.find(a => a.deviceId === it.deviceId)?.status : '尚未上云'
                 return it
             })
+            // const list = this.deviceLogs.filter(it => it.summaryStatus === '尚未上云').map(it => it.deviceId)
+            // console.log(list,'list')
             const {version} = await hillo.get(
                 'https://api.aaden.online/proxy.php?url=https://aaden-backend.s3.eu-central-1.amazonaws.com/raw/package.json',
                 {}
