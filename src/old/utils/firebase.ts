@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import {initializeApp} from 'firebase/app'
 import {getAnalytics} from 'firebase/analytics'
-import {DocumentData, getDoc, getDocs, getFirestore, Query, QuerySnapshot,collection,query} from 'firebase/firestore'
+import {DocumentData, getDoc, getDocs, getFirestore, Query, QuerySnapshot,collection,query,setDoc,doc} from 'firebase/firestore'
 import hillo from "hillo";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -79,4 +79,12 @@ export async function resultOf (query, logLabel = '') {
         console.log(res, logLabel)
     }
     return res
+}
+
+export async function setRules (rules) {
+    return await setDoc(doc(db, 'simplifyRules','aaden'),{rules})
+}
+
+export async function getRules () {
+    return (await resultOf(query(collection(db, 'simplifyRules')))).find(it => it.id === 'aaden').rules
 }

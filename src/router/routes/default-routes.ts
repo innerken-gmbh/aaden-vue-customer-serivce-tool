@@ -73,6 +73,11 @@ export default [
         menuUrl: '/store-management/sync-group',
         menuName: '修改商品同步组(敬请期待)',
       },
+      {
+        parentPath: '/store-management',
+        menuUrl: '/store-management/edit-excel',
+        menuName: '优化Excel',
+      },
     ],
   },
   {
