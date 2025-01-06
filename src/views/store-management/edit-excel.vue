@@ -73,8 +73,10 @@ const excelData = ref(null)
 const needSimplifyList = ref('')
 
 async function simplifyExcel () {
+  console.log(process.env.OPENAI_API_KEY,'key')
   if (needSimplifyList.value) {
     const openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
       dangerouslyAllowBrowser: true,
     })
     try {

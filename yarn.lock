@@ -2,6 +2,31 @@
 # yarn lockfile v1
 
 
+"@ai-sdk/openai@^1.0.13":
+  "integrity" "sha512-kuSLNM6nFy+lgEd6d0X9Bp4hXjPbEwtUbnIrI4jqa9uZZupHc9vh8rOF6XO8s6ZhrWYjnuYZmhvK0S4k+sHrsg=="
+  "resolved" "https://registry.npmjs.org/@ai-sdk/openai/-/openai-1.0.13.tgz"
+  "version" "1.0.13"
+  dependencies:
+    "@ai-sdk/provider" "1.0.3"
+    "@ai-sdk/provider-utils" "2.0.5"
+
+"@ai-sdk/provider-utils@2.0.5":
+  "integrity" "sha512-2M7vLhYN0ThGjNlzow7oO/lsL+DyMxvGMIYmVQvEYaCWhDzxH5dOp78VNjJIVwHzVLMbBDigX3rJuzAs853idw=="
+  "resolved" "https://registry.npmjs.org/@ai-sdk/provider-utils/-/provider-utils-2.0.5.tgz"
+  "version" "2.0.5"
+  dependencies:
+    "@ai-sdk/provider" "1.0.3"
+    "eventsource-parser" "^3.0.0"
+    "nanoid" "^3.3.8"
+    "secure-json-parse" "^2.7.0"
+
+"@ai-sdk/provider@1.0.3":
+  "integrity" "sha512-WiuJEpHTrltOIzv3x2wx4gwksAHW0h6nK3SoDzjqCOJLu/2OJ1yASESTIX+f07ChFykHElVoP80Ol/fe9dw6tQ=="
+  "resolved" "https://registry.npmjs.org/@ai-sdk/provider/-/provider-1.0.3.tgz"
+  "version" "1.0.3"
+  dependencies:
+    "json-schema" "^0.4.0"
+
 "@ampproject/remapping@^2.2.0":
   "integrity" "sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw=="
   "resolved" "https://registry.npmjs.org/@ampproject/remapping/-/remapping-2.3.0.tgz"
@@ -2556,6 +2581,11 @@
   "resolved" "https://registry.npmjs.org/eventemitter3/-/eventemitter3-4.0.7.tgz"
   "version" "4.0.7"
 
+"eventsource-parser@^3.0.0":
+  "integrity" "sha512-T1C0XCUimhxVQzW4zFipdx0SficT651NnkR0ZSH3yQwh+mFMdLfgjABVi4YtMTtaL4s168593DaoaRLMqryavA=="
+  "resolved" "https://registry.npmjs.org/eventsource-parser/-/eventsource-parser-3.0.0.tgz"
+  "version" "3.0.0"
+
 "evtd@^0.2.2", "evtd@^0.2.4":
   "integrity" "sha512-qaeGN5bx63s/AXgQo8gj6fBkxge+OoLddLniox5qtLAEY5HSnuSlISXVPxnSae1dWblvTh4/HoMIB+mbMsvZzw=="
   "resolved" "https://registry.npmmirror.com/evtd/-/evtd-0.2.4.tgz"
@@ -3418,6 +3448,11 @@
   "resolved" "https://registry.npmjs.org/json-schema-traverse/-/json-schema-traverse-1.0.0.tgz"
   "version" "1.0.0"
 
+"json-schema@^0.4.0":
+  "integrity" "sha512-es94M3nTIfsEPisRafak+HDLfHXnKBhV3vU5eqPcS3flIWqcxJWgXHXiey3YrpaNsanY5ei1VoYEbOzijuq9BA=="
+  "resolved" "https://registry.npmjs.org/json-schema/-/json-schema-0.4.0.tgz"
+  "version" "0.4.0"
+
 "json-stable-stringify-without-jsonify@^1.0.1":
   "integrity" "sha512-Bdboy+l7tA3OGW6FjyFHWkP5LuByj1Tk33Ljyq0axyzdk9//JSi2u3fP1QSmd1KNwq6VOKYGlAu87CisVir6Pw=="
   "resolved" "https://registry.npmjs.org/json-stable-stringify-without-jsonify/-/json-stable-stringify-without-jsonify-1.0.1.tgz"
@@ -3769,10 +3804,10 @@
     "vooks" "^0.2.12"
     "vueuc" "^0.4.58"
 
-"nanoid@^3.3.6", "nanoid@^3.3.7":
-  "integrity" "sha512-eSRppjcPIatRIMC1U6UngP8XFcz8MQWGQdt1MTBQ7NaAmvXDfvNxbvWV3x2y6CdEUciCSsDHDQZbhYaB8QEo2g=="
-  "resolved" "https://registry.npmjs.org/nanoid/-/nanoid-3.3.7.tgz"
-  "version" "3.3.7"
+"nanoid@^3.3.6", "nanoid@^3.3.7", "nanoid@^3.3.8":
+  "integrity" "sha512-WNLf5Sd8oZxOm+TzppcYk8gVOgP+l58xNy58D0nbUnOxOWRWvlcCV4kUF7ltmI6PsrLl/BgKEyS4mqsGChFN0w=="
+  "resolved" "https://registry.npmjs.org/nanoid/-/nanoid-3.3.8.tgz"
+  "version" "3.3.8"
 
 "nanomatch@^1.2.1":
   "integrity" "sha512-fpoe2T0RbHwBTBUOftAfBPaDEi06ufaUai0mE6Yn1kacc3SnTErfb/h+X94VXzI64rKFHYImXSvdwGGCmwOqCA=="
@@ -4490,6 +4525,11 @@
   "integrity" "sha512-AQdy8s4WhNvUZ6P8F6PB21tSPIYKniic+Ogx0AacBMjKP1GUHN2E9URxQHtCusiwxudnCKkdy4GrHXPPJSkCCw=="
   "resolved" "https://registry.npmjs.org/screenfull/-/screenfull-6.0.2.tgz"
   "version" "6.0.2"
+
+"secure-json-parse@^2.7.0":
+  "integrity" "sha512-6aU+Rwsezw7VR8/nyvKTx8QpWH9FrcYiXXlqC4z5d5XQBDRqtbfsRjnwGyqbi3gddNtWHuEk9OANUotL26qKUw=="
+  "resolved" "https://registry.npmjs.org/secure-json-parse/-/secure-json-parse-2.7.0.tgz"
+  "version" "2.7.0"
 
 "seemly@^0.3.6":
   "integrity" "sha512-lEV5VB8BUKTo/AfktXJcy+JeXns26ylbMkIUco8CYREsQijuz4mrXres2Q+vMLdwkuLxJdIPQ8IlCIxLYm71Yw=="
@@ -5467,6 +5507,11 @@
   "integrity" "sha512-Ux4ygGWsu2c7isFWe8Yu1YluJmqVhxqK2cLXNQA5AcC3QfbGNpM7fu0Y8b/z16pXLnFxZYvWhd3fhBY9DLmC6Q=="
   "resolved" "https://registry.npmjs.org/yn/-/yn-3.1.1.tgz"
   "version" "3.1.1"
+
+"zod@^3.0.0", "zod@^3.23.8":
+  "integrity" "sha512-muH7gBL9sI1nciMZV67X5fTKKBLtwpZ5VBp1vsOQzj1MhrBZ4wlVCm3gedKZWLp0Oyel8sIGfeiz54Su+OVT+A=="
+  "resolved" "https://registry.npmjs.org/zod/-/zod-3.24.1.tgz"
+  "version" "3.24.1"
 
 "zrender@5.4.0":
   "integrity" "sha512-rOS09Z2HSVGFs2dn/TuYk5BlCaZcVe8UDLLjj1ySYF828LATKKdxuakSZMvrDz54yiKPDYVfjdKqcX8Jky3BIA=="
