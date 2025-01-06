@@ -13,6 +13,12 @@
             @change="handleFileUpload"
           />
         </div>
+        <div>
+          <v-text-field
+            v-model="openAiKey"
+            label="API KEY"
+          />
+        </div>
         <div class="d-flex">
           <v-spacer />
           <v-btn
@@ -71,12 +77,12 @@ async function saveRules () {
 const file = ref(null)
 const excelData = ref(null)
 const needSimplifyList = ref('')
+const openAiKey = ref('')
 
 async function simplifyExcel () {
-  console.log(process.env.OPENAI_API_KEY,'key')
   if (needSimplifyList.value) {
     const openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
+      apiKey: openAiKey.value,
       dangerouslyAllowBrowser: true,
     })
     try {
