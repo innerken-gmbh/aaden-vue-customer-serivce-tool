@@ -75,7 +75,6 @@ const needSimplifyList = ref('')
 async function simplifyExcel () {
   if (needSimplifyList.value) {
     const openai = new OpenAI({
-      apiKey: import.meta.env.VITE_OPENAI,
       dangerouslyAllowBrowser: true,
     })
     try {
