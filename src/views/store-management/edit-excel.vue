@@ -22,6 +22,7 @@
         <div class="d-flex">
           <v-spacer />
           <v-btn
+            :loading="loading"
             variant="outlined"
             elevation="0"
             @click="simplifyExcel"
@@ -78,8 +79,10 @@ async function saveRules () {
 const file = ref(null)
 const openAiKey = ref('')
 const excelData = ref(null)
+const loading = ref(false)
 
 async function simplifyExcel () {
+  loading.value = true
   if (excelData.value) {
     const openai = new OpenAI({
       apiKey: openAiKey.value,
@@ -109,6 +112,7 @@ async function simplifyExcel () {
       console.error('Error:', error);
     }
   }
+  loading.value = false
 }
 async function handleFileUpload () {
   if (file.value) {
