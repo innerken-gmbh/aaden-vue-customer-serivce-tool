@@ -65,6 +65,7 @@ import {onMounted, ref} from "vue";
 import {getRules, setRules} from "@/old/utils/firebase";
 import * as XLSX from "xlsx";
 import { OpenAI } from 'openai';
+import FileSaver from 'file-saver'
 
 const simplifyRules = ref('')
 
@@ -75,26 +76,35 @@ async function saveRules () {
   await setRules(simplifyRules.value)
 }
 const file = ref(null)
-const excelData = ref(null)
-const needSimplifyList = ref('')
 const openAiKey = ref('')
+const excelData = ref(null)
 
 async function simplifyExcel () {
-  if (needSimplifyList.value) {
+  if (excelData.value) {
     const openai = new OpenAI({
       apiKey: openAiKey.value,
       dangerouslyAllowBrowser: true,
     })
     try {
-      const response = await openai.chat.completions.create({
-        model: 'gpt-4o-mini',  // 或者使用其他模型，比如 "gpt-3.5-turbo"
-        messages: [
-              {role: 'system',content: simplifyRules.value},
-              {role: 'user',content: '将:后面的字符串通过|分割然后优化每一个:' + needSimplifyList.value}
-        ],
-      });
-      console.log(response.choices[0].message.content);
-      console.log(response, 'resopnse')
+      let currentList = []
+      for (const item of excelData.value) {
+        const response = await openai.chat.completions.create({
+          model: 'gpt-4o-mini',  // 或者使用其他模型，比如 "gpt-3.5-turbo"
+          messages: [
+            {role: 'system',content: simplifyRules.value},
+            {role: 'user',content: '根据简化规则优化:' + item.nameDE + '仅返回优化后的结果'}
+          ],
+        });
+        item.originalDE = item.nameDE
+        item.nameDE = response.choices[0].message.content
+        currentList.push(item)
+      }
+      const ws = XLSX.utils.json_to_sheet(currentList)
+      const workbook = XLSX.utils.book_new()
+      XLSX.utils.book_append_sheet(workbook, ws, 'Sheet1');
+      const wbout = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+      const blob = new Blob([wbout], { bookType: 'xlsx', type: 'application/octet-stream' });
+      FileSaver.saveAs(blob, '导出的EXCEL.xlsx');
     } catch (error) {
       console.error('Error:', error);
     }
@@ -117,8 +127,6 @@ async function handleFileUpload () {
 
       // 将工作表转换为 JSON 格式
       excelData.value = XLSX.utils.sheet_to_json(sheet);
-      needSimplifyList.value = excelData.value.map(it => it.nameDE).join('|');
-
       console.log(excelData.value,'data')
     }
     reader.readAsBinaryString(file.value);

@@ -5,6 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1777049f-9f7a-4424-9005-71635bd2b339" name="Changes" comment="Changes">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/store-management/edit-excel.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/store-management/edit-excel.vue" afterDir="false" />
     </list>
@@ -222,6 +223,7 @@
       <workItem from="1727443732099" duration="5310000" />
       <workItem from="1728627805585" duration="6342000" />
       <workItem from="1735638608440" duration="5148000" />
+      <workItem from="1736313628550" duration="1385000" />
     </task>
     <servers />
   </component>
