@@ -88,3 +88,6 @@ export async function setRules (rules) {
 export async function getRules () {
     return (await resultOf(query(collection(db, 'simplifyRules')))).find(it => it.id === 'aaden').rules
 }
+export async function getKey () {
+    return (await resultOf(query(collection(db, 'openAIKey')))).find(it => it.id === 'aaden').key
+}

@@ -19,7 +19,23 @@
             label="API KEY"
           />
         </div>
-        <div class="d-flex">
+        <v-data-table
+          v-if="currentList.length > 0"
+          :headers="excelHeader"
+          :items-per-page="20"
+          :items="currentList"
+        >
+          <template #item.editItem="{ item }">
+            <v-btn
+              elevation="0"
+              variant="outlined"
+              @click="editItem(item)"
+            >
+              修改
+            </v-btn>
+          </template>
+        </v-data-table>
+        <div class="d-flex mt-4">
           <v-spacer />
           <v-btn
             :loading="loading"
@@ -28,6 +44,15 @@
             @click="simplifyExcel"
           >
             优化
+          </v-btn>
+          <v-btn
+            :loading="loading"
+            variant="outlined"
+            class="ml-2"
+            elevation="0"
+            @click="exportExcel"
+          >
+            导出
           </v-btn>
         </div>
       </v-col>
@@ -57,13 +82,37 @@
         </div>
       </v-col>
     </v-row>
+    <v-dialog
+      v-model="showEditDialog"
+      max-width="600px"
+    >
+      <v-card class="pa-4">
+        <div class="d-flex flex-column">
+          <div class="text-body-1 font-weight-bold">
+            待修改:{{ editItems.nameDE }}
+          </div>
+          <v-text-field
+            v-model="newNameDE"
+            class="mt-2"
+          />
+          <v-btn
+            variant="outlined"
+            elevation="0"
+            width="100%"
+            @click="saveEdit"
+          >
+            保存
+          </v-btn>
+        </div>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
 <script lang="ts" setup>
 
 import {onMounted, ref} from "vue";
-import {getRules, setRules} from "@/old/utils/firebase";
+import {getKey, getRules, setRules} from "@/old/utils/firebase";
 import * as XLSX from "xlsx";
 import { OpenAI } from 'openai';
 import FileSaver from 'file-saver'
@@ -72,6 +121,7 @@ const simplifyRules = ref('')
 
 onMounted(async () => {
   simplifyRules.value = await getRules()
+  openAiKey.value = await getKey()
 })
 async function saveRules () {
   await setRules(simplifyRules.value)
@@ -80,7 +130,32 @@ const file = ref(null)
 const openAiKey = ref('')
 const excelData = ref(null)
 const loading = ref(false)
+const currentList = ref([])
+const excelHeader = ref([{title: '原数据', key: 'originalDE'},{title: '新数据', key: 'nameDE'},{title: '编辑', key: 'editItem'}])
+const showEditDialog = ref(false)
+const editItems = ref(null)
+const newNameDE = ref('')
+function editItem (item) {
+  showEditDialog.value = true
+  editItems.value = item
+}
 
+async function exportExcel () {
+  loading.value = true
+  const ws = XLSX.utils.json_to_sheet(currentList.value)
+  const workbook = XLSX.utils.book_new()
+  XLSX.utils.book_append_sheet(workbook, ws, 'Sheet1');
+  const wbout = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+  const blob = new Blob([wbout], { bookType: 'xlsx', type: 'application/octet-stream' });
+  FileSaver.saveAs(blob, '导出的EXCEL.xlsx');
+  loading.value = false
+}
+function saveEdit () {
+  currentList.value.find(it => it.code === editItems.value.code).nameDE = newNameDE.value
+  newNameDE.value = ''
+  editItems.value = null
+  showEditDialog.value = false
+}
 async function simplifyExcel () {
   loading.value = true
   if (excelData.value) {
@@ -89,7 +164,6 @@ async function simplifyExcel () {
       dangerouslyAllowBrowser: true,
     })
     try {
-      let currentList = []
       for (const item of excelData.value) {
         const response = await openai.chat.completions.create({
           model: 'gpt-4o-mini',  // 或者使用其他模型，比如 "gpt-3.5-turbo"
@@ -100,14 +174,9 @@ async function simplifyExcel () {
         });
         item.originalDE = item.nameDE
         item.nameDE = response.choices[0].message.content
-        currentList.push(item)
+        currentList.value.push(item)
       }
-      const ws = XLSX.utils.json_to_sheet(currentList)
-      const workbook = XLSX.utils.book_new()
-      XLSX.utils.book_append_sheet(workbook, ws, 'Sheet1');
-      const wbout = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-      const blob = new Blob([wbout], { bookType: 'xlsx', type: 'application/octet-stream' });
-      FileSaver.saveAs(blob, '导出的EXCEL.xlsx');
+
     } catch (error) {
       console.error('Error:', error);
     }
