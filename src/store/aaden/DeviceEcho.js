@@ -166,5 +166,17 @@ export function frontendChannel(version) {
 }
 
 export function fromNowTimestamp(timestamp) {
-    return dayjs(timestamp).fromNow()
+    if (timestamp) {
+        return dayjs(timestamp).fromNow()
+    } else {
+        return '日期有古怪'
+    }
+}
+
+export function fromNowTimeDisplay(timestamp) {
+    if (timestamp) {
+        return dayjs(timestamp).format('dddd, MMMM DD, YYYY, h:mm:ss a')
+    } else {
+        return '日期有古怪'
+    }
 }

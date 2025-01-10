@@ -1,7 +1,7 @@
 <script setup>
 import {onBeforeUnmount, onMounted, ref} from 'vue'
 import {random} from 'lodash-es'
-import {fromNowTimestamp, useDeviceEchoLog} from '@/store/aaden/DeviceEcho'
+import {fromNowTimeDisplay, fromNowTimestamp, useDeviceEchoLog} from '@/store/aaden/DeviceEcho'
 import DashboardLabel from "@/views/jh-widget/dashboard-label.vue";
 import {useDialogStore} from "@/store/aaden/dialogStore";
 import MiniActionButton from "@/views/BaseWidget/basic/button/MiniActionButton.vue";
@@ -9,6 +9,7 @@ import JSpace from "@/views/BaseWidget/basic/JSpace.vue";
 import DeviceDetailPage from "@/views/dashboard/DeviceDetailPage.vue";
 import {getNgrokUrl} from "@/old/utils/firebase";
 import {recordSchema} from "@/old/utils/recordSchema";
+import dayjs from "dayjs";
 
 const deviceEchoLog = useDeviceEchoLog()
 const myFood = ref('糖醋里脊')
@@ -39,7 +40,7 @@ onMounted(async () => {
   })
   updateMyFood()
   await deviceEchoLog.updateDeviceLog()
-
+  console.log(dayjs(null).fromNow(),'321')
 })
 
 function showZHName (text) {
@@ -177,8 +178,8 @@ const headers = ref([
     title: 'summaryStatus',
     key: 'summaryStatus',
   },
-  {title: 'cliVersion', key: 'cliVersion', align: 'end'},
-  {title: 'backendVersion', key: 'backendVersion', align: 'end'},
+  {title: '上次备份', key: 'lastBackupTime'},
+  {title: 'Cli | Backend', key: 'version', align: 'end'},
   {title: '磁盘情况', key: 'diskUsage', align: 'end'},
   {title: '报告时间', key: 'timestamp', align: 'end'},
 ])
@@ -311,6 +312,16 @@ function displayAddress(address) {
         <template #[`item.timestamp`]="{ item }">
           {{ fromNowTimestamp(item.timestamp) }}
         </template>
+        <template #[`item.lastBackupTime`]="{ item }">
+          <v-tooltip bottom>
+            <template #activator="{props }">
+              <div v-bind="props">
+                {{ fromNowTimestamp(item.lastBackupTime) }}
+              </div>
+            </template>
+            <span>{{ fromNowTimeDisplay(item.lastBackupTime) }}</span>
+          </v-tooltip>
+        </template>
         <template #[`item.deviceName`]="{ item }">
           <div v-html="displayAddress(item.deviceName)" />
         </template>
@@ -331,38 +342,35 @@ function displayAddress(address) {
             {{ showZHName(item.summaryStatus) }}
           </v-card>
         </template>
-        <template #[`item.cliVersion`]="{ item }">
+        <template #[`item.version`]="{ item }">
           <div
             class="d-flex justify-end"
             style="width: 100%;"
           >
-            <v-sheet
-              class="pa-1"
-              style="width: fit-content"
-              :color="deviceEchoLog.cliVersionOk(item)&&item.ngrokOk?'green-darken-4':'red-darken-4'"
-            >
-              {{ item.cliVersion }}
-              <span v-if="!item.ngrokOk">
-                ⚠
-              </span>
-            </v-sheet>
-          </div>
-        </template>
-        <template #[`item.backendVersion`]="{ item }">
-          <div
-            class="d-flex justify-end"
-            style="width: 100%;"
-          >
-            <v-sheet
-              class="pa-1"
-              style="width: fit-content"
-              :color="deviceEchoLog.backgroundVersionOk(item)?'green':'red'"
-            >
-              {{ item.backendVersion }}
-              <template v-if="item.maxVersion!=='-1'">
-                / {{ item.maxVersion }}
-              </template>
-            </v-sheet>
+            <div>
+              <v-sheet
+                class="pa-1"
+                style="width: fit-content"
+                :color="deviceEchoLog.cliVersionOk(item)&&item.ngrokOk?'green-darken-4':'red-darken-4'"
+              >
+                {{ item.cliVersion }}
+                <span v-if="!item.ngrokOk">
+                  ⚠
+                </span>
+              </v-sheet>
+            </div>
+            <div>
+              <v-sheet
+                class="pa-1"
+                style="width: fit-content"
+                :color="deviceEchoLog.backgroundVersionOk(item)?'green':'red'"
+              >
+                {{ item.backendVersion }}
+                <template v-if="item.maxVersion!=='-1'">
+                  / {{ item.maxVersion }}
+                </template>
+              </v-sheet>
+            </div>
           </div>
         </template>
         <template #[`item.diskUsage`]="{ item }">
