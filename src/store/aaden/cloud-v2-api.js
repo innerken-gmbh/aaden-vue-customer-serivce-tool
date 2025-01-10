@@ -58,3 +58,7 @@ export async function getAllSubscriptionList () {
 export async function getDeviceSubscriptionList (id) {
     return await hillo.get(baseUrl + 'subscriptions/by-device/' + id)
 }
+
+export async function getDeviceBackendList (deviceId) {
+    return await hillo.get(baseUrl + 'api/backups?id=' + deviceId)
+}

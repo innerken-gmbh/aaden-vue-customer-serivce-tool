@@ -40,7 +40,6 @@ onMounted(async () => {
   })
   updateMyFood()
   await deviceEchoLog.updateDeviceLog()
-  console.log(dayjs(null).fromNow(),'321')
 })
 
 function showZHName (text) {

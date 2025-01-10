@@ -1,5 +1,5 @@
 <script setup>
-import {fromNowTimestamp, useDeviceEchoLog} from "@/store/aaden/DeviceEcho";
+import {fromNowTimeDisplay, fromNowTimestamp, useDeviceEchoLog} from "@/store/aaden/DeviceEcho";
 import PrimaryButton from "@/views/BaseWidget/basic/button/PrimaryButton.vue";
 import {useDialogStore} from "@/store/aaden/dialogStore";
 import {computed, onMounted, ref, watch} from "vue";
@@ -8,7 +8,7 @@ import SecondaryButton from "@/views/BaseWidget/basic/button/SecondaryButton.vue
 import JSpace from "@/views/BaseWidget/basic/JSpace.vue";
 import LoadingProvider from "@/views/BaseWidget/basic/premade/LoadingProvider.vue";
 import {recordSchema} from "@/old/utils/recordSchema";
-import {getDeviceSubscriptionList, getLogsByDeviceId} from "@/store/aaden/cloud-v2-api";
+import {getDeviceBackendList, getDeviceSubscriptionList, getLogsByDeviceId} from "@/store/aaden/cloud-v2-api";
 import {getZHProductName,getDateProgressLinear,formatDate,formatPriceDisplay,showCurrentBillType} from "@/store/aaden/saasSubscription";
 import {checkFileType,imageList} from "@/store/aaden/utils";
 
@@ -18,14 +18,19 @@ const tab = ref(0)
 const dialogStore = useDialogStore()
 const logInfo = ref([])
 const subInfo = ref([])
+const backendList = ref([])
 
 watch(store,async (value) => {
   if (value) {
     logInfo.value = await getLogsByDeviceId(store?.activeDevice?.deviceId)
     subInfo.value = await getDeviceSubscriptionList(store?.activeDevice?.deviceId)
+    backendList.value = await getDeviceBackendList(store?.activeDevice?.deviceId)
   }
 })
 
+async function downloadBackendFiles (item) {
+  window.open(item.fileUrl)
+}
 async function addInfo() {
   const info = await dialogStore.editItem(recordSchema)
   console.log(info)
@@ -72,6 +77,12 @@ const subHeader = ref([
   {title: '项目名称', key: 'productZHName'},
   {title: '项目进度', key: 'subLinear'},
   {title: '截止时间', key: 'subscriptionEndDate'},
+])
+
+const backendHeader = ref([
+  {title: 'id', key: 'id',},
+  {title: '创建时间', key: 'timeDisplay'},
+  {title: '下载', key: 'downloadFile'},
 ])
 const emit = defineEmits(['ngrok'])
 
@@ -157,6 +168,7 @@ function showBigSizeImg (item) {
               <v-tab>Ngrok连接情况</v-tab>
               <v-tab>前端情况</v-tab>
               <v-tab>门店订阅</v-tab>
+              <v-tab>备份列表</v-tab>
             </v-tabs>
           </v-card>
           <v-card
@@ -341,6 +353,32 @@ function showBigSizeImg (item) {
                         <strong>{{ Math.ceil(value) }}%</strong>
                       </template>
                     </v-progress-linear>
+                  </template>
+                </v-data-table>
+              </v-tabs-window-item>
+              <v-tabs-window-item>
+                <v-data-table
+                  :headers="backendHeader"
+                  :items="backendList"
+                >
+                  <template #[`item.timeDisplay`]="{ item }">
+                    <v-tooltip top>
+                      <template #activator="{props }">
+                        <div v-bind="props">
+                          {{ fromNowTimestamp(item.createTimestamp) }}
+                        </div>
+                      </template>
+                      <span>{{ fromNowTimeDisplay(item.createTimestamp) }}</span>
+                    </v-tooltip>
+                  </template>
+                  <template #[`item.downloadFile`]="{ item }">
+                    <v-btn
+                      elevation="0"
+                      variant="outlined"
+                      @click="downloadBackendFiles(item)"
+                    >
+                      下载
+                    </v-btn>
                   </template>
                 </v-data-table>
               </v-tabs-window-item>
