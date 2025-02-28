@@ -62,3 +62,7 @@ export async function getDeviceSubscriptionList (id) {
 export async function getDeviceBackendList (deviceId) {
     return await hillo.get(baseUrl + 'api/backups?id=' + deviceId)
 }
+
+export async function createDeviceByAdmin (userId) {
+    return await hillo.post(baseUrl + 'subscriptions/create-admin/' + userId,{})
+}

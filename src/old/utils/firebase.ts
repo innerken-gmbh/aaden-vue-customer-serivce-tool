@@ -1,6 +1,11 @@
 // Import the functions you need from the SDKs you need
 import {initializeApp} from 'firebase/app'
 import {getAnalytics} from 'firebase/analytics'
+import {
+    createUserWithEmailAndPassword,
+    getAuth,
+    signInWithEmailAndPassword
+} from 'firebase/auth'
 import {DocumentData, getDoc, getDocs, getFirestore, Query, QuerySnapshot,collection,query,setDoc,doc} from 'firebase/firestore'
 import hillo from "hillo";
 // TODO: Add SDKs for Firebase products that you want to use
@@ -21,7 +26,8 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig)
 const analytics = getAnalytics(app)
-const db = getFirestore(app)
+export const db = getFirestore(app)
+export const FireBaseAuth = getAuth(app)
 
 export async function executeQuery(query: Query<DocumentData>) {
     return getDocContentWithId(await getDocs(query))
@@ -90,4 +96,16 @@ export async function getRules () {
 }
 export async function getKey () {
     return (await resultOf(query(collection(db, 'openAIKey')))).find(it => it.id === 'aaden').key
+}
+
+export async function createUserWithEmail (email, password) {
+    return await createUserWithEmailAndPassword(FireBaseAuth, email, password)
+}
+
+export async function loginWithEmailAndPassword (email, password) {
+    return await signInWithEmailAndPassword(FireBaseAuth, email, password)
+}
+
+export function getCurrentUserId () {
+    return FireBaseAuth.currentUser?.uid
 }

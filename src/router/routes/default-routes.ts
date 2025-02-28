@@ -78,6 +78,11 @@ export default [
         menuUrl: '/store-management/edit-excel',
         menuName: '优化Excel',
       },
+      {
+        parentPath: '/store-management',
+        menuUrl: '/store-management/get-test-store',
+        menuName: '注册测试门店',
+      },
     ],
   },
   {

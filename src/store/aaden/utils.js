@@ -83,3 +83,7 @@ export function checkFileType (file) {
 }
 
 export const imageList = ['jepg','jpg','png','gif','svg','webp','bmp']
+
+export function sleep (ms) {
+    return new Promise(resolve => setTimeout(resolve, ms))
+}
