@@ -5,13 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1777049f-9f7a-4424-9005-71635bd2b339" name="Changes" comment="Changes">
-      <change afterPath="$PROJECT_DIR$/src/store/aaden/cloud5-api.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/views/store-management/get-test-store.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/old/utils/firebase.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/old/utils/firebase.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/router/routes/default-routes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/router/routes/default-routes.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/store/aaden/cloud-v2-api.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/aaden/cloud-v2-api.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/store/aaden/utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/aaden/utils.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/store-management/get-test-store.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/store-management/get-test-store.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -234,7 +229,7 @@
       <workItem from="1737010707996" duration="199000" />
       <workItem from="1740557077383" duration="6496000" />
       <workItem from="1740633526645" duration="13725000" />
-      <workItem from="1740722135504" duration="6722000" />
+      <workItem from="1740722135504" duration="7090000" />
     </task>
     <servers />
   </component>

@@ -28,6 +28,12 @@
             width="500px"
           />
         </div>
+        <div
+          v-if="error"
+          style="color: red"
+        >
+          {{ errorMessages }}
+        </div>
         <div class="d-flex align-center justify-center">
           <v-btn
             :loading="loading"
@@ -48,10 +54,13 @@
 
 import {onMounted, ref} from "vue";
 import {getTestDevice} from "@/store/aaden/cloud5-api";
+import { FireBaseAuth } from '@/old/utils/firebase'
 import {createUserWithEmail, getCurrentUserId, loginWithEmailAndPassword} from "@/old/utils/firebase";
 const customerEmail = ref('')
 const customerPassword = ref(generateRandomString(9))
 const loading = ref(false)
+const error = ref(false)
+const errorMessages = ref('')
 
 onMounted(async () => {
   console.log(customerEmail.value, '111')
@@ -66,19 +75,21 @@ async function getCurrentStore () {
       try {
         await createUserWithEmail(email, password)
       } catch (e) {
-        this.error = true
-        this.errorMessages = e.message
+        error.value = true
+        errorMessages.value = e.message
       }
     } else {
       console.log(e.code, 'login')
-      this.error = true
-      this.errorMessages = e.message
+      error.value = true
+      errorMessages.value = e.message
     }
   }
   const userId = await getCurrentUserId()
+  console.log(userId,'userId')
   if (userId) {
     await getTestDevice(userId)
   }
+  await FireBaseAuth.signOut()
   loading.value = false
 }
 
