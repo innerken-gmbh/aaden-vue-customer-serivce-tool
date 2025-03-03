@@ -45,8 +45,10 @@ const headers = ref([
 
 
 const autoRefresh = ref(true)
-
-
+const rawNgrokUrl = "https://ngrok.aaden.io:4433?hostname=localhost&&username=aaden&&password=SW5uZXJrZW4zMjIu&&port="
+function showNgrokForDevice(device) {
+  window.open(rawNgrokUrl + '1' + device.deviceId.toString().padStart(4, '0'))
+}
 async function clickItem(e, row) {
     await deviceEchoLog.selectLogByDeviceId(row.item.deviceId)
 }
@@ -99,6 +101,6 @@ async function reloadTable () {
         </template>
       </v-data-table>
     </v-card>
-    <device-detail-page />
+    <device-detail-page @ngrok="showNgrokForDevice(deviceEchoLog.activeDevice)" />
   </div>
 </template>

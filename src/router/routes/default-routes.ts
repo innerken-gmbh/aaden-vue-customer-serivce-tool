@@ -101,8 +101,8 @@ export default [
       },
       {
         parentPath: '/form',
-        menuUrl: '/form/advance-form',
-        menuName: '外卖订单查询(敬请期待)',
+        menuUrl: '/form/takeaway/takeaway-form',
+        menuName: '外卖订单查询',
         cacheable: true,
       },
       {
