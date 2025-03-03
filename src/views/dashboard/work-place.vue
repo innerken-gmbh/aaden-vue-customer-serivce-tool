@@ -91,10 +91,12 @@ const downloadSchema = ref({
     {
       key: 'year',
       name: '年份',
+      default: dayjs().format('YYYY'),
     },
     {
       key: 'month',
       name: '月份',
+      default: dayjs().format('MM'),
     },
   ]
 })
