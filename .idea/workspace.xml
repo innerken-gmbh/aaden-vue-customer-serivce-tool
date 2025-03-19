@@ -4,7 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1777049f-9f7a-4424-9005-71635bd2b339" name="Changes" comment="Changes" />
+    <list default="true" id="1777049f-9f7a-4424-9005-71635bd2b339" name="Changes" comment="Changes">
+      <change afterPath="$PROJECT_DIR$/src/store/aaden/saasStore.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/store-management/saas-store.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/store-management/storeDetailPage.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/router/routes/default-routes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/router/routes/default-routes.ts" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -56,7 +62,7 @@
     "WebServerToolWindowPanel.toolwindow.show.size": "false",
     "git-widget-placeholder": "master",
     "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/XinZhou/Desktop/Code/aaden-vue-takeaway",
+    "last_opened_file_path": "C:/Users/XinZhou/Desktop/Code/aaden-vue-customer-serivce-tool",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.standard": "true",
     "node.js.detected.package.tslint": "true",
@@ -229,6 +235,18 @@
       <workItem from="1740722135504" duration="8076000" />
       <workItem from="1740979189605" duration="946000" />
       <workItem from="1740987629228" duration="10967000" />
+      <workItem from="1741252493705" duration="44000" />
+      <workItem from="1741255318386" duration="713000" />
+      <workItem from="1741324546002" duration="598000" />
+      <workItem from="1741678489903" duration="14000" />
+      <workItem from="1741691409774" duration="2481000" />
+      <workItem from="1741756364194" duration="1760000" />
+      <workItem from="1741758276565" duration="1842000" />
+      <workItem from="1741760400365" duration="825000" />
+      <workItem from="1741844425627" duration="1139000" />
+      <workItem from="1741930167811" duration="1408000" />
+      <workItem from="1742188046996" duration="822000" />
+      <workItem from="1742378270257" duration="675000" />
     </task>
     <servers />
   </component>

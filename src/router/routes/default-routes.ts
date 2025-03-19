@@ -83,6 +83,11 @@ export default [
         menuUrl: '/store-management/get-test-store',
         menuName: '注册测试门店',
       },
+      {
+        parentPath: '/store-management',
+        menuUrl: '/store-management/saas-store',
+        menuName: '所有SaaS门店',
+      },
     ],
   },
   {
