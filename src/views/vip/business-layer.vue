@@ -49,6 +49,14 @@
           修改基本信息
         </v-btn>
       </template>
+      <template #[`item.delete`]="{ item }">
+        <v-btn
+          variant="outlined"
+          @click="deleteItem(item)"
+        >
+          删除
+        </v-btn>
+      </template>
     </v-data-table>
     <v-dialog
       v-model="showDetailInfo"
@@ -193,7 +201,7 @@
 
 <script lang="ts" setup>
 
-import {businessLayerStore,BLTypeArray,saveFile,colorList,createBusinessLayer,updateBusinessLayerDisplayInfo,updateBusinessLayerParent} from "@/store/aaden/businessLayer";
+import {deleteBusinessLayer,businessLayerStore,BLTypeArray,saveFile,colorList,createBusinessLayer,updateBusinessLayerDisplayInfo,updateBusinessLayerParent} from "@/store/aaden/businessLayer";
 import {computed, onMounted, ref} from "vue";
 import StoreDetailPage from "@/views/store-management/storeDetailPage.vue";
 import BaseForm from "@/views/BaseWidget/form/BaseForm.vue";
@@ -233,6 +241,10 @@ const header = ref([
   {
     title: 'ChangeDisplay',
     key: 'changeDisplay',
+  },
+  {
+    title: 'Delete',
+    key: 'delete',
   },
 ])
 const storeInfoDialog = ref(false)
@@ -317,7 +329,7 @@ const schema = computed(() => {
       key: 'deviceId',
       name: 'deviceId',
       required: false,
-      default: '',
+      default: null,
       hide: () => {
         return !editDisplayInfo.value &&!editParent.value
       },
@@ -401,8 +413,12 @@ const detailInfo = ref({})
 const showDetailInfo = ref(false)
 async function showDetail(item) {
   detailInfo.value = item
-  console.log(detailInfo.value,'value')
   showDetailInfo.value = true
+}
+
+async function deleteItem (item) {
+  await deleteBusinessLayer(item.id)
+  await store.getBusinessLayerList()
 }
 
 async function submit (info) {

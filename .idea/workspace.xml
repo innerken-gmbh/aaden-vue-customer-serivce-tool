@@ -5,13 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1777049f-9f7a-4424-9005-71635bd2b339" name="Changes" comment="Changes">
-      <change afterPath="$PROJECT_DIR$/src/store/aaden/businessLayer.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/views/BaseWidget/basic/dialog/ColorPicker.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/views/vip/business-layer.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/router/routes/default-routes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/router/routes/default-routes.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/BaseWidget/form/BaseForm.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/BaseWidget/form/BaseForm.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/BaseWidget/form/baseFormUtils.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/BaseWidget/form/baseFormUtils.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/aaden/businessLayer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/aaden/businessLayer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/vip/business-layer.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/vip/business-layer.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -249,7 +245,7 @@
       <workItem from="1741930167811" duration="1408000" />
       <workItem from="1742188046996" duration="822000" />
       <workItem from="1742378270257" duration="3701000" />
-      <workItem from="1742449928550" duration="11697000" />
+      <workItem from="1742449928550" duration="13539000" />
     </task>
     <servers />
   </component>

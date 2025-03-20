@@ -1,6 +1,7 @@
 import {defineStore} from "pinia";
 import hillo from "hillo";
 import {baseUrl} from "@/store/aaden/cloud-v2-api";
+import axios from "axios";
 
 export const businessLayerStore = defineStore("businessLayerStore",{
     state: () => {
@@ -30,7 +31,22 @@ export async function createBusinessLayer(item) {
 }
 
 export async function deleteBusinessLayer(id) {
-    return (await hillo.jsonPost(baseUrl + commonPath + 'delete/' + id,{}))
+    const formData = new FormData();
+    formData.append('deleteMode', 'DELETE_ALL')
+
+    return axios.post(baseUrl + commonPath + 'delete/' + id, formData, {
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
+    })
+        .then(response => {
+            console.log(response.data);
+        })
+        .catch(error => {
+            console.error(error);
+        });
+    //
+    // return (await hillo.post(baseUrl + commonPath + 'delete/' + id,formData))
 }
 
 export async function updateBusinessLayerDisplayInfo(item) {
