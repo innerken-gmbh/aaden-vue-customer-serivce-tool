@@ -13,6 +13,7 @@ export const formField = {
   required: true,
   default: null,
   hint: '',
+  hide: (model) => false,
   componentProps: {
     rules: [],
     outlined: true,

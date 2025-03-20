@@ -117,4 +117,19 @@ export default [
       },
     ],
   },
+  {
+    menuUrl: '/vip',
+    menuName: '会员管理',
+    badge: 'dot',
+    iconPrefix: 'iconfont',
+    icon: 'file-text',
+    parentPath: '',
+    children: [
+      {
+        parentPath: '/vip',
+        menuUrl: '/vip/business-layer',
+        menuName: '品牌方管理',
+      },
+    ],
+  },
 ]

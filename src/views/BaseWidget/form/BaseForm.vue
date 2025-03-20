@@ -33,7 +33,10 @@
             v-for="(f) in fields"
             :key="f.key"
           >
-            <div class="d-flex">
+            <div
+              v-if="f.hide(holderObject)"
+              class="d-flex"
+            >
               <div
                 class="text-body-1 mr-2"
                 style="max-width: 48%;"
@@ -111,9 +114,9 @@ const holderObject = ref({})
 const fields = computed(() => {
   return props.schema.map(mapSchemaToField)
 })
-watch(() => props.schema, () => {
+watch(() => props.schema, (value) => {
   reset()
-})
+},{deep: true,immediate: true})
 watch(() => props.show, () => {
   reset()
 })
