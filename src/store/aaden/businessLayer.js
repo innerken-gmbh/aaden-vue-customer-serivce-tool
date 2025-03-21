@@ -2,24 +2,34 @@ import {defineStore} from "pinia";
 import hillo from "hillo";
 import {baseUrl} from "@/store/aaden/cloud-v2-api";
 import axios from "axios";
+import {transformChildrenIdsToObjects, treeToList, treeToListWithAllList} from "@/store/aaden/common/common";
 
 export const businessLayerStore = defineStore("businessLayerStore",{
     state: () => {
         return {
             loading: false,
             search: '',
-            businessLayerList: [],
+            BrandList: [],
+            allList: [],
+            treeList: [],
             bindLayerList: [],
+            selectedId: ''
         }
     },
     actions: {
         async getBusinessLayerList () {
             this.loading = true
-            this.businessLayerList = await getAllBusinessLayer()
+            const list = (await getAllBusinessLayer())
+            this.allList = list
+            this.BrandList = list.filter(it => it.type === BLTyp.Brand)
             this.loading = false
         },
         async getBindBusinessLayerList () {
             this.bindLayerList = (await getAllBusinessLayer()).filter(it => it.type !== BLTyp.Shop)
+        },
+        async getCurrentTreeList () {
+            this.treeList = transformChildrenIdsToObjects(this.allList).filter(it => it.id === this.selectedId)
+            console.log(this.treeList,'list')
         }
     },
 })

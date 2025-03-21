@@ -23,12 +23,12 @@
       :search="search"
       :headers="header"
       :loading="store.loading"
-      :items="store.businessLayerList"
+      :items="store.BrandList"
     >
       <template #[`item.detail`]="{ item }">
         <v-btn
           variant="outlined"
-          @click="showDetail(item)"
+          @click="showTree(item)"
         >
           详情
         </v-btn>
@@ -52,7 +52,7 @@
       <template #[`item.delete`]="{ item }">
         <v-btn
           variant="outlined"
-          @click="deleteItem(item)"
+          @click="deleteItem(item.id)"
         >
           删除
         </v-btn>
@@ -185,6 +185,20 @@
       </v-card>
     </v-dialog>
     <v-dialog
+      v-model="showBrandTree"
+      max-width="800px"
+    >
+      <v-card class="pa-4">
+        <tree-list
+          children-key="children"
+          :menus="menus"
+          :tree-node-list="store.treeList"
+          @selected="editInfo"
+          @menu-click="menuClick"
+        />
+      </v-card>
+    </v-dialog>
+    <v-dialog
       v-model="showAddDialog"
       max-width="800px"
     >
@@ -202,12 +216,14 @@
 <script lang="ts" setup>
 
 import {deleteBusinessLayer,businessLayerStore,BLTypeArray,saveFile,colorList,createBusinessLayer,updateBusinessLayerDisplayInfo,updateBusinessLayerParent} from "@/store/aaden/businessLayer";
-import {computed, onMounted, ref} from "vue";
+import {computed, onMounted, ref, watch} from "vue";
 import StoreDetailPage from "@/views/store-management/storeDetailPage.vue";
 import BaseForm from "@/views/BaseWidget/form/BaseForm.vue";
 import {VFileInput, VSelect, VSwitch} from "vuetify/components";
+import TreeList from "@/views/BaseWidget/basic/TreeList.vue";
 
 const store = businessLayerStore()
+const menus = [{icon: 'mdi-plus',name:'Add'},{icon: 'mdi-lead-pencil', name: 'EditBind'},{icon: 'mdi-lead-pencil', name: 'EditNormal'},{icon: 'mdi-delete',name: 'Delete'}]
 const search = ref('')
 const header = ref([
   {
@@ -218,10 +234,10 @@ const header = ref([
     title: 'description',
     key: 'description',
   },
-  {
-    title: 'parent',
-    key: 'parentDisplay',
-  },
+  // {
+  //   title: 'parent',
+  //   key: 'parentDisplay',
+  // },
   {
     title: 'type',
     key: 'type',
@@ -251,6 +267,7 @@ const storeInfoDialog = ref(false)
 const showAddDialog = ref(false)
 const editParent = ref(false)
 const editDisplayInfo = ref(false)
+const showBrandTree = ref(false)
 onMounted(async () => {
   await store.getBusinessLayerList()
 })
@@ -311,7 +328,7 @@ const schema = computed(() => {
       name: 'parentId',
       component: VSelect,
       required: false,
-      default: '',
+      default: parentId,
       componentProps: {
         items: store.bindLayerList.map(it => {
           it.text = it.name
@@ -411,13 +428,32 @@ const schema = computed(() => {
 
 const detailInfo = ref({})
 const showDetailInfo = ref(false)
+const parentId = ref(-1)
 async function showDetail(item) {
   detailInfo.value = item
   showDetailInfo.value = true
 }
+function menuClick (name,node) {
+  if (name === 'Add') {
+    parentId.value = node
+    newAdd()
+  } else if (name === 'EditBind') {
+    showChangeDialog(detailInfo.value,1)
+  } else if (name === 'Delete') {
+    deleteItem(node)
+  } else if (name === 'EditNormal') {
+    showChangeDialog(detailInfo.value,2)
+  }
+  showBrandTree.value = false
+}
+async function showTree (item) {
+  store.selectedId = item.id
+  await store.getCurrentTreeList()
+  showBrandTree.value = true
+}
 
-async function deleteItem (item) {
-  await deleteBusinessLayer(item.id)
+async function deleteItem (id) {
+  await deleteBusinessLayer(id)
   await store.getBusinessLayerList()
 }
 
@@ -457,6 +493,14 @@ async function submit (info) {
   await store.getBusinessLayerList()
 }
 
+watch(showAddDialog,(value) => {
+  if (!value) {
+    editDisplayInfo.value = false
+    editParent.value = false
+    editObj.value = null
+  }
+},{deep:true})
+
 async function newAdd () {
   await store.getBindBusinessLayerList()
   showAddDialog.value = true
@@ -468,10 +512,8 @@ async function showChangeDialog (item,index) {
   await store.getBindBusinessLayerList()
   if (index === 1) {
     editParent.value = true
-    editDisplayInfo.value = false
   } else if (index === 2) {
     editDisplayInfo.value = true
-    editParent.value = false
   }
   showAddDialog.value = true
 }

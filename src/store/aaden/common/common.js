@@ -106,7 +106,6 @@ export function treeToList(tree, childKey, nodes = []) {
     }
     return uniqBy(nodes, 'id')
 }
-
 export const Actions = {
     Delete: 'Delete',
     Edit: 'Edit'
@@ -125,4 +124,31 @@ export function safeSumBy(arr, key) {
     return sumBy(arr, (item) => {
         return parseFloat(item[key]);
     });
+}
+
+
+export function transformChildrenIdsToObjects(data) {
+    // 创建一个映射表，方便通过 id 快速查找对象
+    const idToObjectMap = new Map();
+    data.forEach(item => idToObjectMap.set(item.id, item));
+
+    // 递归处理每个节点
+    function processNode(node) {
+        if (node.childrenIds && node.childrenIds.length > 0) {
+            // 将 childrenIds 替换为 children
+            node.children = node.childrenIds.map(id => {
+                const child = idToObjectMap.get(id);
+                if (child) {
+                    // 递归处理子节点
+                    return processNode(child);
+                }
+                return null;
+            }).filter(Boolean); // 过滤掉无效的节点
+            delete node.childrenIds; // 删除原始的 childrenIds
+        }
+        return node;
+    }
+    // 找到所有根节点（parentId 为 null 的节点）
+    const roots = data.filter(item => item.parentId === null);
+    return roots.map(root => processNode(root));
 }
