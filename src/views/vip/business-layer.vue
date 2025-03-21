@@ -437,11 +437,11 @@ function menuClick (name,node) {
     parentId.value = node
     newAdd()
   } else if (name === 'EditBind') {
-    showChangeDialog(detailInfo.value,1)
+    showChangeDialog(store.allList.find(it => it.id === node),1)
   } else if (name === 'Delete') {
     deleteItem(node)
   } else if (name === 'EditNormal') {
-    showChangeDialog(detailInfo.value,2)
+    showChangeDialog(store.allList.find(it => it.id === node),2)
   }
   showBrandTree.value = false
 }
