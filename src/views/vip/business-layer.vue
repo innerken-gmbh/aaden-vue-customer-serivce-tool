@@ -220,6 +220,7 @@ import {computed, onMounted, ref, watch} from "vue";
 import BaseForm from "@/views/BaseWidget/form/BaseForm.vue";
 import {VFileInput, VSelect, VSwitch} from "vuetify/components";
 import TreeList from "@/views/BaseWidget/basic/TreeList.vue";
+import ColorPicker from "@/views/BaseWidget/basic/dialog/ColorPicker.vue";
 
 const store = businessLayerStore()
 const menus = [{icon: 'mdi-plus',name:'Add'},{icon: 'mdi-lead-pencil', name: 'EditBind'},{icon: 'mdi-lead-pencil', name: 'EditNormal'},{icon: 'mdi-delete',name: 'Delete'}]
@@ -301,12 +302,8 @@ const schema = computed(() => {
     {
       key: 'color',
       name: 'color',
-      component: VSelect,
-      componentProps: {
-        items: colorList,
-      },
+      component: ColorPicker,
       required: false,
-      default: '',
       hide: () => {
         return !editParent.value
       },
