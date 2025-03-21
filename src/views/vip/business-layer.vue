@@ -217,7 +217,6 @@
 
 import {deleteBusinessLayer,businessLayerStore,BLTypeArray,saveFile,colorList,createBusinessLayer,updateBusinessLayerDisplayInfo,updateBusinessLayerParent} from "@/store/aaden/businessLayer";
 import {computed, onMounted, ref, watch} from "vue";
-import StoreDetailPage from "@/views/store-management/storeDetailPage.vue";
 import BaseForm from "@/views/BaseWidget/form/BaseForm.vue";
 import {VFileInput, VSelect, VSwitch} from "vuetify/components";
 import TreeList from "@/views/BaseWidget/basic/TreeList.vue";
