@@ -427,7 +427,7 @@ const schema = computed(() => {
 
 const detailInfo = ref({})
 const showDetailInfo = ref(false)
-const parentId = ref(-1)
+const parentId = ref(null)
 async function showDetail(item) {
   detailInfo.value = item
   showDetailInfo.value = true
