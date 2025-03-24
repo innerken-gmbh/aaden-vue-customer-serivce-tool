@@ -13,7 +13,7 @@
       />
       <v-btn
         variant="outlined"
-        @click="newAdd"
+        @click="newAdd('Brand')"
       >
         新建
       </v-btn>
@@ -271,7 +271,7 @@ const showBrandTree = ref(false)
 onMounted(async () => {
   await store.getBusinessLayerList()
 })
-
+const schemaType = ref('')
 const schema = computed(() => {
   return [
     {
@@ -313,7 +313,8 @@ const schema = computed(() => {
       name: 'type',
       component: VSelect,
       componentProps: {
-        items: BLTypeArray
+        // items: BLTypeArray
+        items: schemaType.value === 'Brand' ? BLTypeArray.filter(it => it === 'Brand') : (schemaType.value === 'Normal' ? BLTypeArray.filter(it => it !== 'Brand') : BLTypeArray.filter(it => it === 'Shop'))
       },
       hide: () => {
         return !editDisplayInfo.value &&!editParent.value
@@ -335,7 +336,7 @@ const schema = computed(() => {
         itemTitle: 'name'
       },
       hide: () => {
-        return !editDisplayInfo.value
+        return !editDisplayInfo.value && schemaType.value !== 'Brand'
       },
     },
     {
@@ -344,7 +345,7 @@ const schema = computed(() => {
       required: false,
       default: null,
       hide: () => {
-        return !editDisplayInfo.value &&!editParent.value
+        return !editDisplayInfo.value &&!editParent.value && schemaType.value !== 'Brand'
       },
     },
     {
@@ -430,15 +431,20 @@ async function showDetail(item) {
   showDetailInfo.value = true
 }
 function menuClick (name,node) {
+  const info = store.allList.find(it => it.id === node)
   if (name === 'Add') {
     parentId.value = node
-    newAdd()
+    if (info.type === 'Brand') {
+      newAdd('Normal')
+    } else if (info.type === 'Normal') {
+      newAdd('Normal')
+    }
   } else if (name === 'EditBind') {
-    showChangeDialog(store.allList.find(it => it.id === node),1)
+    showChangeDialog(info,1)
   } else if (name === 'Delete') {
     deleteItem(node)
   } else if (name === 'EditNormal') {
-    showChangeDialog(store.allList.find(it => it.id === node),2)
+    showChangeDialog(info,2)
   }
   showBrandTree.value = false
 }
@@ -497,7 +503,8 @@ watch(showAddDialog,(value) => {
   }
 },{deep:true})
 
-async function newAdd () {
+async function newAdd (type) {
+  schemaType.value = type
   await store.getBindBusinessLayerList()
   showAddDialog.value = true
 }

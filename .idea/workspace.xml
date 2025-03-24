@@ -6,7 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="1777049f-9f7a-4424-9005-71635bd2b339" name="Changes" comment="Changes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/BaseWidget/basic/dialog/ColorPicker.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/BaseWidget/basic/dialog/ColorPicker.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/vip/business-layer.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/vip/business-layer.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -60,7 +59,7 @@
     "WebServerToolWindowPanel.toolwindow.show.size": "false",
     "git-widget-placeholder": "master",
     "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/XinZhou/Desktop/Code/storagemanage-vue-pad",
+    "last_opened_file_path": "C:/Users/XinZhou/Desktop/Code/aaden-vue-customer-serivce-tool",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.standard": "true",
     "node.js.detected.package.tslint": "true",
@@ -246,7 +245,8 @@
       <workItem from="1742188046996" duration="822000" />
       <workItem from="1742378270257" duration="3701000" />
       <workItem from="1742449928550" duration="16823000" />
-      <workItem from="1742530357003" duration="15163000" />
+      <workItem from="1742530357003" duration="15512000" />
+      <workItem from="1742810441673" duration="3688000" />
     </task>
     <servers />
   </component>
