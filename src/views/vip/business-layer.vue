@@ -278,7 +278,7 @@ const schema = computed(() => {
       key: 'name',
       name: 'name',
       hide: () => {
-        return !editParent.value
+        return editParent.value
       },
     },
     {
@@ -287,7 +287,7 @@ const schema = computed(() => {
       required: false,
       default: '',
       hide: () => {
-        return !editParent.value
+        return editParent.value
       },
     },
     {
@@ -296,7 +296,7 @@ const schema = computed(() => {
       required: false,
       component: VFileInput,
       hide: () => {
-        return !editParent.value
+        return editParent.value
       },
     },
     {
@@ -305,7 +305,7 @@ const schema = computed(() => {
       component: ColorPicker,
       required: false,
       hide: () => {
-        return !editParent.value
+        return editParent.value
       },
     },
     {
@@ -317,7 +317,7 @@ const schema = computed(() => {
         items: schemaType.value === 'Brand' ? BLTypeArray.filter(it => it === 'Brand') : (schemaType.value === 'Normal' ? BLTypeArray.filter(it => it !== 'Brand') : BLTypeArray.filter(it => it === 'Shop'))
       },
       hide: () => {
-        return !editDisplayInfo.value &&!editParent.value
+        return !editDisplayInfo.value || !editParent.value
       },
     },
     {
@@ -336,7 +336,7 @@ const schema = computed(() => {
         itemTitle: 'name'
       },
       hide: () => {
-        return !editDisplayInfo.value && schemaType.value !== 'Brand'
+        return editDisplayInfo.value && schemaType.value !== 'Brand'
       },
     },
     {
@@ -345,7 +345,7 @@ const schema = computed(() => {
       required: false,
       default: null,
       hide: () => {
-        return !editDisplayInfo.value &&!editParent.value && schemaType.value !== 'Brand'
+        return editDisplayInfo.value || editParent.value && schemaType.value !== 'Brand'
       },
     },
     {
@@ -354,7 +354,7 @@ const schema = computed(() => {
       component: VSwitch,
       default: true,
       hide: () => {
-        return !editParent.value
+        return !editDisplayInfo.value
       },
     },
     {
@@ -363,7 +363,7 @@ const schema = computed(() => {
       required: false,
       default: '',
       hide: () => {
-        return !editDisplayInfo.value &&!editParent.value
+        return editDisplayInfo.value || editParent.value
       },
     },
     {
@@ -372,7 +372,7 @@ const schema = computed(() => {
       required: false,
       default: '',
       hide: () => {
-        return !editDisplayInfo.value &&!editParent.value
+        return editDisplayInfo.value || editParent.value
       },
     },
     {
@@ -381,7 +381,7 @@ const schema = computed(() => {
       required: false,
       default: '',
       hide: () => {
-        return !editDisplayInfo.value &&!editParent.value
+        return editDisplayInfo.value || editParent.value
       },
     },
     {
@@ -390,7 +390,7 @@ const schema = computed(() => {
       required: false,
       default: '',
       hide: () => {
-        return !editDisplayInfo.value &&!editParent.value
+        return editDisplayInfo.value || editParent.value
       },
     },
     {
@@ -399,7 +399,7 @@ const schema = computed(() => {
       required: false,
       default: '',
       hide: () => {
-        return !editDisplayInfo.value &&!editParent.value
+        return editDisplayInfo.value || editParent.value
       },
     },
     {
@@ -408,7 +408,7 @@ const schema = computed(() => {
       required: false,
       default: '',
       hide: () => {
-        return !editDisplayInfo.value &&!editParent.value
+        return editDisplayInfo.value || editParent.value
       },
     },
     {
@@ -417,7 +417,7 @@ const schema = computed(() => {
       required: false,
       default: '',
       hide: () => {
-        return !editDisplayInfo.value &&!editParent.value
+        return editDisplayInfo.value || editParent.value
       },
     },
   ]

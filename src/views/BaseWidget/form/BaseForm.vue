@@ -34,7 +34,7 @@
             :key="f.key"
           >
             <div
-              v-if="f.hide(holderObject)"
+              v-if="!f.hide(holderObject)"
               class="d-flex"
             >
               <div
@@ -114,7 +114,7 @@ const holderObject = ref({})
 const fields = computed(() => {
   return props.schema.map(mapSchemaToField)
 })
-watch(() => props.schema, (value) => {
+watch(() => props.schema, () => {
   reset()
 },{deep: true,immediate: true})
 watch(() => props.show, () => {
