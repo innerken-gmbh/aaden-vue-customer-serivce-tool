@@ -215,15 +215,17 @@
 
 <script lang="ts" setup>
 
-import {deleteBusinessLayer,businessLayerStore,BLTypeArray,saveFile,colorList,createBusinessLayer,updateBusinessLayerDisplayInfo,updateBusinessLayerParent} from "@/store/aaden/businessLayer";
+import {deleteBusinessLayer,businessLayerStore,BLTypeArray,saveFile,createBusinessLayer,updateBusinessLayerDisplayInfo,updateBusinessLayerParent,createInvite,inviteSchema} from "@/store/aaden/businessLayer";
 import {computed, onMounted, ref, watch} from "vue";
 import BaseForm from "@/views/BaseWidget/form/BaseForm.vue";
 import {VFileInput, VSelect, VSwitch} from "vuetify/components";
 import TreeList from "@/views/BaseWidget/basic/TreeList.vue";
 import ColorPicker from "@/views/BaseWidget/basic/dialog/ColorPicker.vue";
 
+import {useDialogStore} from "@/store/aaden/dialogStore";
+
 const store = businessLayerStore()
-const menus = [{icon: 'mdi-plus',name:'Add'},{icon: 'mdi-lead-pencil', name: 'EditBind'},{icon: 'mdi-lead-pencil', name: 'EditNormal'},{icon: 'mdi-delete',name: 'Delete'}]
+const menus = [{icon: 'mdi-plus',name:'Add'},{icon: 'mdi-send',name:'Invite'},{icon: 'mdi-lead-pencil', name: 'EditBind'},{icon: 'mdi-lead-pencil', name: 'EditNormal'},{icon: 'mdi-delete',name: 'Delete'}]
 const search = ref('')
 const header = ref([
   {
@@ -263,7 +265,6 @@ const header = ref([
     key: 'delete',
   },
 ])
-const storeInfoDialog = ref(false)
 const showAddDialog = ref(false)
 const editParent = ref(false)
 const editDisplayInfo = ref(false)
@@ -315,9 +316,6 @@ const schema = computed(() => {
       componentProps: {
         // items: BLTypeArray
         items: schemaType.value === 'Brand' ? BLTypeArray.filter(it => it === 'Brand') : (schemaType.value === 'Normal' ? BLTypeArray.filter(it => it !== 'Brand') : BLTypeArray.filter(it => it === 'Shop'))
-      },
-      hide: () => {
-        return !editDisplayInfo.value || !editParent.value
       },
     },
     {
@@ -430,21 +428,29 @@ async function showDetail(item) {
   detailInfo.value = item
   showDetailInfo.value = true
 }
-function menuClick (name,node) {
+const dialogStore = useDialogStore()
+async function menuClick (name,node) {
   const info = store.allList.find(it => it.id === node)
   if (name === 'Add') {
     parentId.value = node
     if (info.type === 'Brand') {
-      newAdd('Normal')
+      await newAdd('Normal')
     } else if (info.type === 'Normal') {
-      newAdd('Normal')
+      await newAdd('Normal')
     }
   } else if (name === 'EditBind') {
-    showChangeDialog(info,1)
+    await showChangeDialog(info, 1)
   } else if (name === 'Delete') {
-    deleteItem(node)
+    await deleteItem(node)
   } else if (name === 'EditNormal') {
-    showChangeDialog(info,2)
+    await showChangeDialog(info, 2)
+  } else if (name === 'Invite') {
+    const inviteInfo = await dialogStore.editItem(inviteSchema)
+    inviteInfo.blId = info.id
+    inviteInfo.userId = 'admin'
+    await dialogStore.waitFor(async () => {
+      await createInvite(inviteInfo)
+    })
   }
   showBrandTree.value = false
 }

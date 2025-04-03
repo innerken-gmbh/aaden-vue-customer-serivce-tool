@@ -1,5 +1,9 @@
 <script setup>
-import {fromNowTimeDisplay, fromNowTimestamp, useDeviceEchoLog} from "@/store/aaden/DeviceEcho";
+import {
+  fromNowTimeDisplay,
+  fromNowTimestamp,
+  useDeviceEchoLog
+} from "@/store/aaden/DeviceEcho";
 import PrimaryButton from "@/views/BaseWidget/basic/button/PrimaryButton.vue";
 import {useDialogStore} from "@/store/aaden/dialogStore";
 import {computed, onMounted, ref, watch} from "vue";
@@ -11,6 +15,8 @@ import {recordSchema} from "@/old/utils/recordSchema";
 import {getDeviceBackendList, getDeviceSubscriptionList, getLogsByDeviceId} from "@/store/aaden/cloud-v2-api";
 import {getZHProductName,getDateProgressLinear,formatDate,formatPriceDisplay,showCurrentBillType} from "@/store/aaden/saasSubscription";
 import {checkFileType,imageList} from "@/store/aaden/utils";
+import {VFileInput, VSelect} from "vuetify/components";
+import {createInvite, getShopBlId, inviteSchema} from "@/store/aaden/businessLayer";
 
 
 const store = useDeviceEchoLog()
@@ -27,7 +33,9 @@ watch(store,async (value) => {
     backendList.value = await getDeviceBackendList(store?.activeDevice?.deviceId)
   }
 })
-
+async function sendInvite () {
+  console.log(store?.activeDevice, '321')
+}
 async function downloadBackendFiles (item) {
   window.open(item.fileUrl)
 }
@@ -37,6 +45,16 @@ async function addInfo() {
   info.deviceId = store.activeDevice.deviceId
   await dialogStore.waitFor(async () => {
     await store.addEventLog(info)
+  })
+}
+
+async function addInvite() {
+  const info = await dialogStore.editItem(inviteSchema)
+  const res = await getShopBlId(store.activeDevice.deviceId)
+  info.blId = res.id
+  info.userId = 'admin'
+  await dialogStore.waitFor(async () => {
+    await createInvite(info)
   })
 }
 
@@ -134,6 +152,12 @@ function showBigSizeImg (item) {
               </template>
               <template #action>
                 <j-space>
+                  <secondary-button
+                    icon="mdi-email-fast"
+                    @click="addInvite"
+                  >
+                    发送邀请
+                  </secondary-button>
                   <secondary-button
                     v-if="currentMaxVersion === '1.1.1'"
                     icon="mdi-reload"

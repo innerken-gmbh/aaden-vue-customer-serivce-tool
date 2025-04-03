@@ -3,6 +3,7 @@ import hillo from "hillo";
 import {baseUrl} from "@/store/aaden/cloud-v2-api";
 import axios from "axios";
 import {transformChildrenIdsToObjects} from "@/store/aaden/common/common";
+import {VSelect} from "vuetify/components";
 
 export const businessLayerStore = defineStore("businessLayerStore",{
     state: () => {
@@ -98,12 +99,46 @@ export const BLTyp = {
 
 export const BLTypeArray = ['Brand','Normal','Shop']
 
-export const colorList = [
-    '#FFCDD2', '#F8BBD0', '#E1BEE7',
-    '#D1C4E9', '#C5CAE9', '#BBDEFB',
-    '#B3E5FC', '#B2EBF2', '#B2DFDB',
-    '#C8E6C9', '#DCEDC8', '#F0F4C3',
-    '#FFF9C4', '#FFECB3', '#FFE0B2',
-    '#FFCCBC', '#D7CCC8', '#CFD8DC',
-    '#FFFFFF'
-]
+export async function createInvite (item) {
+    return (await hillo.jsonPost(baseUrl + 'user-bl' + '/invite', { ...item }))
+}
+
+export async function getShopBlId(id) {
+    return (await hillo.get(baseUrl + 'common/businessLayer' + '/assureShop/' + id))
+}
+
+export const authList =
+    [
+        { text: 'DataCenter', value: 'DataCenter' },
+        { text: 'Inventory', value: 'Inventory' },
+        { text: 'Supplier', value: 'Supplier' },
+        { text: 'Admin', value: 'Admin' },
+        { text: 'Subscription', value: 'Subscription' },
+        { text: 'Owner', value: 'Owner' }
+    ]
+
+export const inviteSchema = {
+    title: '发出邀请',
+    subtitle: '可要好好输入邮箱，不然又要重发一次',
+    schemas: [
+        {
+            key: 'targetEmail',
+            name: 'targetEmail',
+            componentProps: {
+                rules: [v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) || '请输入正确的邮箱地址！']
+            }
+        },
+        {
+            key: 'auth',
+            name: 'auth',
+            component: VSelect,
+            default: [],
+            componentProps: {
+                multiple: true,
+                items: authList,
+                itemValue: 'text',
+                itemTitle: 'value'
+            }
+        }
+    ]
+}

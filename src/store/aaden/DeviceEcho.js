@@ -7,6 +7,7 @@ import {baseUrl, getDeviceLogByDeviceId, getRecentNgrokStatus} from "./cloud-v2-
 import {groupBy} from "lodash-es";
 import {colorList} from "@/store/aaden/saasSubscription";
 import {saveFiles} from "@/store/aaden/utils";
+import {VSelect} from "vuetify/components";
 
 
 export const useDeviceEchoLog = defineStore('deviceLog', {
