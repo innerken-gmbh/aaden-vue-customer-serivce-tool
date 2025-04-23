@@ -66,3 +66,20 @@ export async function getDeviceBackendList (deviceId) {
 export async function createDeviceByAdmin (userId) {
     return await hillo.post(baseUrl + 'subscriptions/create-admin/' + userId,{})
 }
+
+
+export async function getAllProductList () {
+    return await hillo.get(baseUrl + 'subscriptions/function/list',{})
+}
+
+export async function addProduct (productCode,deviceId) {
+    return await hillo.jsonPost(baseUrl + 'subscriptions/function/add',{
+        node: '',
+        productCode,
+        deviceId,
+    })
+}
+
+export async function deleteProduct (id) {
+    return await hillo.jsonPost(baseUrl + 'subscriptions/function/delete/' + id,{})
+}

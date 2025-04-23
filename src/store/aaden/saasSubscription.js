@@ -1,4 +1,9 @@
-import {getAllSubscriptionList, getDeviceSubscriptionList} from "./cloud-v2-api";
+import {
+    addProduct,
+    getAllProductList,
+    getAllSubscriptionList,
+    getDeviceSubscriptionList
+} from "./cloud-v2-api";
 import {defineStore} from "pinia";
 import dayjs from "dayjs";
 import {groupBy, uniq} from "lodash-es";
@@ -17,7 +22,8 @@ export const useSubscriptionStore = defineStore("saas-subscription",{
             tag: '',
             status: '',
             search: false,
-            allStatusList: []
+            allStatusList: [],
+            productList: [],
         }
     },
     getters: {
@@ -48,6 +54,11 @@ export const useSubscriptionStore = defineStore("saas-subscription",{
         }
     },
     actions: {
+        async getProductList () {
+            this.loading = true
+            this.productList = (await getAllProductList()).filter(it => it.deviceId.toString() === this.deviceId.toString())
+            this.loading = false
+        },
         clearFilterInfo () {
             this.deviceId = ''
             this.selectedProductCode = ''
@@ -110,6 +121,7 @@ const zhDate = [
     {value: 'day',name:'日'},
 ]
 
+
 export const allProductCodeList = [
     {value: 'base',name:'基础包'},
     {value: 'tse',name:'TSE'},
@@ -148,6 +160,26 @@ export const allProductCodeList = [
     {value: 'hStickerPrinter',name:'标签打印机'},
     {value: 'hWifiPrinter',name:'无线打印机'},
     {value: 'hPhone',name:'手机'},
+]
+
+export const softProductCodeList = [
+    {value: 'base',name:'基础包'},
+    {value: 'tse',name:'TSE'},
+    {value: 'restaurant',name:'餐馆功能'},
+    {value: 'advanceSales',name:'高级零售功能'},
+    {value: 'staffManagement',name:'员工管理'},
+    {value: 'sales',name:'营销功能'},
+    {value: 'cashbook',name:'现金帐'},
+    {value: 'boss',name:'老板端APP'},
+    {value: 'reservation',name:'预定功能'},
+    {value: 'saleAnalysis',name:'高级销售分析'},
+    {value: 'inventory',name:'库存系统'},
+    {value: 'cashmanage',name:'资金管理'},
+    {value: 'takeawayWeb',name:'外卖网站'},
+    {value: 'scanToOrder',name:'扫码点餐'},
+    {value: 'queneNumber',name:'叫号系统'},
+    {value: 'kitchenMonitor',name:'厨房显示器'},
+    {value: 'hotpotSystem',name:'火锅传菜系统'},
 ]
 
 export function getProductNameByCode (code) {

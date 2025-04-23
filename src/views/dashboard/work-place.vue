@@ -1,5 +1,5 @@
 <script setup>
-import {onBeforeUnmount, onMounted, ref} from 'vue'
+import {computed, onBeforeUnmount, onMounted, ref} from 'vue'
 import {random} from 'lodash-es'
 import {fromNowTimeDisplay, fromNowTimestamp, useDeviceEchoLog} from '@/store/aaden/DeviceEcho'
 import DashboardLabel from "@/views/jh-widget/dashboard-label.vue";
@@ -10,6 +10,9 @@ import DeviceDetailPage from "@/views/dashboard/DeviceDetailPage.vue";
 import {getNgrokUrl} from "@/old/utils/firebase";
 import {recordSchema} from "@/old/utils/recordSchema";
 import dayjs from "dayjs";
+import {allProductCodeList, softProductCodeList, useSubscriptionStore} from "@/store/aaden/saasSubscription";
+import {addProduct, deleteProduct} from "@/store/aaden/cloud-v2-api";
+import LoadingProvider from "@/views/BaseWidget/basic/premade/LoadingProvider.vue";
 
 const deviceEchoLog = useDeviceEchoLog()
 const myFood = ref('糖醋里脊')
@@ -100,6 +103,36 @@ const downloadSchema = ref({
     },
   ]
 })
+const activeProductDialog = ref(false)
+const storeSub = useSubscriptionStore()
+
+const currentProducts = computed(() => {
+  const activeProductCode = storeSub.productList.map(it => it.productCode)
+  return softProductCodeList.map(it => {
+    if (activeProductCode.includes(it.value)) {
+      it.active = true
+    } else {
+      it.active = false
+    }
+    return it
+  })
+})
+async function editProduct (item) {
+  storeSub.loading = true
+  if (item.active) {
+    const id = storeSub.productList.find(it => it.productCode === item.value).id
+    await deleteProduct(id)
+  } else {
+    await addProduct(item.value,storeSub.deviceId)
+  }
+  storeSub.loading = false
+  activeProductDialog.value = false
+}
+async function showActiveProduct (item) {
+  await storeSub.getProductList()
+  storeSub.deviceId = item.deviceId
+  activeProductDialog.value = true
+}
 async function download3In1() {
   const info = await dialogStore.editItem(downloadSchema.value, null)
   const url = 'https://ik' + info.deviceId.padStart(4,'0') + '.ngrok.aaden.io/PHP/BackendData.php?op=download3In1ForMonth&year=' + info.year + '&month=' + info.month
@@ -409,6 +442,10 @@ function displayAddress(address) {
               text="备注"
               @click="createNewNote(item)"
             />
+            <mini-action-button
+              text="产品"
+              @click="showActiveProduct(item)"
+            />
           </j-space>
         </template>
       </v-data-table>
@@ -441,6 +478,46 @@ function displayAddress(address) {
           width="1600"
           :src="iframeUrl"
         />
+      </v-card>
+    </v-dialog>
+    <v-dialog
+      v-model="activeProductDialog"
+      max-width="600px"
+    >
+      <v-card
+        rounded="lg"
+        class="pa-4"
+      >
+        <div class="d-flex align-center justify-center">
+          <div class="text-body-1" />
+          <v-spacer />
+          <div>
+            <v-btn
+              elevation="0"
+              icon
+              @click="activeProductDialog = false"
+            >
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </div>
+        </div>
+        <loading-provider :loading="storeSub.loading">
+          <div
+            class="mt-2"
+            style="display: grid;grid-gap: 16px;grid-template-columns: repeat(4, 1fr)"
+          >
+            <v-chip
+              v-for="(item,index) in currentProducts"
+              :key="index"
+              :color="item.active ? 'info' : ''"
+              class="d-flex align-center justify-center"
+              style="width: 100%;white-space: normal;height: 50px"
+              @click="editProduct(item)"
+            >
+              {{ item.name }}
+            </v-chip>
+          </div>
+        </loading-provider>
       </v-card>
     </v-dialog>
   </div>
