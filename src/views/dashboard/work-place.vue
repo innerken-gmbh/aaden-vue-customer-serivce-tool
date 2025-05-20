@@ -179,7 +179,7 @@ function showFrontendForDeviceId(item) {
 
 function showAdminForDeviceId(item) {
   const ngrokUrl = getNgrokUrl(item.deviceId)
-  const url = "https://admin.aaden.io/?Base=" + ngrokUrl
+  const url = "https://admin.aaden.io/?Base=" + ngrokUrl + '&Admin=1'
   showIframePageForUrl(url)
 }
 
