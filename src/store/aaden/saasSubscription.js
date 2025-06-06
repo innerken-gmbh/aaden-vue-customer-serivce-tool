@@ -180,6 +180,7 @@ export const softProductCodeList = [
     {value: 'queneNumber',name:'叫号系统'},
     {value: 'kitchenMonitor',name:'厨房显示器'},
     {value: 'hotpotSystem',name:'火锅传菜系统'},
+    {value: 'advancedReservation',name:'高级预定'},
 ]
 
 export function getProductNameByCode (code) {
