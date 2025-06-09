@@ -11,7 +11,7 @@ import {getNgrokUrl} from "@/old/utils/firebase";
 import {recordSchema} from "@/old/utils/recordSchema";
 import dayjs from "dayjs";
 import {allProductCodeList, softProductCodeList, useSubscriptionStore} from "@/store/aaden/saasSubscription";
-import {addProduct, deleteProduct} from "@/store/aaden/cloud-v2-api";
+import {addProduct, deleteProduct, maintenanceSchedule} from "@/store/aaden/cloud-v2-api";
 import LoadingProvider from "@/views/BaseWidget/basic/premade/LoadingProvider.vue";
 
 const deviceEchoLog = useDeviceEchoLog()
@@ -127,6 +127,31 @@ async function editProduct (item) {
   }
   storeSub.loading = false
   activeProductDialog.value = false
+}
+
+async function changeMaintainceStatus (item) {
+
+  if (!item.needMaintain) {
+    const nextNoon = getNextNoonLocalDateTime()
+    await maintenanceSchedule({
+      deviceId: item.deviceId,
+      needMaintain: true,
+      nextMaintainDDL: nextNoon,
+    })
+    await deviceEchoLog.updateDeviceLog()
+  }
+
+}
+function getNextNoonLocalDateTime() {
+  const now = dayjs();
+  const todayNoon = now.startOf('day').add(12, 'hour');
+
+  const nextNoon = now.isBefore(todayNoon)
+      ? todayNoon
+      : todayNoon.add(1, 'day');
+
+  // 返回符合 LocalDateTime 格式的字符串 (YYYY-MM-DDTHH:mm:ss)
+  return nextNoon.format('YYYY-MM-DDTHH:mm:ss');
 }
 async function showActiveProduct (item) {
   await storeSub.getProductList()
@@ -445,6 +470,11 @@ function displayAddress(address) {
             <mini-action-button
               text="产品"
               @click="showActiveProduct(item)"
+            />
+            <mini-action-button
+              :color="item.needMaintain?'green':'grey-lighten-4'"
+              text="维护"
+              @click="changeMaintainceStatus(item)"
             />
           </j-space>
         </template>

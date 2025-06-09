@@ -83,3 +83,9 @@ export async function addProduct (productCode,deviceId) {
 export async function deleteProduct (id) {
     return await hillo.jsonPost(baseUrl + 'subscriptions/function/delete/' + id,{})
 }
+
+export async function maintenanceSchedule (item) {
+    return await hillo.jsonPost(baseUrl + 'api/maintenance-schedule/schedule',{
+        ...item,
+    })
+}
