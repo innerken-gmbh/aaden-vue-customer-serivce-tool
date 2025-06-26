@@ -5,9 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1777049f-9f7a-4424-9005-71635bd2b339" name="Changes" comment="Changes">
+      <change afterPath="$PROJECT_DIR$/src/store/aaden/payment.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/BaseWidget/basic/dialog/DatePicker.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/BaseWidget/basic/dialog/DateRangePicker.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/BaseWidget/basic/dialog/SmallBaseCard.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/BaseWidget/basic/dialog/dateRepo.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/store/aaden/cloud-v2-api.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/aaden/cloud-v2-api.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/store/aaden/saasSubscription.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/aaden/saasSubscription.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/dashboard/work-place.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/dashboard/work-place.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -24,8 +28,8 @@
         <option value="Vue Options API Component" />
         <option value="TypeScript File" />
         <option value="Vue Single File Component" />
-        <option value="JavaScript File" />
         <option value="Vue Composition API Component" />
+        <option value="JavaScript File" />
       </list>
     </option>
   </component>
@@ -271,7 +275,9 @@
       <workItem from="1747902095654" duration="1082000" />
       <workItem from="1748929263616" duration="2525000" />
       <workItem from="1749215603119" duration="583000" />
-      <workItem from="1749465728463" duration="2745000" />
+      <workItem from="1749465728463" duration="2981000" />
+      <workItem from="1750838306669" duration="13534000" />
+      <workItem from="1750915606532" duration="16568000" />
     </task>
     <servers />
   </component>

@@ -10,6 +10,7 @@
 <script lang="ts">
   import { defineComponent } from 'vue'
   import BaseFormDialog from "@/views/BaseWidget/form/BaseFormDialog.vue";
+  import DatePicker from "@/views/BaseWidget/basic/dialog/DatePicker.vue";
 
   export default defineComponent({
     name: 'App',
