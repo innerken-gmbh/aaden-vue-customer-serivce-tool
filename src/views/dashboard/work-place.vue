@@ -628,7 +628,6 @@ function displayAddress(address) {
               @click="changeMaintainceStatus(item)"
             />
             <mini-action-button
-              :color="item.needMaintain?'green':'grey-lighten-4'"
               text="调账"
               @click="editOrderPayment(item)"
             />
