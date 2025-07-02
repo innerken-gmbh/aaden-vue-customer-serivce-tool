@@ -70,8 +70,17 @@ export function getNgrokUrl(deviceId: string) {
     return 'ik' + deviceId.toString().padStart(4, '0') + '.ngrok.aaden.io'
 }
 
+export function getSaasUrl(deviceId: string) {
+    return 'https://ht.api.aaden.io/ik' + deviceId.toString().padStart(4, '0')
+}
+
 export function getEndPointUrl(deviceId: string) {
-    return 'https://' + getNgrokUrl(deviceId) + '/PHP/'
+    if (parseInt(deviceId) > 6000 && parseInt(deviceId) < 9000) {
+        return getSaasUrl(deviceId) + '/PHP/'
+    } else {
+        return 'https://' + getNgrokUrl(deviceId) + '/PHP/'
+    }
+
 }
 
 export async function getAllSubscriptionForStore (deviceId) {
