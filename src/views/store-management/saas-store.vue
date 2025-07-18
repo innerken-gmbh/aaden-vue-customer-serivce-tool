@@ -26,6 +26,14 @@
           详情
         </v-btn>
       </template>
+      <template #[`item.deleteStore`]="{ item }">
+        <v-btn
+          variant="outlined"
+          @click="storeDelete(item)"
+        >
+          删除
+        </v-btn>
+      </template>
     </v-data-table>
     <v-dialog
       v-model="storeInfoDialog"
@@ -70,6 +78,10 @@ const header = ref([
     title: 'Detail',
     key: 'detail',
   },
+  {
+    title: "Delete",
+    key: "deleteStore",
+  }
 ])
 const storeInfoDialog = ref(false)
 
@@ -80,6 +92,10 @@ onMounted(() => {
 async function showDetail(item) {
   await store.getStoreDetail(item.deviceId)
   storeInfoDialog.value = true
+}
+async function storeDelete (item) {
+  await store.deleteStore(item.id)
+  await store.getStoreList()
 }
 </script>
 
