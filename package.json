@@ -13,6 +13,7 @@
     "@vueuse/core": "^8.5.0",
     "axios": "1.6.0",
     "clipboard": "^2.0.8",
+    "crypto-js": "^4.2.0",
     "dayjs": "^1.11.10",
     "dotenv": "^16.4.7",
     "echarts": "^5.1.2",
