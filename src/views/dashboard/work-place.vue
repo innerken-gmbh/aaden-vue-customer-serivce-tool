@@ -22,6 +22,7 @@ import {
   getUnpaidOrder,
   loadPaymentLog
 } from "@/store/aaden/payment";
+import {createAppInvite, createInvite, getShopBlId, getShopInfo, inviteSchema} from "@/store/aaden/businessLayer";
 
 const deviceEchoLog = useDeviceEchoLog()
 const myFood = ref('糖醋里脊')
@@ -186,6 +187,18 @@ const paymentTotalValidationMessage = computed(() => {
   }
   return ''
 })
+
+
+async function addAppInvite() {
+  const info = await dialogStore.editItem(inviteSchema)
+
+  info.deviceId = store.activeDevice.deviceId
+  const shopInfo = await getShopInfo(info.deviceId)
+  info.userId = shopInfo.mainUserId
+  await dialogStore.waitFor(async () => {
+    await createAppInvite(info)
+  })
+}
 
 const currentBillOrder = ref({})
 
@@ -631,6 +644,10 @@ function displayAddress(address) {
               text="调账"
               @click="editOrderPayment(item)"
             />
+            <mini-action-button
+              text="邀请码"
+              @click="addAppInvite(item)"
+            />
           </j-space>
         </template>
       </v-data-table>
@@ -913,8 +930,8 @@ function displayAddress(address) {
             </v-icon>
           </div>
           <!-- Error message for payment total validation -->
-          <div 
-            v-if="paymentTotalValidationMessage" 
+          <div
+            v-if="paymentTotalValidationMessage"
             class="mt-2 text-error text-caption"
           >
             {{ paymentTotalValidationMessage }}

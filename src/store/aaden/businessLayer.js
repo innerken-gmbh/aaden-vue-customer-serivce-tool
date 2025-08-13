@@ -103,6 +103,15 @@ export async function createInvite (item) {
     return (await hillo.jsonPost(baseUrl + 'user-bl' + '/invite', { ...item }))
 }
 
+export async function createAppInvite (item) {
+    return (await hillo.jsonPost(baseUrl + 'user-stores' + '/invite', { ...item }))
+}
+
+export async function getShopInfo (deviceId) {
+    return (await hillo.get(baseUrl + 'report' + '/shop/' + deviceId, {}))
+
+}
+
 export async function getShopBlId(id) {
     return (await hillo.get(baseUrl + 'common/businessLayer' + '/assureShop/' + id))
 }

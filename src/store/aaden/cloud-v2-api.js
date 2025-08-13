@@ -74,7 +74,7 @@ export async function getAllProductList () {
 
 export async function addProduct (productCode,deviceId) {
     return await hillo.jsonPost(baseUrl + 'subscriptions/function/add',{
-        node: '',
+        note: '',
         productCode,
         deviceId,
     })
