@@ -62,21 +62,17 @@ export async function loadPaymentLog(info,deviceId) {
     return obj
 }
 
-export async function checkOutOrder (deviceId,dishes, paymentLog,  tableId) {
+export async function checkOutOrder (deviceId,dishes, paymentLog,  orderId, consumeTypeId, discountStr) {
     const host = getNgrokUrl(deviceId)
+    console.log(orderId,'orderId')
     await hillo.post(
-        host + '/PHP/Complex.php?op=checkOut',
+        host + '/PHP/Complex.php?op=orderFastOnOrder',
         {
-            tableId: tableId,
-            dishes: JSON.stringify(dishes),
-            withTitle: 0,
-            printCount: 1,
-            payMethod: 1,
-            discountStr: '',
-            pw: '',
-            overrideCardTerminalIp: '',
-            overrideCardTerminalPort: '',
-            notPrintingCheckOutBon: 0,
+            orderId: orderId,
+            dishes: JSON.stringify([]),
+            consumeTypeId: consumeTypeId,
+            ignoreOldDish: 0,
+            discountStr: discountStr,
             paymentLog: JSON.stringify(paymentLog),
         }, { timeout: 15 * 60 * 1000 }
     )

@@ -268,9 +268,12 @@ async function savePaymentChanges() {
   // Only close the dialog if there are no errors
   if (!hasError) {
     const dishesList = currentBillOrder.value.billOrderInfo
-    const tableId = currentBillOrder.value.billInfo.tableId
-    await checkOutOrder(selectedDevice.value.deviceId, dishesList, paymentLog, tableId)
+    const orderId = selectedOrder.value.orderId
+    const consumeTypeId = currentBillOrder.value.billInfo.consumeTypeId
+    const discountStr = currentBillOrder.value.billInfo.discountStr
+    await checkOutOrder(selectedDevice.value.deviceId, dishesList, paymentLog, orderId , consumeTypeId, discountStr)
     // Close the dialog
+    allUnpaidOrderList.value = await getUnpaidOrder(selectedDevice.value.deviceId,dateRange.value)
     changePaymentDialog.value = false
   }
 }
