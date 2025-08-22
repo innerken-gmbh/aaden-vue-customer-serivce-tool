@@ -6,8 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="1777049f-9f7a-4424-9005-71635bd2b339" name="Changes" comment="Changes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/store/aaden/payment.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/aaden/payment.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/dashboard/work-place.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/dashboard/work-place.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/aaden/cloud-v2-api.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/aaden/cloud-v2-api.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/dashboard/check-image.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/dashboard/check-image.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -281,7 +281,8 @@
       <workItem from="1754645193528" duration="2468000" />
       <workItem from="1755067649219" duration="1705000" />
       <workItem from="1755070989318" duration="736000" />
-      <workItem from="1755153468682" duration="3056000" />
+      <workItem from="1755153468682" duration="5859000" />
+      <workItem from="1755854447001" duration="1572000" />
     </task>
     <servers />
   </component>

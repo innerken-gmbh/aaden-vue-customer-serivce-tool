@@ -26,6 +26,10 @@ export async function getDishImages() {
     return await hillo.get(baseUrl + "api/dish-images")
 }
 
+export async function getDishImageByDeviceId(deviceId) {
+    return await hillo.get(baseUrl + "api/dish-images/by-device/" + deviceId)
+}
+
 export async function getDishList (id) {
     return (await hillo.get('https://ik' + id.padStart(4,'0') + '.ngrok.aaden.io/PHP/Dishes.php',{})).content
 }

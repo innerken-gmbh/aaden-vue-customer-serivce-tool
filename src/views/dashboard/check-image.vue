@@ -1,6 +1,6 @@
 <script setup>
 import {computed, onMounted, ref, watch} from 'vue'
-import {editDish, getDishImages, getDishList} from "@/store/aaden/cloud-v2-api";
+import {editDish, getDishImageByDeviceId, getDishImages, getDishList} from "@/store/aaden/cloud-v2-api";
 import LoadingProvider from "@/views/BaseWidget/basic/premade/LoadingProvider.vue";
 import {groupBy, keyBy} from "lodash-es";
 import JSZip from 'jszip'
@@ -12,7 +12,6 @@ import IKUtils from "innerken-js-utils";
 onMounted(async () => {
   await reload()
 })
-let allImgList = ref([])
 let searchDeviceId = ref('')
 let currentList = ref([])
 let loading = ref(false)
@@ -26,9 +25,12 @@ let log = ref('')
 
 async function reload() {
   loading.value = true
-  allImgList.value = await getDishImages()
-  currentList.value = allImgList.value
+  currentList.value = await getDishImageByDeviceId(1)
   loading.value = false
+}
+
+async function searchImages() {
+  currentList.value = await getDishImageByDeviceId(searchDeviceId.value)
 }
 
 function selectedItem (value,item) {
@@ -105,18 +107,6 @@ watch((imgUploadDialog), (value) => {
   deep:true,
   immediate: true
 })
-
-watch((searchDeviceId),async (value) => {
-  if (value) {
-    currentList.value = allImgList.value.filter(it => it.deviceId === value)
-  } else {
-    currentList.value = allImgList.value
-  }
-},{
-  deep: true,
-  immediate: true,
-})
-
 </script>
 
 <template>
@@ -178,6 +168,13 @@ watch((searchDeviceId),async (value) => {
           prepend-inner-icon="mdi-magnify"
           style="max-width: 300px"
         />
+        <v-btn
+          class="ml-2"
+          variant="outlined"
+          @click="searchImages"
+        >
+          查询
+        </v-btn>
       </div>
 
       <div
