@@ -37,7 +37,9 @@ function vawBoot() {
   useAppRouter(app)
   useGlobalComponents(app)
   useRouterGuard()
-  useMock()
+  if (import.meta.env.VITE_USE_MOCK === 'true') {
+    useMock()
+  }
   app.use(vuetify)
   app.use(naive)
   app.mount('#app')

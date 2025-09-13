@@ -8,6 +8,7 @@ import {
 } from 'firebase/auth'
 import {DocumentData, getDoc, getDocs, getFirestore, Query, QuerySnapshot,collection,query,setDoc,doc} from 'firebase/firestore'
 import hillo from "hillo";
+import { stripUndefinedDeep } from '@/utils/clean'
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -26,7 +27,7 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig)
 const analytics = getAnalytics(app)
-export const db = getFirestore(app)
+export const firebaseDB = getFirestore(app)
 export const FireBaseAuth = getAuth(app)
 
 export async function executeQuery(query: Query<DocumentData>) {
@@ -84,7 +85,7 @@ export function getEndPointUrl(deviceId: string) {
 }
 
 export async function getAllSubscriptionForStore (deviceId) {
-    return await resultOf(query(collection(db, 'saas-store-subscription', deviceId.toString(), 'subscriptions')))
+    return await resultOf(query(collection(firebaseDB, 'saas-store-subscription', deviceId.toString(), 'subscriptions')))
 }
 
 export async function resultOf (query, logLabel = '') {
@@ -97,14 +98,15 @@ export async function resultOf (query, logLabel = '') {
 }
 
 export async function setRules (rules) {
-    return await setDoc(doc(db, 'simplifyRules','aaden'),{rules})
+    const payload = stripUndefinedDeep({ rules })
+    return await setDoc(doc(firebaseDB, 'simplifyRules','aaden'), payload)
 }
 
 export async function getRules () {
-    return (await resultOf(query(collection(db, 'simplifyRules')))).find(it => it.id === 'aaden').rules
+    return (await resultOf(query(collection(firebaseDB, 'simplifyRules')))).find(it => it.id === 'aaden').rules
 }
 export async function getKey () {
-    return (await resultOf(query(collection(db, 'openAIKey')))).find(it => it.id === 'aaden').key
+    return (await resultOf(query(collection(firebaseDB, 'openAIKey')))).find(it => it.id === 'aaden').key
 }
 
 export async function createUserWithEmail (email, password) {

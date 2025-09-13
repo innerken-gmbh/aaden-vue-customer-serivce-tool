@@ -2,7 +2,8 @@ import hillo from "hillo";
 import {delay} from "lodash-es";
 import {sleep} from "openai/core";
 import {collection,addDoc} from "firebase/firestore";
-import {db} from "@/old/utils/firebase";
+import {firebaseDB} from "@/old/utils/firebase";
+import { stripUndefinedDeep } from "@/utils/firebase";
 
 export const cloudUrl = "https://cloud5.api.aaden.io"
 
@@ -36,11 +37,12 @@ export async function findDeviceByDeviceId (deviceId) {
 const userAndStoreRelation = 'userStore'
 
 export async function bindStoreToUser (userId,deviceId,admin) {
-    return await addDoc(collection(db, userAndStoreRelation), {
+    const payload = stripUndefinedDeep({
         userId,
         deviceId,
-        admin
+        admin,
     })
+    return await addDoc(collection(firebaseDB, userAndStoreRelation), payload)
 }
 
 export async function getTestDevice(userId){
