@@ -276,6 +276,20 @@
           </n-form-item>
         </div>
 
+        <div class="grid grid-cols-2 gap-4 mt-2">
+          <n-form-item
+            label="预计发货日期"
+            path="expectedShipAt"
+          >
+            <n-date-picker
+              v-model:value="form.expectedShipAt"
+              type="date"
+              clearable
+              placeholder="可选"
+              :is-date-disabled="disableBeforeTomorrow"
+            />
+          </n-form-item>
+        </div>
 
         <div class="mt-2 flex items-center gap-2">
           <n-select
@@ -649,8 +663,13 @@ const filteredItems = computed(() => {
       return t >= start && t <= end
     })
   }
-  // 默认按 updatedAt desc
-  arr = arr.slice().sort((a, b) => toMillis(b.updatedAt) - toMillis(a.updatedAt))
+  // 默认按 预计发货时间(expectedShipAt) 倒序，其次按更新时间倒序
+  arr = arr.slice().sort((a: any, b: any) => {
+    const ea = toMillis(a.expectedShipAt)
+    const eb = toMillis(b.expectedShipAt)
+    if (ea !== eb) return eb - ea
+    return toMillis(b.updatedAt) - toMillis(a.updatedAt)
+  })
   return arr
 })
 
@@ -660,6 +679,16 @@ function toMillis(v: any): number {
   if (v?.toMillis) return v.toMillis()
   const t = new Date(v).getTime()
   return isNaN(t) ? 0 : t
+}
+
+// Disable picking dates earlier than tomorrow (local time)
+function startOfTomorrowMs(): number {
+  const now = new Date()
+  const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+  return startOfToday.getTime() + 24 * 60 * 60 * 1000
+}
+function disableBeforeTomorrow(ts: number): boolean {
+  return ts < startOfTomorrowMs()
 }
 
 const page = ref(1)
@@ -676,10 +705,19 @@ function onPageSizeChange(ps: number) {
 // 编辑弹窗状态与表单
 const showEdit = ref(false)
 const editFormRef = ref()
-const form = reactive<any>({ id: undefined, billNo: '', customerCode: '', submitter: '', items: [] as any[], remark: '', configRequirements: '' })
+const form = reactive<any>({ id: undefined, billNo: '', customerCode: '', submitter: '', items: [] as any[], remark: '', configRequirements: '', expectedShipAt: null as any })
 const editRules = {
   billNo: { required: true, message: '请填写单据编号', trigger: ['input', 'blur'] },
   customerCode: { required: true, message: '请填写客户名称', trigger: ['input', 'blur'] },
+  expectedShipAt: {
+    async validator(_: any, v: number | null) {
+      if (!v) return true
+      if (typeof v !== 'number') return true
+      if (v < startOfTomorrowMs()) throw new Error('预计发货日期最早为明天')
+      return true
+    },
+    trigger: ['change', 'blur']
+  }
 }
 
 
@@ -756,7 +794,7 @@ async function onImportBom() {
 
 // 行操作
 async function onCreate() {
-  Object.assign(form, { id: undefined, billNo: '', customerCode: '', submitter: '', items: [], remark: '', configRequirements: '' })
+  Object.assign(form, { id: undefined, billNo: '', customerCode: '', submitter: '', items: [], remark: '', configRequirements: '', expectedShipAt: null })
   selectedBomId.value = null
   editAttachments.value = []
   ;(editing as any).value = form
@@ -988,6 +1026,7 @@ const columns = computed(() => [
   { title: '备注', key: 'remark', render: (row: SalesOrder) => (row.remark || '-') },
   { title: '明细数', key: 'items', render: (row: SalesOrder) => (row.items?.length || 0) + '' },
   { title: '发货状态', key: 'shipStatus', render: (row: SalesOrder) => h(NTag, { type: row.shipStatus === 'SHIPPED' ? 'success' : 'warning', size: 'small' }, { default: () => (row.shipStatus === 'SHIPPED' ? '已发货' : '未发货') }) },
+  { title: '预计发货日期', key: 'expectedShipAt', render: (row: SalesOrder) => formatDate((row as any).expectedShipAt) },
   { title: '发货时间', key: 'shippedAt', render: (row: SalesOrder) => formatTime(row.shippedAt) },
   {
     title: '附件',
@@ -1037,6 +1076,7 @@ async function onEdit(row: SalesOrder) {
     submitter: (row as any).submitter || '',
     remark: row.remark || '',
     configRequirements: (row as any).configRequirements || '',
+    expectedShipAt: toMillis((row as any).expectedShipAt) || null,
     items: (row.items || []).map(it => ({ productId: it.productId, qty: it.qty, remark: it.remark || '' }))
   })
   editAttachments.value = ((row as any).attachments || []) as string[]
@@ -1064,7 +1104,7 @@ async function onSubmitEdit() {
         listSubmitters().then(list => { submitters.value = list })
       } catch {}
     }
-    await save({ id: form.id, billNo: form.billNo, customerCode: form.customerCode, submitter: submitterName || undefined, items: form.items, remark: form.remark, configRequirements: form.configRequirements, attachments: editAttachments.value })
+    await save({ id: form.id, billNo: form.billNo, customerCode: form.customerCode, submitter: submitterName || undefined, items: form.items, remark: form.remark, configRequirements: form.configRequirements, attachments: editAttachments.value, expectedShipAt: form.expectedShipAt ? new Date(form.expectedShipAt) : undefined })
     message.success('已保存')
     showEdit.value = false
   } catch (e: any) {
@@ -1078,5 +1118,13 @@ function formatTime(v: any) {
   const d = new Date(ms)
   const pad = (n: number) => String(n).padStart(2, '0')
   return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`
+}
+
+function formatDate(v: any) {
+  const ms = toMillis(v)
+  if (!ms) return ''
+  const d = new Date(ms)
+  const pad = (n: number) => String(n).padStart(2, '0')
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`
 }
 </script>
