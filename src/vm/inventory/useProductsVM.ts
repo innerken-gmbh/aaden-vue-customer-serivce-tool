@@ -16,7 +16,7 @@ export function useProductsVM() {
   const stockMin = ref<number | null>(null)
   const stockMax = ref<number | null>(null)
   const page = ref<number>(1)
-  const pageSize = ref<number>(10)
+  const pageSize = ref<number>(50)
 
   // selection for batch actions
   const selectedIds = ref<ID[]>([])

@@ -12,7 +12,7 @@ export function useBomsVM() {
   // filters & pagination
   const keyword = ref<string>('')
   const page = ref<number>(1)
-  const pageSize = ref<number>(10)
+  const pageSize = ref<number>(50)
 
   // selection
   const selectedIds = ref<ID[]>([])

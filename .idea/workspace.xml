@@ -6,7 +6,16 @@
   <component name="ChangeListManager">
     <list default="true" id="1777049f-9f7a-4424-9005-71635bd2b339" name="Changes" comment="Changes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/repo/inventory/packages.repo.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/repo/inventory/packages.repo.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/repo/inventory/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/repo/inventory/types.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/router/routes/async.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/router/routes/async.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/router/routes/constants.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/router/routes/constants.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/inventory/inbound-notices/list.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/inventory/inbound-notices/list.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/inventory/packages/list.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/inventory/packages/list.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/inventory/sales-orders/list.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/inventory/sales-orders/list.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/inventory/stock-records/list.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/inventory/stock-records/list.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/vm/inventory/useBomsVM.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/vm/inventory/useBomsVM.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/vm/inventory/useProductsVM.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/vm/inventory/useProductsVM.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -88,7 +97,7 @@
     "npm.serve.executor": "Run",
     "settings.editor.selected.configurable": "junie.application.models",
     "to.speed.mode.migration.done": "true",
-    "ts.external.directory.path": "/Users/haodong/Applications/WebStorm.app/Contents/plugins/javascript-plugin/jsLanguageServicesImpl/external",
+    "ts.external.directory.path": "/Users/haodong/Documents/GitHub/aaden-vue-customer-serivce-tool/node_modules/typescript/lib",
     "vue.rearranger.settings.migration": "true"
   },
   "keyToStringList": {
@@ -300,6 +309,7 @@
       <workItem from="1757741306557" duration="2420000" />
       <workItem from="1757744500597" duration="17905000" />
       <workItem from="1757764757053" duration="4185000" />
+      <workItem from="1758087371177" duration="8034000" />
     </task>
     <servers />
   </component>

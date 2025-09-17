@@ -327,7 +327,10 @@
                 >
                   数量
                 </th>
-                <th class="text-left p-2" style="width: 180px;">
+                <th
+                  class="text-left p-2"
+                  style="width: 180px;"
+                >
                   库存
                 </th>
                 <th class="text-left p-2">
@@ -368,7 +371,12 @@
                     <span class="mx-1 text-gray-400">/</span>
                     <span :class="reservedTextClass(it.productId)">已预订：{{ Number((getProduct(it.productId) as any)?.reservedStock || 0) }}</span>
                   </div>
-                  <div v-else class="text-gray-400">-</div>
+                  <div
+                    v-else
+                    class="text-gray-400"
+                  >
+                    -
+                  </div>
                 </td>
                 <td class="p-2">
                   <n-input
@@ -494,17 +502,32 @@
         <n-divider title-placement="left">
           快递链接
         </n-divider>
-        <div v-if="detailTrackingLinks.length" class="space-y-1">
+        <div
+          v-if="detailTrackingLinks.length"
+          class="space-y-1"
+        >
           <div class="flex flex-col gap-1">
-            <div v-for="(link, i) in detailTrackingLinks" :key="i" class="flex items-center gap-2">
+            <div
+              v-for="(link, i) in detailTrackingLinks"
+              :key="i"
+              class="flex items-center gap-2"
+            >
               <span class="text-xs break-all">{{ link }}</span>
-              <n-button size="tiny" tertiary type="primary" @click="openLink(link)">
+              <n-button
+                size="tiny"
+                tertiary
+                type="primary"
+                @click="openLink(link)"
+              >
                 打开
               </n-button>
             </div>
           </div>
         </div>
-        <div v-else class="text-gray-400">
+        <div
+          v-else
+          class="text-gray-400"
+        >
           暂无快递链接
         </div>
         <n-divider title-placement="left">
@@ -515,22 +538,43 @@
             <table class="min-w-full text-sm">
               <thead>
                 <tr class="text-gray-500">
-                  <th class="text-left p-2">货品</th>
-                  <th class="text-left p-2" style="width: 120px;">数量</th>
-                  <th class="text-left p-2">备注</th>
+                  <th class="text-left p-2">
+                    货品
+                  </th>
+                  <th
+                    class="text-left p-2"
+                    style="width: 120px;"
+                  >
+                    数量
+                  </th>
+                  <th class="text-left p-2">
+                    备注
+                  </th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(it, i) in detailOrder.items" :key="i">
-                  <td class="p-2">{{ productLabel(it.productId) }}</td>
-                  <td class="p-2">{{ it.qty }}</td>
-                  <td class="p-2">{{ it.remark || '-' }}</td>
+                <tr
+                  v-for="(it, i) in detailOrder.items"
+                  :key="i"
+                >
+                  <td class="p-2">
+                    {{ productLabel(it.productId) }}
+                  </td>
+                  <td class="p-2">
+                    {{ it.qty }}
+                  </td>
+                  <td class="p-2">
+                    {{ it.remark || '-' }}
+                  </td>
                 </tr>
               </tbody>
             </table>
           </div>
         </div>
-        <div v-else class="text-gray-400">
+        <div
+          v-else
+          class="text-gray-400"
+        >
           暂无货品明细
         </div>
         <n-divider title-placement="left">
@@ -692,7 +736,7 @@ function disableBeforeTomorrow(ts: number): boolean {
 }
 
 const page = ref(1)
-const pageSize = ref(10)
+const pageSize = ref(50)
 const pagedItems = computed(() => {
   const start = (page.value - 1) * pageSize.value
   return filteredItems.value.slice(start, start + pageSize.value)
@@ -758,7 +802,7 @@ async function ensureOptionsLoaded() {
   if (!productOptions.value.length || !productList.value.length) {
     const prods = await listProducts()
     productList.value = prods
-    productOptions.value = prods.map(p => ({ label: `${p.name} (${p.code})`, value: p.id as string }))
+    productOptions.value = prods.map(p => ({ label: `${p.code} · ${p.name}`, value: p.id as string }))
   }
   if (!bomOptions.value.length) {
     const boms = await listBoms()

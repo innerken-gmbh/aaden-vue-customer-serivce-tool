@@ -23,13 +23,6 @@
           clearable
           style="width: 140px"
         />
-        <n-date-picker
-          v-model:value="ui.range"
-          type="daterange"
-          clearable
-          format="yyyy-MM-dd"
-          placeholder="时间范围"
-        />
         <n-button @click="applyFilter" :loading="loading">搜索</n-button>
         <n-button @click="onClear" :disabled="loading">清空</n-button>
       </n-space>
@@ -81,7 +74,9 @@
           <div class="text-gray-500 mb-2">记录信息</div>
           <n-descriptions bordered :column="2" label-placement="left" size="small">
             <n-descriptions-item label="类型">
-              {{ detailRecord?.type === 'IN' ? '入库' : (detailRecord?.type === 'OUT' ? '出库' : '-') }}
+              <n-tag :type="detailRecord?.type === 'IN' ? 'success' : (detailRecord?.type === 'OUT' ? 'error' : undefined)" size="small">
+                {{ detailRecord?.type === 'IN' ? '入库' : (detailRecord?.type === 'OUT' ? '出库' : '-') }}
+              </n-tag>
             </n-descriptions-item>
             <n-descriptions-item label="数量">
               {{ detailRecord?.qty ?? '-' }}
@@ -102,7 +97,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { NButton, NAlert, NSpin, NDataTable, NSpace, NSelect, NDatePicker, NPagination, NModal } from 'naive-ui'
+import { NButton, NAlert, NSpin, NDataTable, NSpace, NSelect, NDatePicker, NPagination, NModal, NTag } from 'naive-ui'
 import { computed, onMounted, reactive, ref, h } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useStockRecordsVM } from '@/vm/inventory/useStockRecordsVM'
@@ -115,18 +110,34 @@ const router = useRouter()
 const { loading, error, items, filter, search } = useStockRecordsVM()
 
 // UI state for filters and pagination
-const ui = reactive<{ productId?: string; type?: 'IN' | 'OUT' | undefined; range: [number, number] | null }>({
+const ui = reactive<{ productId?: string; type?: 'IN' | 'OUT' | undefined }>({
   productId: undefined,
   type: undefined,
-  range: null,
 })
 
 const page = ref(1)
-const pageSize = ref(10)
-const pageCount = computed(() => Math.max(1, Math.ceil((items.value?.length || 0) / pageSize.value)))
+const pageSize = ref(50)
+
+function toMillis(v: any): number {
+  if (!v) return 0
+  if (typeof v === 'number') return v
+  if ((v as any)?.toMillis) return (v as any).toMillis()
+  if ((v as any)?.seconds) return (v as any).seconds * 1000
+  const t = new Date(v).getTime()
+  return isNaN(t) ? 0 : t
+}
+
+const sortedItems = computed(() => {
+  const list = (items.value || []).slice()
+  // 默认按创建时间倒序
+  list.sort((a: any, b: any) => toMillis(b.createdAt) - toMillis(a.createdAt))
+  return list
+})
+
+const pageCount = computed(() => Math.max(1, Math.ceil((sortedItems.value?.length || 0) / pageSize.value)))
 const pagedItems = computed(() => {
   const start = (page.value - 1) * pageSize.value
-  return (items.value || []).slice(start, start + pageSize.value)
+  return sortedItems.value.slice(start, start + pageSize.value)
 })
 
 function rowKey(row: any) {
@@ -164,14 +175,12 @@ function openDetail(row: any) {
 }
 
 const columns = computed(() => [
+  { title: '类型', key: 'type', render: (row: any) => h(NTag, { type: row.type === 'IN' ? 'success' : 'error', size: 'small' }, { default: () => (row.type === 'IN' ? '入库' : '出库') }) },
   { title: '货品', key: 'productId', render: (row: any) => {
     const p = productMap.value[row.productId]
-    return p ? `${p.code} · ${p.name}` : row.productId
+    return p ? `${p.name}` : row.productId
   } },
-  { title: '类型', key: 'type', render: (row: any) => (row.type === 'IN' ? '入库' : '出库') },
   { title: '数量', key: 'qty' },
-  { title: '关联', key: 'related', render: (row: any) => [row.relatedType, row.relatedId].filter(Boolean).join('#') || '-' },
-  { title: '发生时间', key: 'at', render: (row: any) => fmt(row.at) },
   { title: '创建时间', key: 'createdAt', render: (row: any) => fmt(row.createdAt) },
   { title: '备注', key: 'remark' },
   { title: '操作', key: 'actions', render: (row: any) => h(NButton, { size: 'small', onClick: () => openDetail(row) }, { default: () => '详情' }) },
@@ -189,18 +198,12 @@ async function applyFilter() {
     productId: ui.productId,
     type: ui.type,
   }
-  if (ui.range && Array.isArray(ui.range)) {
-    // Naive UI returns timestamps in ms
-    f.startAt = new Date(ui.range[0])
-    f.endAt = new Date(ui.range[1])
-  }
   await search(f)
 }
 
 function onClear() {
   ui.productId = undefined
   ui.type = undefined
-  ui.range = null
   page.value = 1
   search({})
 }

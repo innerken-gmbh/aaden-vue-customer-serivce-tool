@@ -36,4 +36,27 @@ export const asyncRoutes = [
       },
     ],
   },
+  {
+    path: '/inventory',
+    component: LAYOUT,
+    name: 'Inventory',
+    meta: {
+      title: '库存管理',
+      iconPrefix: 'iconfont',
+      icon: 'menu',
+    },
+    children: [
+      {
+        path: 'packages',
+        name: 'InventoryPackages',
+        component: () => import('@/views/inventory/packages/list.vue'),
+        meta: {
+          title: '包裹记录',
+          cacheable: true,
+          iconPrefix: 'iconfont',
+          icon: 'menu',
+        },
+      },
+    ],
+  },
 ]

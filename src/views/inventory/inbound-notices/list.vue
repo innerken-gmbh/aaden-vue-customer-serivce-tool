@@ -318,7 +318,7 @@
 <script setup lang="ts">
 import { NButton, NAlert, NSpin, NDataTable, NSpace, NSelect, NPagination, NModal, NForm, NFormItem, NInput, NDatePicker, NInputNumber, NDescriptions, NDescriptionsItem, NAutoComplete, NTag } from 'naive-ui'
 import { computed, h, onMounted, reactive, ref, watch } from 'vue'
-import { createInboundNotice, deleteInboundNotice, listInboundNotices, updateInboundNotice, confirmInboundArrival } from '@/repo/inventory/inbound-notices.repo'
+import { createInboundNotice, deleteInboundNotice, listInboundNotices, updateInboundNotice, confirmInboundArrival, getInboundNotice } from '@/repo/inventory/inbound-notices.repo'
 import { listProducts } from '@/repo/inventory/products.repo'
 import { listVendors, ensureVendor } from '@/repo/inventory/vendors.repo'
 import { listSubmitters, ensureSubmitter } from '@/repo/inventory/submitters.repo'
@@ -384,7 +384,7 @@ onMounted(() => { load(); loadProducts(); loadVendors(); loadSubmitters() })
 watch(status, () => { page.value = 1; load() })
 
 const page = ref(1)
-const pageSize = ref(10)
+const pageSize = ref(50)
 const idKeyword = ref<string>('')
 const filteredItems = computed(() => {
   const list = items.value || []
@@ -527,6 +527,18 @@ async function onSubmit() {
   try {
     loading.value = true
     error.value = null
+
+    // Concurrency guard: if editing an existing notice, re-fetch latest to ensure not already arrived/locked
+    if (form.id) {
+      const latest = await getInboundNotice(form.id)
+      if (!latest) {
+        throw new Error('入库预告不存在，可能已被删除，请刷新列表')
+      }
+      if (latest.locked || latest.status === 'ARRIVED') {
+        throw new Error('该预告已到货或已被锁定，无法继续编辑，请刷新列表查看最新状态')
+      }
+    }
+
     // Ensure vendor exists in vendor list (Firebase); vendor persists as string on the notice
     const vendorName = (form.vendor || '').trim()
     if (vendorName) {

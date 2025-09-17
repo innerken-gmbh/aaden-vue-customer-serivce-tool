@@ -101,6 +101,12 @@ export const constantRoutes = [
         component: () => import('@/views/inventory/sales-orders/list.vue'),
         meta: { title: '销售订单' },
       },
+      {
+        path: 'packages',
+        name: 'InventoryPackages',
+        component: () => import('@/views/inventory/packages/list.vue'),
+        meta: { title: '包裹记录' },
+      },
     ],
   },
 ]

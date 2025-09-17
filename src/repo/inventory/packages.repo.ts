@@ -13,7 +13,6 @@ export interface PackageFilter {
 
 export async function createPackage(p: Omit<Package, 'id' | 'createdAt' | 'updatedAt'>): Promise<ID> {
   if (!p.trackingUrl) throw new Error('trackingUrl 必填')
-  if (!p.relatedType || !p.relatedId) throw new Error('必须指定关联类型与ID')
   const payload = stripUndefinedDeep({
     ...p,
     createdAt: serverTimestamp(),

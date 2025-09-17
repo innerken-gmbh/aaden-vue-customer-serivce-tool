@@ -96,6 +96,9 @@ export interface Package extends BaseDoc {
   relatedId: ID
   status?: 'CREATED' | 'IN_TRANSIT' | 'DELIVERED' | 'CANCELLED'
   carrier?: string
+  eta?: any
+  arrivedAt?: any
+  contents?: string
   remark?: string
 }
 
