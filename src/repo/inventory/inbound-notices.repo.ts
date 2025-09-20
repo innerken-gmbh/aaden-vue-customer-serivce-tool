@@ -1,7 +1,6 @@
 import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, query, serverTimestamp, updateDoc, where } from 'firebase/firestore'
 import { db, stripUndefinedDeep } from '@/utils/firebase'
 import type { ID, InboundNotice } from './types'
-import { deletePackage, getPackageByRelation, upsertPackageByRelation } from './packages.repo'
 import { createStockRecord } from './stock-records.repo'
 import { adjustProductStock, adjustProductInTransit } from './products.repo'
 import { COLLECTIONS } from '@/repo/config'
@@ -41,15 +40,6 @@ export async function createInboundNotice(n: Omit<InboundNotice, 'id' | 'created
     updatedAt: serverTimestamp(),
   })
   const ref = await addDoc(collection(db, COL), payload)
-  // Upsert package if trackingUrl present
-  if (n.trackingUrl) {
-    await upsertPackageByRelation('InboundNotice', ref.id, {
-      trackingUrl: n.trackingUrl,
-      direction: 'IN',
-      status: 'IN_TRANSIT',
-      remark: n.remark,
-    } as any)
-  }
   // Increase in-transit for pending items
   if ((payload.status || 'PENDING') === 'PENDING') {
     for (const it of items) {
@@ -108,19 +98,6 @@ export async function updateInboundNotice(id: ID, n: Partial<InboundNotice>): Pr
   const payload = stripUndefinedDeep({ ...payloadBase, updatedAt: serverTimestamp() })
   await updateDoc(doc(db, COL, id), payload)
 
-  if (n.trackingUrl !== undefined) {
-    if (n.trackingUrl) {
-      await upsertPackageByRelation('InboundNotice', id, {
-        trackingUrl: n.trackingUrl,
-        direction: 'IN',
-        status: 'IN_TRANSIT',
-        remark: n.remark,
-      } as any)
-    } else {
-      const pkg = await getPackageByRelation('InboundNotice', id)
-      if (pkg?.id) await deletePackage(pkg.id)
-    }
-  }
 }
 
 export async function deleteInboundNotice(id: ID): Promise<void> {
@@ -132,8 +109,6 @@ export async function deleteInboundNotice(id: ID): Promise<void> {
     }
   }
   await deleteDoc(doc(db, COL, id))
-  const pkg = await getPackageByRelation('InboundNotice', id)
-  if (pkg?.id) await deletePackage(pkg.id)
 }
 
 // Confirm arrival: create stock-in records, adjust stock, and lock the notice
@@ -165,11 +140,6 @@ export async function confirmInboundArrival(id: ID, lines?: { productId: ID; qty
     await adjustProductStock(it.productId, it.qty)
   }
 
-  // Update package status if exists
-  const pkg = await getPackageByRelation('InboundNotice', id)
-  if (pkg?.id) {
-    await upsertPackageByRelation('InboundNotice', id, { ...pkg, status: 'DELIVERED' } as any)
-  }
 
   const payload = stripUndefinedDeep({
     status: 'ARRIVED',

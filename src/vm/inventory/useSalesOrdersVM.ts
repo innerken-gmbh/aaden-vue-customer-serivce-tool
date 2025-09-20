@@ -91,14 +91,13 @@ export function useSalesOrdersVM() {
     }
   }
 
-  async function doShip(id: ID, trackingUrls: string) {
-    const raw = (trackingUrls || '').split(',').map(s => s.trim()).filter(Boolean)
-    if (!raw.length) throw new Error('请填写发货快递链接，多个用逗号分隔')
-    if (raw.some((u) => !/^https?:\/\//i.test(u))) throw new Error('每条追踪链接必须以 http/https 开头')
-    const normalized = raw.join(',')
+  async function doShip(id: ID, pkgs: { trackingUrl: string; eta?: any; contents?: string; remark?: string }[]) {
+    const list = (pkgs || []).filter(p => p && p.trackingUrl)
+    if (!list.length) throw new Error('请至少填写一个包裹，并提供追踪链接')
+    if (list.some(p => !/^https?:\/\//i.test(p.trackingUrl))) throw new Error('每个包裹的追踪链接必须以 http/https 开头')
     loading.value = true
     try {
-      await shipOrder(id, normalized)
+      await shipOrder(id, list as any)
       await load()
     } finally {
       loading.value = false

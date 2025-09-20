@@ -131,16 +131,61 @@
         label-placement="left"
         label-width="100"
       >
-        <n-form-item
-          label="追踪链接"
-          path="trackingLinks"
-        >
-          <n-input
-            v-model:value="shipForm.trackingLinks"
-            type="textarea"
-            :autosize="{ minRows: 3 }"
-            placeholder="必填；多条用逗号分隔；需以 http/https 开头"
-          />
+        <n-form-item label="包裹列表">
+          <div class="space-y-2 w-full">
+            <div
+              v-for="(p, i) in shipForm.packages"
+              :key="i"
+              class="grid grid-cols-1 md:grid-cols-12 gap-2 items-center"
+            >
+              <div class="md:col-span-5">
+                <n-input
+                  v-model:value="p.trackingUrl"
+                  placeholder="追踪链接（必填） https://..."
+                />
+              </div>
+              <div class="md:col-span-3">
+                <n-date-picker
+                  v-model:value="p.eta"
+                  type="datetime"
+                  placeholder="预计到货（可选）"
+                />
+              </div>
+              <div class="md:col-span-3">
+                <n-input
+                  v-model:value="p.contents"
+                  placeholder="包裹内容（可选）"
+                />
+              </div>
+              <div class="md:col-span-1 text-right">
+                <n-button
+                  size="small"
+                  tertiary
+                  type="error"
+                  @click="removeShipPackage(i)"
+                >
+                  删除
+                </n-button>
+              </div>
+              <div class="md:col-span-12">
+                <n-input
+                  v-model:value="p.remark"
+                  type="textarea"
+                  :autosize="{ minRows: 1, maxRows: 3 }"
+                  placeholder="备注（可选）"
+                />
+              </div>
+            </div>
+            <div>
+              <n-button
+                size="small"
+                tertiary
+                @click="addShipPackage"
+              >
+                添加包裹
+              </n-button>
+            </div>
+          </div>
         </n-form-item>
         <n-form-item
           label="主设备编号"
@@ -213,7 +258,7 @@
           <n-button
             type="primary"
             :loading="loading"
-            :disabled="!allChecked"
+            :disabled="false"
             @click="onSubmitShip"
           >
             确认发货
@@ -735,6 +780,30 @@ function disableBeforeTomorrow(ts: number): boolean {
   return ts < startOfTomorrowMs()
 }
 
+// Helpers: compare expectedShipAt (date-only) with today for styling
+function startOfDayMs(ms: number): number {
+  const d = new Date(ms)
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime()
+}
+function isExpectedOverdue(row: SalesOrder): boolean {
+  const v: any = (row as any).expectedShipAt
+  if (!v) return false
+  const ms = toMillis(v)
+  if (!Number.isFinite(ms)) return false
+  const day = startOfDayMs(ms)
+  const today = startOfDayMs(Date.now())
+  return day < today
+}
+function isExpectedToday(row: SalesOrder): boolean {
+  const v: any = (row as any).expectedShipAt
+  if (!v) return false
+  const ms = toMillis(v)
+  if (!Number.isFinite(ms)) return false
+  const day = startOfDayMs(ms)
+  const today = startOfDayMs(Date.now())
+  return day === today
+}
+
 const page = ref(1)
 const pageSize = ref(50)
 const pagedItems = computed(() => {
@@ -881,19 +950,8 @@ function confirmAsync(msg: string): Promise<boolean> {
 // 发货
 const showShip = ref(false)
 const shipFormRef = ref()
-const shipForm = reactive<{ orderId: string | null; trackingLinks: string; mainDeviceCode: string; shipAt: number | null; remark: string }>({ orderId: null, trackingLinks: '', mainDeviceCode: '', shipAt: Date.now(), remark: '' })
+const shipForm = reactive<{ orderId: string | null; packages: any[]; mainDeviceCode: string; shipAt: number | null; remark: string }>({ orderId: null, packages: [{ trackingUrl: '' }], mainDeviceCode: '', shipAt: Date.now(), remark: '' })
 const shipRules = {
-  trackingLinks: {
-    required: true,
-    message: '请填写追踪链接（多条用逗号）',
-    validator(_: any, v: string) {
-      const parts = (v || '').split(',').map(s => s.trim()).filter(Boolean)
-      if (parts.length === 0) return new Error('至少填写一条追踪链接')
-      if (parts.some(p => !/^https?:\/\//i.test(p))) return new Error('每条必须以 http/https 开头')
-      return true
-    },
-    trigger: ['blur', 'input']
-  },
   mainDeviceCode: {
     required: true,
     message: '请填写主设备编号',
@@ -975,6 +1033,17 @@ async function onShowDetail(row: SalesOrder) {
   showDetail.value = true
 }
 
+function addShipPackage() {
+  shipForm.packages.push({ trackingUrl: '' })
+}
+function removeShipPackage(i: number) {
+  if (shipForm.packages.length <= 1) {
+    shipForm.packages = [{ trackingUrl: '' }]
+    return
+  }
+  shipForm.packages.splice(i, 1)
+}
+
 // NUpload 自定义上传 - 发货对话框
 async function shipUploadRequest(opts: any) {
   const { file, onFinish, onError } = opts || {}
@@ -1022,7 +1091,7 @@ async function onShip(row: SalesOrder) {
     return
   }
   shipForm.orderId = row.id || null
-  shipForm.trackingLinks = ''
+  shipForm.packages = [{ trackingUrl: '' }]
   shipForm.mainDeviceCode = (row as any).mainDeviceCode || ''
   shipForm.shipAt = Date.now()
   shipForm.remark = ''
@@ -1035,11 +1104,7 @@ async function onShip(row: SalesOrder) {
 async function onSubmitShip() {
   await (shipFormRef.value as any)?.validate?.()
   if (!shipForm.orderId) return
-  if (!allChecked.value) {
-    message.warning('请先完成核对清单勾选')
-    return
-  }
-  const tracking = shipForm.trackingLinks
+  const pkgs = (shipForm.packages || []).map(p => ({ trackingUrl: (p.trackingUrl || '').trim(), eta: p.eta || undefined, contents: p.contents || undefined, remark: p.remark || undefined }))
   try {
     const updates: any = { mainDeviceCode: shipForm.mainDeviceCode }
     if (shipUploadUrls.value.length > 0) {
@@ -1054,7 +1119,7 @@ async function onSubmitShip() {
       if (updates.attachments) (items.value[idx] as any).attachments = updates.attachments
       ;(items.value[idx] as any).mainDeviceCode = updates.mainDeviceCode
     }
-    await doShip(shipForm.orderId, tracking)
+    await doShip(shipForm.orderId, pkgs as any)
     message.success('发货成功')
     showShip.value = false
   } catch (e: any) {
@@ -1070,7 +1135,17 @@ const columns = computed(() => [
   { title: '备注', key: 'remark', render: (row: SalesOrder) => (row.remark || '-') },
   { title: '明细数', key: 'items', render: (row: SalesOrder) => (row.items?.length || 0) + '' },
   { title: '发货状态', key: 'shipStatus', render: (row: SalesOrder) => h(NTag, { type: row.shipStatus === 'SHIPPED' ? 'success' : 'warning', size: 'small' }, { default: () => (row.shipStatus === 'SHIPPED' ? '已发货' : '未发货') }) },
-  { title: '预计发货日期', key: 'expectedShipAt', render: (row: SalesOrder) => formatDate((row as any).expectedShipAt) },
+  { title: '预计发货日期', key: 'expectedShipAt', render: (row: SalesOrder) => {
+    const text = formatDate((row as any).expectedShipAt) || '-'
+    const pending = row.shipStatus !== 'SHIPPED'
+    if (pending && isExpectedOverdue(row)) {
+      return h('span', { class: 'bg-red-500 text-white px-2 py-0.5 rounded' }, text)
+    }
+    if (pending && isExpectedToday(row)) {
+      return h('span', { class: 'bg-yellow-300 text-black px-2 py-0.5 rounded' }, text)
+    }
+    return text
+  } },
   { title: '发货时间', key: 'shippedAt', render: (row: SalesOrder) => formatTime(row.shippedAt) },
   {
     title: '附件',

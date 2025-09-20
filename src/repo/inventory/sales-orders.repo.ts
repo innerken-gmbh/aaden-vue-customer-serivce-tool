@@ -84,8 +84,11 @@ export async function deleteSalesOrder(id: ID): Promise<void> {
   await deleteDoc(doc(db, COL, id))
 }
 
-export async function shipOrder(id: ID, trackingUrls: string): Promise<void> {
-  if (!trackingUrls || !trackingUrls.trim()) throw new Error('发货必须填写快递追踪链接')
+export interface ShipPackageInput { trackingUrl: string; eta?: any; contents?: string; remark?: string }
+
+export async function shipOrder(id: ID, pkgs: ShipPackageInput[]): Promise<void> {
+  const packages = (pkgs || []).filter(p => p && p.trackingUrl)
+  if (!packages.length) throw new Error('发货必须至少填写一个包裹，且包含追踪链接')
   const current = await getSalesOrder(id)
   if (!current) throw new Error('订单不存在')
   if (current.locked || current.shipStatus === 'SHIPPED') throw new Error('订单已发货')
@@ -108,9 +111,26 @@ export async function shipOrder(id: ID, trackingUrls: string): Promise<void> {
     await adjustProductStock(it.productId, -it.qty)
   }
 
+  // Create package records
+  for (const p of packages) {
+    await addDoc(collection(db, COLLECTIONS.PACKAGES), stripUndefinedDeep({
+      trackingUrl: p.trackingUrl,
+      direction: 'OUT',
+      relatedType: 'SalesOrder',
+      relatedId: id,
+      status: 'IN_TRANSIT',
+      eta: p.eta,
+      contents: p.contents,
+      remark: p.remark,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    }))
+  }
+
   const payload = stripUndefinedDeep({
     shipStatus: 'SHIPPED',
-    shipTrackingUrls: trackingUrls,
+    shipTrackingUrls: undefined,
+    arrivalStatus: 'PENDING',
     shippedAt: serverTimestamp(),
     locked: true,
     updatedAt: serverTimestamp(),

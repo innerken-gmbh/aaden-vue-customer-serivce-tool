@@ -143,6 +143,7 @@
 import { NButton, NAlert, NSpin, NDataTable, NSpace, NSelect, NPagination, NModal, NForm, NFormItem, NInput, NDatePicker, NTag, useMessage, NPopconfirm } from 'naive-ui'
 import { computed, h, onMounted, ref } from 'vue'
 import { listPackages, createPackage, updatePackage } from '@/repo/inventory/packages.repo'
+import useUserStore from '@/store/modules/user'
 
 const loading = ref(false)
 const error = ref<string | null>(null)
@@ -200,7 +201,7 @@ async function onCreate() {
       relatedId: form.value.relatedId || undefined as any,
       status: 'IN_TRANSIT',
       eta: form.value.eta,
-      contents: form.value.contents,
+      contents: (form.value.contents || '').trim() ? form.value.contents : undefined,
       remark: form.value.remark,
     } as any)
     msg.success('已创建')
@@ -238,7 +239,9 @@ function fmt(dt: any) {
 
 async function markDelivered(row: any) {
   try {
-    await updatePackage(row.id, { status: 'DELIVERED', arrivedAt: new Date() } as any)
+    const userStore = useUserStore()
+    const registrar = userStore?.nickName || userStore?.userName || ''
+    await updatePackage(row.id, { status: 'DELIVERED', arrivedAt: new Date(), arrivedBy: registrar } as any)
     msg.success('已标记到货')
     await load()
   } catch (e: any) {
@@ -258,7 +261,8 @@ const columns = computed(() => [
   { title: '来源', key: 'relatedType', render: (row: any) => `${row.relatedType || '-'}#${row.relatedId || ''}` },
   { title: '状态', key: 'status', render: (row: any) => statusTag(row) },
   { title: '预计到货', key: 'eta', render: (row: any) => fmt(row.eta) },
-  { title: '包裹内容', key: 'contents', ellipsis: { tooltip: true } },
+  { title: '到货时间', key: 'arrivedAt', render: (row: any) => fmt(row.arrivedAt) },
+  { title: '登记人', key: 'arrivedBy' },
   { title: '备注', key: 'remark', ellipsis: { tooltip: true } },
   { title: '创建于', key: 'createdAt', render: (row: any) => fmt(row.createdAt) },
   {

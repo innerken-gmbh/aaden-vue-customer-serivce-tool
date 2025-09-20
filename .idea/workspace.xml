@@ -4,18 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1777049f-9f7a-4424-9005-71635bd2b339" name="Changes" comment="Changes">
+    <list default="true" id="1777049f-9f7a-4424-9005-71635bd2b339" name="Changes" comment="加入包裹记录功能和库存管理相关优化">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/repo/inventory/inbound-notices.repo.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/repo/inventory/inbound-notices.repo.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/repo/inventory/packages.repo.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/repo/inventory/packages.repo.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/repo/inventory/sales-orders.repo.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/repo/inventory/sales-orders.repo.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/repo/inventory/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/repo/inventory/types.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/router/routes/async.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/router/routes/async.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/router/routes/constants.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/router/routes/constants.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/inventory/inbound-notices/list.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/inventory/inbound-notices/list.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/inventory/packages/list.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/inventory/packages/list.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/inventory/sales-orders/list.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/inventory/sales-orders/list.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/inventory/stock-records/list.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/inventory/stock-records/list.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/vm/inventory/useBomsVM.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/vm/inventory/useBomsVM.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/vm/inventory/useProductsVM.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/vm/inventory/useProductsVM.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/vm/inventory/useSalesOrdersVM.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/vm/inventory/useSalesOrdersVM.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -170,7 +167,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-b598e85cdad2-JavaScript-WS-252.25557.126" />
+        <option value="bundled-js-predefined-d6986cc7102b-9c94529fcfe0-JavaScript-WS-252.26199.162" />
       </set>
     </attachedChunks>
   </component>
@@ -309,8 +306,18 @@
       <workItem from="1757741306557" duration="2420000" />
       <workItem from="1757744500597" duration="17905000" />
       <workItem from="1757764757053" duration="4185000" />
-      <workItem from="1758087371177" duration="8034000" />
+      <workItem from="1758087371177" duration="10915000" />
+      <workItem from="1758346198273" duration="2176000" />
     </task>
+    <task id="LOCAL-00001" summary="加入包裹记录功能和库存管理相关优化">
+      <option name="closed" value="true" />
+      <created>1758100232190</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1758100232190</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -338,6 +345,11 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Changes" />
+    <MESSAGE value="加入包裹记录功能和库存管理相关优化" />
+    <option name="LAST_COMMIT_MESSAGE" value="加入包裹记录功能和库存管理相关优化" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

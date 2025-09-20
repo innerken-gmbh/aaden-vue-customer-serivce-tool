@@ -81,6 +81,7 @@ export interface SalesOrder extends BaseDoc {
   shippedAt?: any
   shipStatus: 'PENDING' | 'SHIPPED'
   shipTrackingUrls?: string
+  arrivalStatus?: 'PENDING' | 'ARRIVED'
   mainDeviceCode?: string
   attachments?: string[]
   locked?: boolean
@@ -98,6 +99,7 @@ export interface Package extends BaseDoc {
   carrier?: string
   eta?: any
   arrivedAt?: any
+  arrivedBy?: string
   contents?: string
   remark?: string
 }
