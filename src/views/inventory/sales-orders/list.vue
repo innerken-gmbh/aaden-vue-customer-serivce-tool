@@ -331,7 +331,6 @@
               type="date"
               clearable
               placeholder="可选"
-              :is-date-disabled="disableBeforeTomorrow"
             />
           </n-form-item>
         </div>
@@ -770,15 +769,19 @@ function toMillis(v: any): number {
   return isNaN(t) ? 0 : t
 }
 
-// Disable picking dates earlier than tomorrow (local time)
-function startOfTomorrowMs(): number {
-  const now = new Date()
-  const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate())
-  return startOfToday.getTime() + 24 * 60 * 60 * 1000
+// Add N working days (Mon-Fri) to a timestamp and return milliseconds
+function addWorkingDaysMs(startMs: number, days: number): number {
+  if (!Number.isFinite(startMs)) startMs = Date.now()
+  let d = new Date(startMs)
+  let added = 0
+  while (added < days) {
+    d = new Date(d.getTime() + 24 * 60 * 60 * 1000)
+    const day = d.getDay() // 0=Sun,6=Sat
+    if (day !== 0 && day !== 6) added++
+  }
+  return d.getTime()
 }
-function disableBeforeTomorrow(ts: number): boolean {
-  return ts < startOfTomorrowMs()
-}
+
 
 // Helpers: compare expectedShipAt (date-only) with today for styling
 function startOfDayMs(ms: number): number {
@@ -824,9 +827,7 @@ const editRules = {
   customerCode: { required: true, message: '请填写客户名称', trigger: ['input', 'blur'] },
   expectedShipAt: {
     async validator(_: any, v: number | null) {
-      if (!v) return true
-      if (typeof v !== 'number') return true
-      if (v < startOfTomorrowMs()) throw new Error('预计发货日期最早为明天')
+      // 允许填写任意日期（包括过去日期）
       return true
     },
     trigger: ['change', 'blur']
@@ -1034,11 +1035,17 @@ async function onShowDetail(row: SalesOrder) {
 }
 
 function addShipPackage() {
-  shipForm.packages.push({ trackingUrl: '' })
+  const order = shipCurrentOrder.value
+  const dev = (order as any)?.mainDeviceCode || (order as any)?.deviceId || ''
+  const remark = dev ? `${order?.billNo || ''}/${dev}` : `${order?.billNo || ''}`
+  shipForm.packages.push({ trackingUrl: '', eta: addWorkingDaysMs(Date.now(), 3), contents: '', remark })
 }
 function removeShipPackage(i: number) {
   if (shipForm.packages.length <= 1) {
-    shipForm.packages = [{ trackingUrl: '' }]
+    const order = shipCurrentOrder.value
+    const dev = (order as any)?.mainDeviceCode || (order as any)?.deviceId || ''
+    const remark = dev ? `${order?.billNo || ''}/${dev}` : `${order?.billNo || ''}`
+    shipForm.packages = [{ trackingUrl: '', eta: addWorkingDaysMs(Date.now(), 3), contents: '', remark }]
     return
   }
   shipForm.packages.splice(i, 1)
@@ -1091,7 +1098,9 @@ async function onShip(row: SalesOrder) {
     return
   }
   shipForm.orderId = row.id || null
-  shipForm.packages = [{ trackingUrl: '' }]
+  const dev = (row as any).mainDeviceCode || (row as any).deviceId || ''
+  const remark = dev ? `${row.billNo || ''}/${dev}` : `${row.billNo || ''}`
+  shipForm.packages = [{ trackingUrl: '', eta: addWorkingDaysMs(Date.now(), 3), contents: '', remark }]
   shipForm.mainDeviceCode = (row as any).mainDeviceCode || ''
   shipForm.shipAt = Date.now()
   shipForm.remark = ''
@@ -1129,9 +1138,17 @@ async function onSubmitShip() {
 
 const columns = computed(() => [
   { title: 'ID', key: 'id4', render: (row: SalesOrder) => '#' + String((row.id as string) || '').slice(-4) },
-  { title: '单据编号', key: 'billNo' },
+  { title: '单据编号', key: 'billNo', render: (row: SalesOrder) => {
+    const dev = (row as any).mainDeviceCode || (row as any).deviceId
+    if (dev) {
+      return h('div', { class: 'flex flex-col' }, [
+        h('div', String(row.billNo || '')),
+        h('div', { class: 'text-xs text-gray-500' }, String(dev))
+      ])
+    }
+    return String(row.billNo || '')
+  } },
   { title: '客户名称', key: 'customerCode' },
-  { title: '提交人', key: 'submitter', render: (row: SalesOrder) => (row as any).submitter || '-' },
   { title: '备注', key: 'remark', render: (row: SalesOrder) => (row.remark || '-') },
   { title: '明细数', key: 'items', render: (row: SalesOrder) => (row.items?.length || 0) + '' },
   { title: '发货状态', key: 'shipStatus', render: (row: SalesOrder) => h(NTag, { type: row.shipStatus === 'SHIPPED' ? 'success' : 'warning', size: 'small' }, { default: () => (row.shipStatus === 'SHIPPED' ? '已发货' : '未发货') }) },
@@ -1146,7 +1163,7 @@ const columns = computed(() => [
     }
     return text
   } },
-  { title: '发货时间', key: 'shippedAt', render: (row: SalesOrder) => formatTime(row.shippedAt) },
+  { title: '发货/更新时间', key: 'time', render: (row: SalesOrder) => row.shipStatus === 'SHIPPED' ? (formatTime(row.shippedAt) || '-') : (formatTime(row.updatedAt) || '-') },
   {
     title: '附件',
     key: 'attachments',
@@ -1162,7 +1179,6 @@ const columns = computed(() => [
       })
     }
   },
-  { title: '更新时间', key: 'updatedAt', render: (row: SalesOrder) => formatTime(row.updatedAt) },
   {
     title: '操作',
     key: 'actions',

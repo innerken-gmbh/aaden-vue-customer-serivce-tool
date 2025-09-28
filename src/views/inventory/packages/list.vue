@@ -237,6 +237,17 @@ function fmt(dt: any) {
   }
 }
 
+function toMs(v: any): number {
+  if (!v) return 0
+  try {
+    return v?.seconds ? v.seconds * 1000 : (typeof v === 'number' ? v : new Date(v).getTime())
+  } catch { return 0 }
+}
+function startOfDayMs(ms: number): number {
+  const d = new Date(ms)
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime()
+}
+
 async function markDelivered(row: any) {
   try {
     const userStore = useUserStore()
@@ -256,23 +267,51 @@ function statusTag(row: any) {
   return h(NTag as any, { type, strong: true }, { default: () => label })
 }
 
+function normalizeUrl(link: string) {
+  if (!link) return ''
+  return /^https?:\/\//i.test(link) ? link : `https://${link}`
+}
+function openTracking(row: any) {
+  const url = normalizeUrl(row?.trackingUrl || '')
+  if (!url) { msg?.warning?.('无追踪链接'); return }
+  window.open(url, '_blank')
+}
+
 const columns = computed(() => [
-  { title: '追踪链接', key: 'trackingUrl', render: (row: any) => row.trackingUrl ? h('a', { href: row.trackingUrl, target: '_blank', class: 'text-blue-600' }, row.trackingUrl) : '-' },
+  // 不再显示完整追踪链接
+  // { title: '追踪链接', key: 'trackingUrl', render: (row: any) => row.trackingUrl ? h('a', { href: row.trackingUrl, target: '_blank', class: 'text-blue-600' }, row.trackingUrl) : '-' },
   { title: '来源', key: 'relatedType', render: (row: any) => `${row.relatedType || '-'}#${row.relatedId || ''}` },
   { title: '状态', key: 'status', render: (row: any) => statusTag(row) },
-  { title: '预计到货', key: 'eta', render: (row: any) => fmt(row.eta) },
+  { title: '预计到货', key: 'eta', render: (row: any) => {
+    const text = fmt(row.eta) || '-'
+    const ms = toMs(row.eta)
+    if (ms) {
+      const day = startOfDayMs(ms)
+      const today = startOfDayMs(Date.now())
+      if (row.status !== 'DELIVERED' && day < today) {
+        return h('span', { class: 'text-red-600 font-medium' }, text)
+      }
+    }
+    return text
+  } },
   { title: '到货时间', key: 'arrivedAt', render: (row: any) => fmt(row.arrivedAt) },
   { title: '登记人', key: 'arrivedBy' },
   { title: '备注', key: 'remark', ellipsis: { tooltip: true } },
   { title: '创建于', key: 'createdAt', render: (row: any) => fmt(row.createdAt) },
   {
-    title: '操作', key: 'actions', width: 140,
+    title: '操作', key: 'actions', width: 220,
     render: (row: any) => {
-      if (row.status === 'DELIVERED') return h('span', null, '-')
-      return h(NPopconfirm as any, { onPositiveClick: () => markDelivered(row) }, {
+      // 追踪按钮：打开链接，新窗口；无链接时禁用
+      const trackBtn = h(NButton as any, { size: 'small', tertiary: true, onClick: () => openTracking(row), disabled: !row.trackingUrl }, { default: () => '追踪链接' })
+
+      if (row.status === 'DELIVERED') {
+        return h(NSpace as any, { size: 8 }, { default: () => [trackBtn] })
+      }
+      const markBtn = h(NPopconfirm as any, { onPositiveClick: () => markDelivered(row) }, {
         default: () => '确认标记到货？',
         trigger: () => h(NButton as any, { type: 'success', size: 'small' }, { default: () => '标记到货' })
       })
+      return h(NSpace as any, { size: 8 }, { default: () => [trackBtn, markBtn] })
     }
   },
 ])

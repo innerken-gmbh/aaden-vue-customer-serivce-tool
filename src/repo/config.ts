@@ -12,6 +12,7 @@ export const COLLECTIONS = {
   SUBMITTERS: 'inventory-submitters',
   VENDORS: 'inventory-vendors',
   PACKAGES: 'inventory-packages',
+  STOCKTAKES: 'inventory-stocktakes',
 } as const
 
 export type CollectionKey = keyof typeof COLLECTIONS

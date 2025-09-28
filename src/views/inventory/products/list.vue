@@ -4,6 +4,7 @@
       <h1 class="text-xl font-semibold">库存管理 · 货品</h1>
       <n-space>
         <n-button type="primary" @click="onCreate" :disabled="loading">新建货品</n-button>
+        <n-button type="info" @click="onStartStocktake" :disabled="loading">开始盘点</n-button>
         <n-button @click="load" :loading="loading">刷新</n-button>
       </n-space>
     </div>
@@ -80,21 +81,127 @@
         </div>
       </n-form>
     </n-modal>
+
+    <!-- 盘点弹窗 -->
+    <n-modal v-model:show="showStocktake" preset="card" title="开始盘点" style="max-width: 1100px">
+      <div class="mb-2 flex items-center gap-3">
+        <span class="text-gray-600">说明：修改数量时必须填写备注；提交后会自动生成入库/出库记录并调整库存。</span>
+      </div>
+      <div style="max-height: 60vh; overflow-y: auto;">
+        <n-data-table :columns="stocktakeColumns" :data="stocktakeRows" :bordered="false" :row-key="(r:any)=>r.productId" />
+      </div>
+      <div class="mt-3 flex items-center gap-2">
+        <span class="text-gray-600">本次备注：</span>
+        <n-input v-model:value="stocktakeRemark" placeholder="可选，用于本次盘点整体备注" />
+      </div>
+      <div class="flex justify-end gap-2 mt-4">
+        <n-button @click="showStocktake = false">取消</n-button>
+        <n-button type="primary" :loading="submittingStocktake" @click="onSubmitStocktake">提交</n-button>
+      </div>
+    </n-modal>
   </div>
 </template>
 <script setup lang="ts">
-import { NButton, NAlert, NSpin, NDataTable, NModal, NForm, NFormItem, NInput, NInputNumber, NSwitch, NSpace, NPopconfirm, NPagination } from 'naive-ui'
+import { NButton, NAlert, NSpin, NDataTable, NModal, NForm, NFormItem, NInput, NInputNumber, NSwitch, NSpace, NPopconfirm, NPagination, useMessage } from 'naive-ui'
 import { computed, h, onMounted, reactive, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import useProductsVM from '@/vm/inventory/useProductsVM'
-import { isProductCodeTaken } from '@/repo/inventory/products.repo'
+import { isProductCodeTaken, adjustProductStock } from '@/repo/inventory/products.repo'
+import { createStockRecord } from '@/repo/inventory/stock-records.repo'
+import { createStocktake } from '@/repo/inventory/stocktakes.repo'
 
 const router = useRouter()
-const { loading, error, editing, load, edit, save, remove, adjust, keyword, stockMin, stockMax, page, pageSize, pageCount, pagedItems, selectedIds, applyFilter, resetFilter, batchRemove } = useProductsVM()
+const message = useMessage()
+const { loading, error, editing, items, load, edit, save, remove, adjust, keyword, stockMin, stockMax, page, pageSize, pageCount, pagedItems, selectedIds, applyFilter, resetFilter, batchRemove } = useProductsVM() as any
 
 onMounted(() => {
   load()
 })
+
+// 盘点相关
+const showStocktake = ref(false)
+const submittingStocktake = ref(false)
+const stocktakeRows = ref<any[]>([])
+const stocktakeRemark = ref('')
+
+function onStartStocktake() {
+  // 准备数据快照
+  const list = (items?.value || []) as any[]
+  stocktakeRows.value = list.map((p: any) => ({
+    productId: p.id,
+    code: p.code,
+    name: p.name,
+    beforeQty: Number(p.stock || 0),
+    afterQty: Number(p.stock || 0),
+    remark: '',
+  }))
+  showStocktake.value = true
+}
+
+const stocktakeColumns = [
+  { title: '编号', key: 'code', width: 140 },
+  { title: '名称', key: 'name' },
+  { title: '当前库存', key: 'beforeQty', width: 100 },
+  {
+    title: '盘点后数量', key: 'afterQty', width: 140,
+    render(row: any) {
+      return h(NInputNumber, {
+        value: row.afterQty,
+        min: 0,
+        onUpdateValue(v: number) { row.afterQty = v }
+      })
+    }
+  },
+  { title: '差异', key: 'diff', width: 100, render: (row: any) => {
+    const diff = Number(row.afterQty || 0) - Number(row.beforeQty || 0)
+    const cls = diff === 0 ? '' : (diff > 0 ? 'text-green-600 font-bold' : 'text-red-600 font-bold')
+    return h('span', { class: cls }, String(diff))
+  } },
+  { title: '备注', key: 'remark', render: (row: any) => h(NInput, { value: row.remark, placeholder: '若有调整请填写原因', onUpdateValue(v: string){ row.remark = v } }) },
+]
+
+async function onSubmitStocktake() {
+  // 校验变更备注
+  const changed = stocktakeRows.value.filter(r => Number(r.afterQty) !== Number(r.beforeQty))
+  for (const r of changed) {
+    if (!String(r.remark || '').trim()) {
+      message.error(`请填写【${r.name}】的修改备注`)
+      return
+    }
+  }
+  submittingStocktake.value = true
+  try {
+    // 逐条调整库存并写入库存记录
+    for (const r of changed) {
+      const diff = Number(r.afterQty) - Number(r.beforeQty)
+      if (diff === 0) continue
+      await createStockRecord({
+        productId: r.productId,
+        type: diff > 0 ? 'IN' : 'OUT',
+        qty: Math.abs(diff),
+        at: new Date(),
+        remark: `盘点调整：${r.remark || ''}`,
+        relatedType: 'Manual',
+        relatedId: r.productId,
+      } as any)
+      await adjustProductStock(r.productId, diff)
+    }
+    // 保存盘点记录
+    await createStocktake({
+      at: new Date(),
+      operator: '',
+      remark: stocktakeRemark.value,
+      items: stocktakeRows.value.map(r => ({ productId: r.productId, name: r.name, beforeQty: r.beforeQty, afterQty: r.afterQty, diff: Number(r.afterQty) - Number(r.beforeQty), remark: r.remark })),
+    } as any)
+    message.success('盘点完成')
+    showStocktake.value = false
+    router.push({ name: 'InventoryStocktakes' })
+  } catch (e: any) {
+    message.error(e?.message || String(e))
+  } finally {
+    submittingStocktake.value = false
+  }
+}
 
 function onClear() {
   resetFilter()
@@ -231,8 +338,21 @@ const columns = computed(() => [
       const stock = Number(row.stock || 0)
       const highlight = reserved > stock
       const cls = highlight ? 'inline-block rounded px-2 py-0.5 bg-amber-50 text-amber-700 font-extrabold' : ''
-      const text = String(reserved)
-      return h('span', { class: cls }, highlight ? `⚠️ ${text}` : text)
+      // 计算预订占库存百分比，并将百分比数字按比例从绿(低)到红(高)着色；当库存为 0 时，仅显示数量。
+      const percent = stock > 0 ? Math.round((reserved / stock) * 100) : null
+      if (percent === null) {
+        const text = String(reserved)
+        return h('span', { class: cls }, highlight ? `⚠️ ${text}` : text)
+      }
+      const capped = Math.max(0, Math.min(100, percent))
+      const hue = 120 - (capped / 100) * 120 // 0%->绿色(120)，100%->红色(0)
+      const color = `hsl(${Math.round(hue)}, 75%, 40%)`
+      const children = [
+        `${reserved} (`,
+        h('span', { style: { color, fontWeight: '700', fontSize: '12px' } }, `${percent}%`),
+        ')',
+      ]
+      return h('span', { class: cls }, highlight ? ['⚠️ ', ...children] : children)
     },
   },
   {

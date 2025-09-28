@@ -104,6 +104,21 @@ export interface Package extends BaseDoc {
   remark?: string
 }
 
+export interface StocktakeItem {
+  productId: ID
+  name?: string
+  beforeQty: number
+  afterQty: number
+  diff: number
+  remark?: string
+}
+
+export interface Stocktake extends BaseDoc {
+  at: any
+  operator?: string
+  remark?: string
+  items: StocktakeItem[]
+}
 
 // Vendor for inbound notices selection list
 export interface Vendor extends BaseDoc {

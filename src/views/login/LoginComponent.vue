@@ -35,6 +35,11 @@
               placeholder="请输入用户名/手机号"
               prefix-icon="el-icon-user"
               clearable
+              name="username"
+              autocomplete="username"
+              autocapitalize="off"
+              spellcheck="false"
+              autofocus
             />
           </div>
           <div class="mt-4 item-wrapper">
@@ -44,6 +49,8 @@
               type="password"
               clearable
               prefix-icon="el-icon-lock"
+              name="password"
+              autocomplete="current-password"
             />
           </div>
           <div class="mt-6">
@@ -68,31 +75,6 @@
             </div>
           </div>
         </div>
-        <div class="third-login">
-          <n-divider dashed>
-            第三方登录
-          </n-divider>
-          <n-space justify="center">
-            <n-icon
-              color="var(--primary-color)"
-              size="20"
-            >
-              <LogoAlipay />
-            </n-icon>
-            <n-icon
-              color="var(--primary-color)"
-              size="20"
-            >
-              <LogoGithub />
-            </n-icon>
-            <n-icon
-              color="var(--primary-color)"
-              size="20"
-            >
-              <LogoWechat />
-            </n-icon>
-          </n-space>
-        </div>
       </div>
     </div>
     <div
@@ -113,6 +95,10 @@
           round
           placeholder="请输入用户名/手机号"
           size="large"
+          name="username"
+          autocomplete="username"
+          autocapitalize="off"
+          spellcheck="false"
         >
           <template #prefix>
             <n-icon>
@@ -129,6 +115,8 @@
           type="password"
           show-password-toggle
           :maxlength="8"
+          name="password"
+          autocomplete="current-password"
         >
           <template #prefix>
             <n-icon>
@@ -159,29 +147,6 @@
           >忘记密码？</a>
         </div>
       </div>
-      <div class="footer">
-        <n-divider>第三方登录</n-divider>
-        <div class="flex justify-evenly">
-          <n-icon
-            color="#c3c3c3"
-            size="30"
-          >
-            <LogoAlipay />
-          </n-icon>
-          <n-icon
-            color="#c3c3c3"
-            size="30"
-          >
-            <LogoGithub />
-          </n-icon>
-          <n-icon
-            color="#c3c3c3"
-            size="30"
-          >
-            <LogoWechat />
-          </n-icon>
-        </div>
-      </div>
     </div>
   </n-el>
 </template>
@@ -192,13 +157,7 @@ import {useRoute, useRouter} from 'vue-router'
 import ImageBg1 from '@/assets/img_login_bg.png'
 import {DeviceType} from '@/store/types'
 import {useMessage} from 'naive-ui'
-import {
-  LockClosedOutline as PasswordIcon,
-  LogoAlipay,
-  LogoGithub,
-  LogoWechat,
-  PhonePortraitOutline as PhoneIcon,
-} from '@vicons/ionicons5'
+import { LockClosedOutline as PasswordIcon, PhonePortraitOutline as PhoneIcon } from '@vicons/ionicons5'
 import useAppInfo from '@/old/hooks/useAppInfo'
 import useUserStore from '@/store/modules/user'
 import useAppConfigStore from '@/store/modules/app-config'
@@ -206,12 +165,13 @@ import {md5} from 'js-md5';
 
 export default defineComponent({
   name: 'Login',
-  components: {PhoneIcon, PasswordIcon, LogoGithub, LogoAlipay, LogoWechat},
+  components: { PhoneIcon, PasswordIcon },
   setup() {
     const {version} = useAppInfo()
-    const username = ref('admin')
-    const password = ref('123456')
-    const autoLogin = ref(true)
+    // 默认不预填账号和密码，且不勾选自动登录
+    const username = ref('')
+    const password = ref('')
+    const autoLogin = ref(false)
     const loading = ref(false)
     const router = useRouter()
     const route = useRoute()
@@ -394,7 +354,8 @@ export default defineComponent({
     justify-content: center;
     flex-direction: column;
     align-items: center;
-    background: linear-gradient(to bottom, var(--primary-color));
+    /* Use a subtle neutral gradient instead of a solid primary fill to avoid harsh/strange background color */
+    background: linear-gradient(180deg, #f7f9fc 0%, #eef2f7 100%);
 
     .form-wrapper {
       width: 50%;
