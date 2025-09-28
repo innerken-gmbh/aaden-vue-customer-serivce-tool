@@ -4,15 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1777049f-9f7a-4424-9005-71635bd2b339" name="Changes" comment="加入包裹记录功能和库存管理相关优化">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/repo/config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/repo/config.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/repo/inventory/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/repo/inventory/types.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/router/routes/constants.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/router/routes/constants.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/inventory/packages/list.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/inventory/packages/list.vue" afterDir="false" />
+    <list default="true" id="1777049f-9f7a-4424-9005-71635bd2b339" name="Changes" comment="加入盘点管理功能">
       <change beforePath="$PROJECT_DIR$/src/views/inventory/products/list.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/inventory/products/list.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/inventory/sales-orders/list.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/inventory/sales-orders/list.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/login/LoginComponent.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/login/LoginComponent.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -308,7 +301,7 @@
       <workItem from="1757764757053" duration="4185000" />
       <workItem from="1758087371177" duration="10915000" />
       <workItem from="1758346198273" duration="2176000" />
-      <workItem from="1759072255765" duration="2504000" />
+      <workItem from="1759072255765" duration="2862000" />
     </task>
     <task id="LOCAL-00001" summary="加入包裹记录功能和库存管理相关优化">
       <option name="closed" value="true" />
@@ -318,7 +311,15 @@
       <option name="project" value="LOCAL" />
       <updated>1758100232190</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="加入盘点管理功能">
+      <option name="closed" value="true" />
+      <created>1759074993619</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1759074993619</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -350,7 +351,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Changes" />
     <MESSAGE value="加入包裹记录功能和库存管理相关优化" />
-    <option name="LAST_COMMIT_MESSAGE" value="加入包裹记录功能和库存管理相关优化" />
+    <MESSAGE value="加入盘点管理功能" />
+    <option name="LAST_COMMIT_MESSAGE" value="加入盘点管理功能" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

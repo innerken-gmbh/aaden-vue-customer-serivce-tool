@@ -8,6 +8,7 @@
         <n-button @click="load" :loading="loading">刷新</n-button>
       </n-space>
     </div>
+    <div class="mt-1 text-gray-500">上次盘点：{{ lastStocktakeText }}</div>
 
     <div class="mt-3 flex flex-wrap items-end justify-between gap-3">
       <n-space align="end" item-style="display: flex; align-items: end; gap: 8px;">
@@ -108,14 +109,25 @@ import { useRouter } from 'vue-router'
 import useProductsVM from '@/vm/inventory/useProductsVM'
 import { isProductCodeTaken, adjustProductStock } from '@/repo/inventory/products.repo'
 import { createStockRecord } from '@/repo/inventory/stock-records.repo'
-import { createStocktake } from '@/repo/inventory/stocktakes.repo'
+import { createStocktake, listStocktakes } from '@/repo/inventory/stocktakes.repo'
 
 const router = useRouter()
 const message = useMessage()
 const { loading, error, editing, items, load, edit, save, remove, adjust, keyword, stockMin, stockMax, page, pageSize, pageCount, pagedItems, selectedIds, applyFilter, resetFilter, batchRemove } = useProductsVM() as any
 
+// 最近一次盘点时间
+const lastStocktakeAt = ref<any>(null)
+const lastStocktakeText = computed(() => fmt(lastStocktakeAt.value) || '未盘点')
+async function loadLastStocktake() {
+  try {
+    const arr = await listStocktakes()
+    lastStocktakeAt.value = (arr && arr.length) ? arr[0].at : null
+  } catch {}
+}
+
 onMounted(() => {
   load()
+  loadLastStocktake()
 })
 
 // 盘点相关
@@ -200,6 +212,18 @@ async function onSubmitStocktake() {
     message.error(e?.message || String(e))
   } finally {
     submittingStocktake.value = false
+  }
+}
+
+function fmt(dt: any) {
+  if (!dt) return ''
+  try {
+    const ms = dt.seconds ? dt.seconds * 1000 : new Date(dt).getTime()
+    const d = new Date(ms)
+    const pad = (n: number) => String(n).padStart(2, '0')
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`
+  } catch {
+    return ''
   }
 }
 
@@ -288,16 +312,6 @@ async function onSubmitAdjust() {
   }
 }
 
-function fmt(dt: any) {
-  if (!dt) return ''
-  try {
-    const ms = dt.seconds ? dt.seconds * 1000 : new Date(dt).getTime()
-    const d = new Date(ms)
-    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`
-  } catch {
-    return ''
-  }
-}
 
 const vm = { batchRemove: useProductsVM().batchRemove }
 

@@ -45,10 +45,10 @@
         style="width: 220px"
       />
       <n-input
-        v-model:value="filters.id4"
+        v-model:value="filters.deviceCode"
         clearable
-        placeholder="ID后四位"
-        style="width: 160px"
+        placeholder="设备编号（模糊）"
+        style="width: 200px"
       />
       <n-select
         v-model:value="filters.shipStatus"
@@ -685,10 +685,10 @@ onMounted(() => {
 })
 
 // 搜索筛选
-const filters = reactive<{ orderNo: string; customerCode: string; id4: string; shipStatus: 'PENDING' | 'SHIPPED' | null; timeRange: [number, number] | null }>({
+const filters = reactive<{ orderNo: string; customerCode: string; deviceCode: string; shipStatus: 'PENDING' | 'SHIPPED' | null; timeRange: [number, number] | null }>({
   orderNo: '',
   customerCode: '',
-  id4: '',
+  deviceCode: '',
   shipStatus: null,
   timeRange: null,
 })
@@ -713,7 +713,7 @@ function onSearch() {
 function onReset() {
   filters.orderNo = ''
   filters.customerCode = ''
-  filters.id4 = ''
+  filters.deviceCode = ''
   filters.shipStatus = null
   filters.timeRange = null as any
   page.value = 1
@@ -737,9 +737,12 @@ const filteredItems = computed(() => {
     const k = filters.customerCode.trim().toLowerCase()
     arr = arr.filter(x => (x.customerCode || '').toLowerCase().includes(k))
   }
-  if (filters.id4?.trim()) {
-    const k = filters.id4.trim().toLowerCase()
-    arr = arr.filter(x => String((x.id || '')).slice(-4).toLowerCase().includes(k))
+  if (filters.deviceCode?.trim()) {
+    const k = filters.deviceCode.trim().toLowerCase()
+    arr = arr.filter(x => {
+      const dev = ((x as any).mainDeviceCode || (x as any).deviceId || '').toLowerCase()
+      return dev.includes(k)
+    })
   }
   if (filters.shipStatus) {
     arr = arr.filter(x => x.shipStatus === filters.shipStatus)
@@ -1137,17 +1140,8 @@ async function onSubmitShip() {
 }
 
 const columns = computed(() => [
-  { title: 'ID', key: 'id4', render: (row: SalesOrder) => '#' + String((row.id as string) || '').slice(-4) },
-  { title: '单据编号', key: 'billNo', render: (row: SalesOrder) => {
-    const dev = (row as any).mainDeviceCode || (row as any).deviceId
-    if (dev) {
-      return h('div', { class: 'flex flex-col' }, [
-        h('div', String(row.billNo || '')),
-        h('div', { class: 'text-xs text-gray-500' }, String(dev))
-      ])
-    }
-    return String(row.billNo || '')
-  } },
+  { title: '单据编号', key: 'billNo' },
+  { title: '设备编号', key: 'mainDeviceCode', render: (row: SalesOrder) => String(((row as any).mainDeviceCode || (row as any).deviceId || '-') as any) },
   { title: '客户名称', key: 'customerCode' },
   { title: '备注', key: 'remark', render: (row: SalesOrder) => (row.remark || '-') },
   { title: '明细数', key: 'items', render: (row: SalesOrder) => (row.items?.length || 0) + '' },
