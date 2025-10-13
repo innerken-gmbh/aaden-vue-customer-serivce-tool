@@ -31,7 +31,11 @@ export async function getDishImageByDeviceId(deviceId) {
 }
 
 export async function getDishList (id) {
-    return (await hillo.get('https://ik' + id.padStart(4,'0') + '.ngrok.aaden.io/PHP/Dishes.php',{})).content
+    if (parseFloat(id) > 6000 && parseFloat(id) < 9000) {
+        return (await hillo.get('https://ht.api.aaden.io/ik' + id.padStart(4,'0')  + '/PHP/Dishes.php',{})).content
+    } else {
+        return (await hillo.get('https://ik' + id.padStart(4,'0') + '.ngrok.aaden.io/PHP/Dishes.php',{})).content
+    }
 }
 
 export async function editDish (id,item) {
@@ -40,11 +44,19 @@ export async function editDish (id,item) {
     if (updateItem.file) {
         updateItem.imageExt = updateItem.file.name.split('.')[1]
     }
-    return await hillo.postWithUploadFile('https://ik' + id.padStart(4, '0') + '.ngrok.aaden.io/PHP/Dishes.php?op=update', {
-            ...updateItem,
-            params: JSON.stringify(updateItem)
-        },
-        {showLoading: false})
+    if (parseFloat(id) > 6000 && parseFloat(id) < 9000) {
+        return await hillo.postWithUploadFile('https://ht.api.aaden.io/ik' + id.padStart(4,'0')  + '/PHP/Dishes.php?op=update', {
+                ...updateItem,
+                params: JSON.stringify(updateItem)
+            },
+            {showLoading: false})
+    } else {
+        return await hillo.postWithUploadFile('https://ik' + id.padStart(4, '0') + '.ngrok.aaden.io/PHP/Dishes.php?op=update', {
+                ...updateItem,
+                params: JSON.stringify(updateItem)
+            },
+            {showLoading: false})
+    }
 }
 
 export async function getLogsByDeviceId (id) {
