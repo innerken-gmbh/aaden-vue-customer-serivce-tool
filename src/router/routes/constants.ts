@@ -115,4 +115,43 @@ export const constantRoutes = [
       },
     ],
   },
+  {
+    path: '/recon',
+    name: 'Reconciliation',
+    component: LAYOUT,
+    meta: { title: '对账平台' },
+    children: [
+      { path: '', redirect: { name: 'ReconCompanies' }, meta: { hidden: true } },
+      {
+        path: 'companies',
+        name: 'ReconCompanies',
+        component: () => import('@/views/recon/companies/list.vue'),
+        meta: { title: '公司' },
+      },
+      {
+        path: 'company/:companyId/accounts',
+        name: 'ReconAccounts',
+        component: () => import('@/views/recon/company/accounts.vue'),
+        meta: { title: '账户', hidden: true },
+        beforeEnter: (to) => {
+          const id = Number(to.params.companyId)
+          if (!Number.isFinite(id) || id <= 0) {
+            return { name: 'ReconAccounts', params: { companyId: 1 } }
+          }
+        },
+      },
+      {
+        path: 'company/:companyId/transactions',
+        name: 'ReconTransactions',
+        component: () => import('@/views/recon/statement/transactions.vue'),
+        meta: { title: '流水' },
+        beforeEnter: (to) => {
+          const id = Number(to.params.companyId)
+          if (!Number.isFinite(id) || id <= 0) {
+            return { name: 'ReconTransactions', params: { companyId: 1 } }
+          }
+        },
+      },
+    ],
+  }
 ]
