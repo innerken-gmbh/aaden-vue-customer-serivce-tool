@@ -4,15 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1777049f-9f7a-4424-9005-71635bd2b339" name="Changes" comment="加入盘点管理功能">
-      <change afterPath="$PROJECT_DIR$/doc/epics/bank-statement/api.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/doc/epics/bank-statement/context.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/doc/epics/bank-statement/frontend-requirements.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/doc/epics/bank-statement/plan.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.junie/doc/inventory-compact.md" beforeDir="false" afterPath="$PROJECT_DIR$/doc/epics/inventory/inventory-compact.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.junie/doc/tasks.md" beforeDir="false" afterPath="$PROJECT_DIR$/doc/epics/inventory/inventory-tasks.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/router/routes/constants.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/router/routes/constants.ts" afterDir="false" />
+    <list default="true" id="1777049f-9f7a-4424-9005-71635bd2b339" name="Changes" comment="jiaruxingongneng">
       <change beforePath="$PROJECT_DIR$/src/store/aaden/cloud-v2-api.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/aaden/cloud-v2-api.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -314,7 +306,7 @@
       <workItem from="1758346198273" duration="2176000" />
       <workItem from="1759072255765" duration="2862000" />
       <workItem from="1760352129510" duration="312000" />
-      <workItem from="1761381035019" duration="38747000" />
+      <workItem from="1761381035019" duration="38823000" />
     </task>
     <task id="LOCAL-00001" summary="加入包裹记录功能和库存管理相关优化">
       <option name="closed" value="true" />
@@ -332,7 +324,15 @@
       <option name="project" value="LOCAL" />
       <updated>1759074993619</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="jiaruxingongneng">
+      <option name="closed" value="true" />
+      <created>1761493883798</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1761493883798</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -365,7 +365,8 @@
     <MESSAGE value="Changes" />
     <MESSAGE value="加入包裹记录功能和库存管理相关优化" />
     <MESSAGE value="加入盘点管理功能" />
-    <option name="LAST_COMMIT_MESSAGE" value="加入盘点管理功能" />
+    <MESSAGE value="jiaruxingongneng" />
+    <option name="LAST_COMMIT_MESSAGE" value="jiaruxingongneng" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
