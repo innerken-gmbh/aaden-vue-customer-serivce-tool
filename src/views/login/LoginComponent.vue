@@ -161,7 +161,6 @@ import { LockClosedOutline as PasswordIcon, PhonePortraitOutline as PhoneIcon } 
 import useAppInfo from '@/old/hooks/useAppInfo'
 import useUserStore from '@/store/modules/user'
 import useAppConfigStore from '@/store/modules/app-config'
-import {md5} from 'js-md5';
 
 export default defineComponent({
   name: 'Login',
@@ -184,43 +183,43 @@ export default defineComponent({
     const onLogin = () => {
       loading.value = true
 
-
       function doLogin() {
         const baseData = {}
         const data = {}
-        const hash = '88daa06eb3f7e4ecd6b1556441737b9b'
-        const inputAfterHash = md5(password.value)
-        console.log(inputAfterHash)
-        if (username.value === 'admin' && hash === inputAfterHash) {
+
+        // Local credentials:
+        // Full access
+        const ADMIN_USERNAME = 'admin'
+        const ADMIN_PASSWORD = 'Aaden#2025'
+        // Limited access (no bank statements)
+        const SUPPORT_USERNAME = 'support'
+        const SUPPORT_PASSWORD = 'Helpdesk#2025'
+
+        const u = username.value?.trim()
+        const p = password.value || ''
+
+        if (u === ADMIN_USERNAME && p === ADMIN_PASSWORD) {
           baseData.code = 200
           baseData.msg = '登录成功'
           data.nickName = '超级管理员'
-          data.userName = 'admin'
+          data.userName = ADMIN_USERNAME
           data.userId = 1
-          data.roleId = 1
-          data.token = "token"
+          data.roleId = 1 // admin
+          data.token = 'token'
           data.roles = [
-            {
-              roleCode: 'ROLE_admin',
-              roleId: 1,
-              roleName: '超级管理员',
-            },
+            { roleCode: 'ROLE_admin', roleId: 1, roleName: '超级管理员' },
           ]
           baseData.data = data
-        } else if (username.value === 'editor') {
+        } else if (u === SUPPORT_USERNAME && p === SUPPORT_PASSWORD) {
           baseData.code = 200
           baseData.msg = '登录成功'
-          data.nickName = '编辑员'
-          data.userName = 'editor'
+          data.nickName = '客服账号'
+          data.userName = SUPPORT_USERNAME
           data.userId = 2
-          data.roleId = 2
-          data.token = "token"
+          data.roleId = 2 // limited
+          data.token = 'token'
           data.roles = [
-            {
-              roleCode: 'ROLE_editor',
-              roleId: 2,
-              roleName: '网站编辑人员',
-            },
+            { roleCode: 'ROLE_support', roleId: 2, roleName: '受限客服' },
           ]
           baseData.data = data
         } else {
@@ -231,16 +230,20 @@ export default defineComponent({
         return baseData
       }
 
-      const {data} = doLogin()
-      userStore.saveUser(data).then(() => {
-        router
+      const { data } = doLogin()
+      if (data) {
+        userStore.saveUser(data).then(() => {
+          router
             .replace({
-              path: route.query.redirect ? (route.query.redirect) : '/',
+              path: route.query.redirect ? route.query.redirect : '/',
             })
             .then(() => {
               loading.value = false
             })
-      })
+        })
+      } else {
+        loading.value = false
+      }
     }
     return {
       isMobileScreen,

@@ -100,7 +100,7 @@
       />
       <n-input
         v-model:value="vm.filters.query"
-        placeholder="搜索名称/描述"
+        placeholder="搜索名称/描述/备注/金额"
       />
     </div>
 
@@ -328,128 +328,13 @@
       </template>
     </n-modal>
 
-    <!-- 编辑交易 -->
-    <n-modal
+    <!-- 编辑交易（已抽离成独立组件） -->
+    <EditTransactionDialog
       v-model:show="showEdit"
-      preset="card"
-      title="编辑流水"
-      :mask-closable="false"
-      style="width: 680px; max-width: 90vw"
-      content-style="max-height: 70vh; overflow: auto"
-    >
-      <n-form
-        ref="editFormRef"
-        :model="editForm"
-        :rules="editRules"
-        label-width="96"
-      >
-        <n-form-item
-          label="名称"
-          path="name"
-        >
-          <n-input
-            v-model:value="editForm.name"
-            maxlength="120"
-            show-count
-            placeholder="请输入名称"
-          />
-        </n-form-item>
-        <n-form-item
-          label="描述"
-          path="description"
-        >
-          <n-input
-            v-model:value="editForm.description"
-            type="textarea"
-            placeholder="可选"
-          />
-        </n-form-item>
-        <n-form-item
-          label="日期"
-          path="date"
-        >
-          <n-date-picker
-            v-model:value="editForm.date"
-            type="date"
-          />
-        </n-form-item>
-        <n-form-item
-          label="金额"
-          path="amount"
-        >
-          <n-input-number
-            v-model:value="editForm.amount"
-            :precision="2"
-            :min="-999999999"
-            :max="999999999"
-          />
-        </n-form-item>
-        <n-form-item
-          label="类型"
-          path="transactionType"
-        >
-          <n-select
-            v-model:value="editForm.transactionType"
-            :options="[
-              { label: '收入', value: 'INCOME' },
-              { label: '支出', value: 'OUTCOME' },
-            ]"
-          />
-        </n-form-item>
-        <n-form-item
-          v-if="editForm.transactionType === 'OUTCOME'"
-          label="费用类型"
-          path="expenseType"
-        >
-          <n-select
-            v-model:value="editForm.expenseType"
-            :options="[
-              { label: '生产', value: 'PRODUCTION' },
-              { label: '管理', value: 'MANAGEMENT' },
-            ]"
-            clearable
-          />
-        </n-form-item>
-        <n-form-item
-          label="分类备注"
-        >
-          <n-input
-            v-model:value="editForm.categoryNote"
-            type="textarea"
-            :autosize="{ minRows: 1, maxRows: 4 }"
-            disabled
-          />
-          <template #feedback>
-            该备注来自分类规则，供参考，不能在此处编辑。
-          </template>
-        </n-form-item>
-        <n-form-item
-          label="负责人"
-          path="departmentHeadId"
-        >
-          <n-select
-            v-model:value="editForm.departmentHeadId"
-            :options="vm.departmentHeadSelectOptions"
-            placeholder="请选择负责人"
-            clearable
-            filterable
-          />
-        </n-form-item>
-      </n-form>
-      <template #footer>
-        <div class="flex justify-end gap-2">
-          <n-button @click="showEdit = false">
-            取消
-          </n-button>
-          <n-button
-            type="primary"
-            @click="onSaveEdit"
-          >
-            保存
-          </n-button>
-        </div>
-      </template>
-    </n-modal>
+      :transaction="editingRow"
+      :department-head-options="vm.departmentHeadSelectOptions"
+      @saved="onEditSaved"
+    />
 
     <!-- 附件预览 -->
     <n-modal
@@ -585,6 +470,7 @@ import { useReconTransactionsStore } from '@/vm/reconciliation/recon-transaction
 import type { BankTransactionDTO, BankStatementDTO } from '@/repo/reconciliation/types'
 import { listStatementsByAccount, exportStatementZip } from '@/repo/reconciliation/statement.repo'
 import BatchAttachmentsDialog from './components/BatchAttachmentsDialog.vue'
+import EditTransactionDialog from './components/EditTransactionDialog.vue'
 import { openDownloadViaProxy, getDownloadProxyUrl } from '@/utils/download'
 
 const vm = useReconTransactionsStore()
@@ -903,89 +789,17 @@ async function onBeforeSingleUpload({ file }: { file: UploadFileInfo }) {
   return false
 }
 
-// 编辑弹窗
+// 编辑弹窗（状态保留在父组件，仅负责打开与传入行）
 const showEdit = ref(false)
 const editingRow = ref<BankTransactionDTO | null>(null)
-const editForm = reactive({
-  id: null as number | null,
-  statementId: null as number | null,
-  name: '',
-  description: '' as string | null,
-  date: null as number | null, // timestamp for n-date-picker
-  amount: 0 as number,
-  transactionType: 'INCOME' as 'INCOME' | 'OUTCOME',
-  expenseType: null as 'PRODUCTION' | 'MANAGEMENT' | null,
-  departmentHeadId: null as number | null,
-  // Hidden fields to preserve values when saving (backend lacks partial update)
-  tag: null as string | null,
-  submissionStatus: 'WAITING' as 'WAITING' | 'NOT_REQUIRED' | 'INVALID_CONTENT' | 'SUBMITTED',
-  fileUrl: null as string | null,
-  fileName: null as string | null,
-  categoryNote: null as string | null,
-})
-const editRules: Record<string, any> = {
-  name: { required: true, message: '请输入名称', trigger: ['input', 'blur'] },
-  date: { required: true, type: 'number', message: '请选择日期', trigger: ['change', 'blur'] },
-  amount: { required: true, type: 'number', message: '请输入金额', trigger: ['input', 'blur'] },
-  transactionType: { required: true, message: '请选择类型', trigger: ['change'] },
-}
-const editFormRef = ref<FormInst | null>(null)
 
 function openEdit(row: BankTransactionDTO) {
   editingRow.value = row
-  editForm.id = row.id
-  editForm.statementId = row.statementId
-  editForm.name = row.name
-  editForm.description = (row.description ?? '') as string | null
-  editForm.date = new Date(row.date + 'T00:00:00').getTime()
-  editForm.amount = Number(row.amount)
-  editForm.transactionType = row.transactionType
-  editForm.expenseType = row.transactionType === 'OUTCOME' ? (row.expenseType ?? null) : null
-  editForm.departmentHeadId = row.departmentHead?.id ?? null
-  // preserve non-editable fields to avoid backend clearing due to non-partial update
-  editForm.tag = (row.tag ?? null) as string | null
-  editForm.submissionStatus = row.submissionStatus
-  editForm.fileUrl = (row.fileUrl ?? null) as string | null
-  editForm.fileName = (row.fileName ?? null) as string | null
-  editForm.categoryNote = (row.categoryNote ?? null) as string | null
   showEdit.value = true
 }
 
-function toLocalDate(ts: number | null): string | null {
-  if (!ts || !Number.isFinite(ts)) return null
-  const d = new Date(ts)
-  const y = d.getFullYear()
-  const m = String(d.getMonth() + 1).padStart(2, '0')
-  const day = String(d.getDate()).padStart(2, '0')
-  return `${y}-${m}-${day}`
-}
-
-async function onSaveEdit() {
-  try {
-    await editFormRef.value?.validate()
-    const payload = {
-      // send all fields explicitly, backend doesn't support partial update
-      id: editForm.id ?? null,
-      statementId: Number(editForm.statementId),
-      name: editForm.name,
-      description: (editForm.description ?? null) as string | null,
-      date: toLocalDate(editForm.date) as string,
-      amount: Number(editForm.amount),
-      transactionType: editForm.transactionType,
-      expenseType: editForm.transactionType === 'OUTCOME' ? (editForm.expenseType ?? null) : null,
-      departmentHeadId: (editForm.departmentHeadId ?? null) as number | null,
-      tag: (editForm.tag ?? null) as string | null,
-      submissionStatus: editForm.submissionStatus,
-      fileUrl: (editForm.fileUrl ?? null) as string | null,
-      fileName: (editForm.fileName ?? null) as string | null,
-      categoryNote: (editForm.categoryNote ?? null) as string | null,
-    }
-    await vm.saveTransactionEdit(payload as any)
-    showEdit.value = false
-    window.$message?.success?.('保存成功')
-  } catch (e: any) {
-    window.$message?.error?.(e?.message || '保存失败')
-  }
+function onEditSaved() {
+  // 子组件已保存并给出提示；如需刷新列表，这里可以调用 vm.reloadByAccount 或 vm.load()
 }
 
 // 附件预览状态与工具
@@ -1150,6 +964,9 @@ const columns = [
           : null,
       ]),
   },
+  { title: '备注', key: 'note', render: (row: BankTransactionDTO) => (row.note && row.note.trim().length > 0)
+      ? h('div', { class: 'text-xs text-gray-600 max-w-[360px] line-clamp-2 break-words' }, row.note)
+      : '-' },
   { title: '金额', key: 'amount', render: (row: BankTransactionDTO) => h('span', { class: (row.amount >= 0 ? 'text-green-600' : 'text-red-600') + ' whitespace-nowrap tabular-nums' }, formatEuro(row.amount)) },
   {
     title: '类型',

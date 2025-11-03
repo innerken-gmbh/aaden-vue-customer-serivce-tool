@@ -83,9 +83,17 @@ export const useReconTransactionsStore = defineStore('recon-transactions', {
           }
         }
         if (state.filters.query) {
-          const q = state.filters.query.toLowerCase()
-          const text = `${t.name} ${t.description ?? ''}`.toLowerCase()
-          if (!text.includes(q)) return false
+          const q = state.filters.query.trim().toLowerCase()
+          const text = `${t.name} ${t.description ?? ''} ${t.note ?? ''}`.toLowerCase()
+          // 支持按金额搜索：当输入为数字（允许包含逗号）时，匹配金额相等或包含
+          const numRaw = q.replace(/,/g, '')
+          const numVal = Number(numRaw)
+          const byAmount = Number.isFinite(numVal)
+            ? (Number(t.amount.toFixed(2)) === Number(numVal.toFixed ? numVal.toFixed(2) : numVal) ||
+               String(t.amount).includes(numRaw) ||
+               String(t.amount.toFixed(2)).includes(numRaw))
+            : false
+          if (!(text.includes(q) || byAmount)) return false
         }
         return true
       })

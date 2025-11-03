@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { reactive } from 'vue'
 import { useRoute } from 'vue-router'
 import type { ReconciliationAccountDTO, ReconciliationAccountSaveDTO } from '@/repo/reconciliation/types'
-import { listAccounts, saveAccount } from '@/repo/reconciliation/account.repo'
+import { listAccounts, saveAccount, deleteAccountApi } from '@/repo/reconciliation/account.repo'
 
 function masked(no: string) {
   if (!no) return ''
@@ -82,6 +82,30 @@ export const useReconAccountsStore = defineStore('recon-accounts', {
         alias: this.form.alias?.trim() || undefined,
       })
       this.showModal = false
+      await this.load()
+    },
+    async deleteAccount(row: ReconciliationAccountDTO) {
+      // Confirm via Naive UI dialog if available; otherwise fallback to native confirm
+      let proceed = true
+      if (window.$dialog?.warning) {
+        try {
+          const ret = await window.$dialog.warning({
+            title: '确认删除',
+            content: `确定要删除账户「${row.bankName} - ${this.masked(row.accountNumber)}」吗？此操作不可恢复。`,
+            positiveText: '删除',
+            negativeText: '取消',
+          })
+          if (ret === false) proceed = false
+        } catch {
+          // Some implementations reject on cancel
+          proceed = false
+        }
+      } else if (typeof window.confirm === 'function') {
+        proceed = window.confirm(`确定要删除账户「${row.bankName} - ${this.masked(row.accountNumber)}」吗？`)
+      }
+      if (!proceed) return
+      await deleteAccountApi({ id: row.id })
+      window.$message?.success?.('删除成功')
       await this.load()
     },
   },

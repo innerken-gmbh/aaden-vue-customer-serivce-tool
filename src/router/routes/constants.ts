@@ -144,7 +144,7 @@ export const constantRoutes = [
         path: 'company/:companyId/transactions',
         name: 'ReconTransactions',
         component: () => import('@/views/recon/statement/transactions.vue'),
-        meta: { title: '流水' },
+        meta: { title: '流水', requiredRoleId: 1 },
         beforeEnter: (to) => {
           const id = Number(to.params.companyId)
           if (!Number.isFinite(id) || id <= 0) {

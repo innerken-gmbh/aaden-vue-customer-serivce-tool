@@ -116,10 +116,18 @@ const columns = [
         h(
           'a',
           {
-            class: 'text-primary cursor-pointer',
+            class: 'text-primary mr-3 cursor-pointer',
             onClick: () => router.push({ name: 'ReconTransactions', params: { companyId: row.companyId } }),
           },
           '流水'
+        ),
+        h(
+          'a',
+          {
+            class: 'text-red-500 cursor-pointer',
+            onClick: () => vm.deleteAccount(row),
+          },
+          '删除'
         ),
       ]
     },

@@ -22,6 +22,11 @@ function usePermissionGuard() {
       await permissionStore.initPermissionRoute()
       return { ...to, replace: true }
     }
+    // Role-based route protection: redirect to 403 if role not allowed
+    const requiredRoleId = (to.meta && (to.meta as any).requiredRoleId) as number | undefined
+    if (typeof requiredRoleId !== 'undefined' && userStore.roleId !== requiredRoleId) {
+      return { path: '/403' }
+    }
     return true
   })
 }

@@ -47,6 +47,15 @@ export interface ReconciliationAccountSaveDTO {
   alias?: string | null
 }
 
+export interface ReconciliationAccountDeleteDTO {
+  id: number
+}
+
+export interface ReconciliationAccountDeleteResultDTO {
+  success: boolean
+  deletedAt?: string | null
+}
+
 export interface BankStatementDTO {
   id: number
   accountId: number
@@ -82,6 +91,7 @@ export interface BankTransactionDTO {
   account?: TransactionAccountDTO | null
   name: string
   description?: string | null
+  note?: string | null
   date: string // ISO LocalDate
   amount: number
   transactionType: TransactionType
@@ -100,6 +110,7 @@ export interface BankTransactionSaveDTO {
   statementId: number
   name: string
   description?: string | null
+  note?: string | null
   date: string // ISO LocalDate (YYYY-MM-DD)
   amount: number
   transactionType: TransactionType
