@@ -6,17 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="1777049f-9f7a-4424-9005-71635bd2b339" name="Changes" comment="jiaruxingongneng">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/epics/bank-statement/api.md" beforeDir="false" afterPath="$PROJECT_DIR$/doc/epics/bank-statement/api.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/repo/reconciliation/account.repo.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/repo/reconciliation/account.repo.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/repo/reconciliation/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/repo/reconciliation/types.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/router/guard/permission.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/router/guard/permission.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/router/routes/constants.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/router/routes/constants.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/store/modules/permission.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/modules/permission.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/login/LoginComponent.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/login/LoginComponent.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/recon/company/accounts.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/recon/company/accounts.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/recon/statement/transactions.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/recon/statement/transactions.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/vm/reconciliation/recon-accounts.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/vm/reconciliation/recon-accounts.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/vm/reconciliation/recon-transactions.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/vm/reconciliation/recon-transactions.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,50 +62,50 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "WebServerToolWindowFactoryState": "true",
-    "WebServerToolWindowPanel.toolwindow.highlight.mappings": "true",
-    "WebServerToolWindowPanel.toolwindow.highlight.symlinks": "true",
-    "WebServerToolWindowPanel.toolwindow.show.date": "false",
-    "WebServerToolWindowPanel.toolwindow.show.permissions": "false",
-    "WebServerToolWindowPanel.toolwindow.show.size": "false",
-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultAutoModeForALLUsers.v1": "true",
-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "dev.nx.console.ai_check_dont_ask_again": "true",
-    "dev.nx.console.last_ai_configure_notification_timestamp": "1762148427758",
-    "git-widget-placeholder": "master",
-    "ignore.virus.scanning.warn.message": "true",
-    "junie.onboarding.icon.badge.shown": "true",
-    "last_opened_file_path": "/Users/haodong/Documents/GitHub/aaden-vue-customer-serivce-tool/doc/epics/bank-statement",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.standard": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.standard": "",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "npm.build.executor": "Run",
-    "npm.dev.executor": "Run",
-    "npm.serve.executor": "Run",
-    "settings.editor.selected.configurable": "junie.application.models",
-    "to.speed.mode.migration.done": "true",
-    "ts.external.directory.path": "/Users/haodong/Documents/GitHub/aaden-vue-customer-serivce-tool/node_modules/typescript/lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowPanel.toolwindow.highlight.mappings&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowPanel.toolwindow.highlight.symlinks&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowPanel.toolwindow.show.date&quot;: &quot;false&quot;,
+    &quot;WebServerToolWindowPanel.toolwindow.show.permissions&quot;: &quot;false&quot;,
+    &quot;WebServerToolWindowPanel.toolwindow.show.size&quot;: &quot;false&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultAutoModeForALLUsers.v1&quot;: &quot;true&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;dev.nx.console.ai_check_dont_ask_again&quot;: &quot;true&quot;,
+    &quot;dev.nx.console.last_ai_configure_notification_timestamp&quot;: &quot;1762148427758&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/haodong/Documents/GitHub/aaden-vue-customer-serivce-tool/doc/epics/bank-statement&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.standard&quot;: &quot;&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;npm.build.executor&quot;: &quot;Run&quot;,
+    &quot;npm.dev.executor&quot;: &quot;Run&quot;,
+    &quot;npm.serve.executor&quot;: &quot;Run&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;junie.application.models&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/haodong/Documents/GitHub/aaden-vue-customer-serivce-tool/node_modules/typescript/lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "vue.recent.templates": [
-      "Vue Options API Component",
-      "Vue Composition API Component"
+  &quot;keyToStringList&quot;: {
+    &quot;vue.recent.templates&quot;: [
+      &quot;Vue Options API Component&quot;,
+      &quot;Vue Composition API Component&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/doc/epics/bank-statement" />
@@ -322,6 +315,7 @@
       <workItem from="1761381035019" duration="38863000" />
       <workItem from="1762072836851" duration="3029000" />
       <workItem from="1762148366911" duration="1907000" />
+      <workItem from="1762687805503" duration="519000" />
     </task>
     <task id="LOCAL-00001" summary="加入包裹记录功能和库存管理相关优化">
       <option name="closed" value="true" />

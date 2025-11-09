@@ -14,56 +14,14 @@ const usePermissionStore = defineStore('permission-route', {
     },
     getters: {
         getPermissionSideBar(state) {
-            const userStore = useUserStore()
-            const roleId = userStore.roleId
-
-            const isAllowed = (route: any): boolean => {
-                const required = route?.meta?.requiredRoleId
-                return typeof required === 'undefined' || required === roleId
-            }
-            const deepFilter = (route: any): any | null => {
-                if (!route.meta || route.meta.hidden) return null
-                if (!isAllowed(route)) {
-                    // If parent is not allowed, do not display it, regardless of children
-                    return null
-                }
-                let children = route.children || []
-                const filteredChildren = children
-                    .map((c: any) => deepFilter(c))
-                    .filter((c: any) => !!c)
-                if (children.length && filteredChildren.length === 0) {
-                    // Parent with no visible children should be hidden
-                    return null
-                }
-                return { ...route, children: filteredChildren }
-            }
-
-            return state.permissionRoutes
-                .map((r: any) => deepFilter(r))
-                .filter((r: any) => !!r)
+            return state.permissionRoutes.filter((it) => {
+                return it.meta && !it.meta.hidden
+            })
         },
         getPermissionSplitTabs(state) {
-            const userStore = useUserStore()
-            const roleId = userStore.roleId
-            const isAllowed = (route: any): boolean => {
-                const required = route?.meta?.requiredRoleId
-                return typeof required === 'undefined' || required === roleId
-            }
-            const deepFilter = (route: any): any | null => {
-                if (!route.meta || route.meta.hidden) return null
-                if (!isAllowed(route)) return null
-                let children = route.children || []
-                const filteredChildren = children
-                    .map((c: any) => deepFilter(c))
-                    .filter((c: any) => !!c)
-                if (children.length && filteredChildren.length === 0) {
-                    return null
-                }
-                return { ...route, children: filteredChildren }
-            }
-            return state.permissionRoutes
-                .map((r: any) => deepFilter(r))
-                .filter((r: any) => !!r && r.children && r.children.length > 0)
+            return state.permissionRoutes.filter((it) => {
+                return it.meta && !it.meta.hidden && it.children && it.children.length > 0
+            })
         },
     },
     actions: {
