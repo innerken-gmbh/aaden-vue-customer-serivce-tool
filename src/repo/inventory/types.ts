@@ -87,6 +87,47 @@ export interface SalesOrder extends BaseDoc {
   locked?: boolean
 }
 
+// Intent Orders
+export type IntentOrderStatus =
+  | 'SUBMITTED'          // 销售提交
+  | 'QUOTED'             // 财务已开具报价(Angebot)
+  | 'PAYMENT_UPLOADED'   // 销售已上传付款证明
+  | 'EXPORTED'           // 已导出/创建销售订单
+  | 'RECEIVED'           // 财务确认到账
+  | 'ARCHIVED'           // 已归档
+  | 'CLOSED'             // 已关闭（未付款等）
+
+export interface IntentOrderItem {
+  productId: ID
+  qty: number
+  remark?: string
+}
+
+export interface IntentOrder extends BaseDoc {
+  name?: string
+  customerCode: string
+  submitter?: string
+  items: IntentOrderItem[]
+  remark?: string
+  expectedShipAt?: any
+  attachments?: string[]
+  status: IntentOrderStatus
+  // 报价/付款/导出相关
+  angebotUrl?: string
+  quoteBillNo?: string
+  // 原始文件名（更友好展示）
+  quoteOriginalName?: string
+  paymentProofUrls?: string[]
+  // 新结构：保存每个付款凭证的 url 与原始文件名（向下兼容旧的 paymentProofUrls）
+  paymentProofs?: { url: string; name?: string }[]
+  reviewedAmount?: number
+  exportedSalesOrderId?: ID | null
+  exportedFlag?: boolean
+  // 关闭
+  closeReason?: string
+  locked?: boolean
+}
+
 export type PackageDirection = 'IN' | 'OUT'
 export type PackageRelatedType = 'InboundNotice' | 'SalesOrder'
 

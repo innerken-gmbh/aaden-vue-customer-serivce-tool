@@ -5,6 +5,7 @@
 
 export const COLLECTIONS = {
   SALES_ORDERS: 'salesOrders',
+  INTENT_ORDERS: 'intentOrders',
   PRODUCTS: 'inventory-products',
   INBOUND_NOTICES: 'inventory-inbound-notices',
   STOCK_RECORDS: 'stockRecords',

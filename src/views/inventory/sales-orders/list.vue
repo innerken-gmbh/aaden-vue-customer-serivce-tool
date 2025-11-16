@@ -666,6 +666,7 @@
 </template>
 <script setup lang="ts">
 import { computed, h, onMounted, reactive, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { NAlert, NButton, NDataTable, NDatePicker, NForm, NFormItem, NInput, NInputNumber, NModal, NPagination, NPopconfirm, NSelect, NSpace, NSpin, useMessage, NTag, NAutoComplete, NUpload, NDivider, NImage } from 'naive-ui'
 import useSalesOrdersVM from '@/vm/inventory/useSalesOrdersVM'
 import type { SalesOrder } from '@/repo/inventory/types'
@@ -677,11 +678,22 @@ import { updateSalesOrder, getSalesOrder } from '@/repo/inventory/sales-orders.r
 import { uploadFile, checkFileType, imageList } from '@/store/aaden/utils.js'
 
 const message = useMessage()
+const route = useRoute()
+const router = useRouter()
 
 const { loading, items, error, load, remove, doShip, editing, save, mergeFromBom } = useSalesOrdersVM()
 
-onMounted(() => {
-  load()
+onMounted(async () => {
+  await load()
+  const qid = (route.query.detailId as string) || ''
+  if (qid) {
+    openDetailById(qid)
+  }
+})
+
+watch(() => route.query.detailId, (newId) => {
+  const id = (newId as string) || ''
+  if (id) openDetailById(id)
 })
 
 // 搜索筛选
@@ -1035,6 +1047,25 @@ async function onShowDetail(row: SalesOrder) {
   detailOrder.value = row
   await ensureOptionsLoaded()
   showDetail.value = true
+}
+
+async function openDetailById(id: string) {
+  if (!id) return
+  // 优先从已加载列表中取，避免额外请求
+  let row = items.value.find(x => x.id === id) || null
+  if (!row) {
+    try {
+      const r = await getSalesOrder(id)
+      if (r) row = r as any
+    } catch (e: any) {
+      // ignore, fallback to error
+    }
+  }
+  if (!row) {
+    message.error('未找到销售订单')
+    return
+  }
+  await onShowDetail(row)
 }
 
 function addShipPackage() {

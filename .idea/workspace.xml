@@ -5,11 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1777049f-9f7a-4424-9005-71635bd2b339" name="Changes" comment="jiaruxingongneng">
+      <change afterPath="$PROJECT_DIR$/doc/epics/加入销售意向订单/销售意向订单.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/router/guard/permission.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/router/guard/permission.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/repo/config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/repo/config.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/repo/inventory/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/repo/inventory/types.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/router/routes/constants.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/router/routes/constants.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/store/modules/permission.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/modules/permission.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/login/LoginComponent.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/login/LoginComponent.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/inventory/sales-orders/list.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/inventory/sales-orders/list.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -316,6 +317,7 @@
       <workItem from="1762072836851" duration="3029000" />
       <workItem from="1762148366911" duration="1907000" />
       <workItem from="1762687805503" duration="519000" />
+      <workItem from="1763289899870" duration="24144000" />
     </task>
     <task id="LOCAL-00001" summary="加入包裹记录功能和库存管理相关优化">
       <option name="closed" value="true" />
