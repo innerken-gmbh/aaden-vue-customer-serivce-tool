@@ -151,3 +151,15 @@ export const inviteSchema = {
         }
     ]
 }
+
+
+export async function bindDeviceWithMain (bindingKey,userId) {
+    return (await hillo.post(baseUrl + 'user-stores/bind-main-user/' + bindingKey + '/' + userId, {}))
+}
+
+export async function bindDeviceWithoutMain (userId,deviceId) {
+    return (await hillo.post(baseUrl + 'user-stores/bind', {
+        firebaseUid: userId,
+        deviceId: deviceId
+    }))
+}

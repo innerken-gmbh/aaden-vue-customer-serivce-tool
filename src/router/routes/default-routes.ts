@@ -93,6 +93,11 @@ export default [
         menuUrl: '/store-management/reservation-key',
         menuName: '预定Key'
       },
+      {
+        parentPath: '/store-management',
+        menuUrl: '/store-management/device-bind',
+        menuName: 'Admin绑定'
+      },
     ],
   },
   {

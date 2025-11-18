@@ -189,11 +189,13 @@ const paymentTotalValidationMessage = computed(() => {
 })
 
 
-async function addAppInvite() {
+async function addAppInvite(item) {
+  console.log(item, 'item')
   const info = await dialogStore.editItem(inviteSchema)
 
-  info.deviceId = store.activeDevice.deviceId
+  info.deviceId = item.deviceId
   const shopInfo = await getShopInfo(info.deviceId)
+  console.log(shopInfo, 'shopInfo')
   info.userId = shopInfo.mainUserId
   await dialogStore.waitFor(async () => {
     await createAppInvite(info)
