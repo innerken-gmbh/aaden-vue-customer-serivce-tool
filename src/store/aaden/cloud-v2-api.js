@@ -1,4 +1,5 @@
 import hillo from "hillo";
+import dayjs from "dayjs";
 
 
 // export const baseUrl = "https://cloud-v2.aaden.io/"
@@ -62,7 +63,10 @@ export async function editDish (id,item) {
 }
 
 export async function getLogsByDeviceId (id) {
-    return await hillo.get(baseUrl+'api/frontend-logs/by-device/' + id)
+    return (await hillo.get(baseUrl+'api/frontend-logs/by-device/' + id)).map(it => {
+        it.timeDisplay = dayjs(it.timestamp).format('YYYY-MM-DD HH:mm:ss')
+        return it
+    }).sort((a, b) => b.timeDisplay.localeCompare(a.timeDisplay))
 }
 
 export async function getDeviceLogByDeviceId(id) {
