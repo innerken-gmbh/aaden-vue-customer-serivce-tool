@@ -80,7 +80,7 @@
             width="100%"
             @click="setDebug"
           >
-            绑定
+            生成记录
           </v-btn>
         </div>
       </div>

@@ -5,10 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1777049f-9f7a-4424-9005-71635bd2b339" name="Changes" comment="jiaruxingongneng">
-      <change afterPath="$PROJECT_DIR$/src/views/store-management/check-reservation.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/router/routes/default-routes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/router/routes/default-routes.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/store/aaden/businessLayer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/aaden/businessLayer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/store-management/check-reservation.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/store-management/check-reservation.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -319,7 +316,7 @@
       <workItem from="1763465225852" duration="336000" />
       <workItem from="1763465569731" duration="8000" />
       <workItem from="1763618441032" duration="2326000" />
-      <workItem from="1764236089722" duration="1926000" />
+      <workItem from="1764236089722" duration="2316000" />
     </task>
     <task id="LOCAL-00001" summary="加入包裹记录功能和库存管理相关优化">
       <option name="closed" value="true" />
