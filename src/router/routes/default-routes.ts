@@ -98,6 +98,11 @@ export default [
         menuUrl: '/store-management/device-bind',
         menuName: 'Admin绑定'
       },
+      {
+        parentPath: '/store-management',
+        menuUrl: '/store-management/check-reservation',
+        menuName: '预定debug写入'
+      },
     ],
   },
   {

@@ -5,12 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1777049f-9f7a-4424-9005-71635bd2b339" name="Changes" comment="jiaruxingongneng">
-      <change afterPath="$PROJECT_DIR$/doc/epics/加入销售意向订单/销售意向订单.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/store-management/check-reservation.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/repo/config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/repo/config.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/repo/inventory/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/repo/inventory/types.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/router/routes/constants.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/router/routes/constants.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/inventory/sales-orders/list.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/inventory/sales-orders/list.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/router/routes/default-routes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/router/routes/default-routes.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/aaden/businessLayer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/aaden/businessLayer.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -84,7 +82,7 @@
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/haodong/Documents/GitHub/aaden-vue-customer-serivce-tool/doc/epics/bank-statement&quot;,
+    &quot;last_opened_file_path&quot;: &quot;F:/Code/aaden-vue-customer-serivce-tool&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -97,7 +95,7 @@
     &quot;npm.serve.executor&quot;: &quot;Run&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;junie.application.models&quot;,
     &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;/Users/haodong/Documents/GitHub/aaden-vue-customer-serivce-tool/node_modules/typescript/lib&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;F:\\Code\\aaden-vue-customer-serivce-tool\\node_modules\\typescript\\lib&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
   &quot;keyToStringList&quot;: {
@@ -170,7 +168,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-3aa1da707db6-JavaScript-WS-252.27397.92" />
+        <option value="bundled-js-predefined-d6986cc7102b-09060db00ec0-JavaScript-WS-251.26927.40" />
       </set>
     </attachedChunks>
   </component>
@@ -318,6 +316,10 @@
       <workItem from="1762148366911" duration="1907000" />
       <workItem from="1762687805503" duration="519000" />
       <workItem from="1763289899870" duration="24144000" />
+      <workItem from="1763465225852" duration="336000" />
+      <workItem from="1763465569731" duration="8000" />
+      <workItem from="1763618441032" duration="2326000" />
+      <workItem from="1764236089722" duration="1926000" />
     </task>
     <task id="LOCAL-00001" summary="加入包裹记录功能和库存管理相关优化">
       <option name="closed" value="true" />

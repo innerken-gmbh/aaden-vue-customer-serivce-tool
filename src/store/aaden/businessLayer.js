@@ -163,3 +163,7 @@ export async function bindDeviceWithoutMain (userId,deviceId) {
         deviceId: deviceId
     }))
 }
+
+export async function setDebugInfo (info) {
+    return (await hillo.jsonPost('https://reservation-api.aaden.io/reservableTable/getTableTimeDebug', info)).data
+}
