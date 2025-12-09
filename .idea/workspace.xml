@@ -5,16 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1777049f-9f7a-4424-9005-71635bd2b339" name="Changes" comment="jiaruxingongneng">
-      <change afterPath="$PROJECT_DIR$/src/store/aaden/readFiles/category.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/store/aaden/readFiles/dish.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/store/aaden/readFiles/print.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/store/aaden/readFiles/readFiles.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/views/tools/dishes-upload.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/router/routes/default-routes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/router/routes/default-routes.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/store/aaden/utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/aaden/utils.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/tools/dishes-upload.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/tools/dishes-upload.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -328,7 +319,7 @@
       <workItem from="1764236089722" duration="2696000" />
       <workItem from="1764915660212" duration="13240000" />
       <workItem from="1765178835906" duration="6018000" />
-      <workItem from="1765257089113" duration="17840000" />
+      <workItem from="1765257089113" duration="18273000" />
     </task>
     <task id="LOCAL-00001" summary="加入包裹记录功能和库存管理相关优化">
       <option name="closed" value="true" />

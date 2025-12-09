@@ -36,7 +36,7 @@ async function handleFileUpload() {
   }
 
   if (file.value) {
-    step.value += '正在阅读文件别慌！' + `<br>`
+    step.value = '正在阅读文件别慌！' + `<br>` + step.value
     loading.value = true;
     const fileType = file.value.name.split('.').pop()?.toLowerCase();
     if (fileType === 'csv') {
@@ -97,14 +97,14 @@ async function uploadPrepare(rawFileData) {
   if (log.value.length === 0) {
     await uploadCategory(currentUrl.value, rawFileData)
     await uploadDish(currentUrl.value, rawFileData)
-    step.value += '文件上传完毕！'
+    step.value = '文件上传完毕！' + step.value
   } else {
-    step.value += '文件有问题,结束上传' + `<br>`
+    step.value = '文件有问题,结束上传' + `<br>` + step.value
   }
 }
 
 async function uploadCategory(url, rawFileData) {
-  step.value += '开始上传Category' + `<br>`
+  step.value = '开始上传Category' + `<br>` + step.value
   const categoryNameDict = (await getCategoryNameByZHDEEN(url))
   const categoryReqs = []
   // Track unique category combinations that have been added to categoryReqs
@@ -120,7 +120,7 @@ async function uploadCategory(url, rawFileData) {
 
       // Only add if this category combination hasn't been added yet
       if (!addedCategories.has(categoryKey)) {
-        step.value += '准备新建category:' + dish.catNameZH + `<br>`
+        step.value = '准备新建category:' + dish.catNameZH + `<br>` + step.value
         categoryReqs.push(addCategory(url,{
           langs: [
             {
@@ -148,16 +148,16 @@ async function uploadCategory(url, rawFileData) {
     }
   }
   try {
-    step.value += '开始新建category' + `<br>`
+    step.value = '开始新建category' + `<br>` + step.value
     await Promise.all(categoryReqs)
-    step.value += '新建category结束' + `<br>`
+    step.value = '新建category结束' + `<br>` + step.value
   } catch (e) {
     console.log(e, '新建category')
   }
 }
 
 async function uploadDish(url, rawFileData) {
-  step.value += '开始检查产品信息' + `<br>`
+  step.value = '开始检查产品信息' + `<br>` + step.value
   const categoryDict = (await getCategory(url))
   const allList = (await getDishCodeList(url))
   const dishCodeDict = allList.codeList
@@ -168,7 +168,7 @@ async function uploadDish(url, rawFileData) {
       const hashCodeByFiles = hashCodeWithFiles(dish)
       const hashCodeBySystem = hashCodeWithSystem(currentDish)
       if (hashCodeByFiles !== hashCodeBySystem) {
-        step.value += dish.nameZH + '系统已经存在,正在更新' + `<br>`
+        step.value = dish.nameZH + '系统已经存在,正在更新' + `<br>` + step.value
         currentDish.price = dish.price
         currentDish.langs = [
           {
@@ -191,10 +191,10 @@ async function uploadDish(url, rawFileData) {
         currentDish.categoryId = categoryDict.find(it => it.langs.find(x => x.lang === 'ZH').name.toLowerCase() === dish.catNameZH.toLowerCase())?.id ?? currentDish.categoryId
         await updateDish(url, currentDish)
       } else {
-        step.value += dish.nameZH + '系统已经存在,无需更新' + `<br>`
+        step.value = dish.nameZH + '系统已经存在,无需更新' + `<br>` + step.value
       }
     } else {
-      step.value += '正在新建产品' + dish.nameZH + `<br>`
+      step.value = '正在新建产品' + dish.nameZH + `<br>` + step.value
       const newDish = {
         code: dish.code,
         color: '#ffffff',
