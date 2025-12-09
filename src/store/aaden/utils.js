@@ -1,6 +1,8 @@
 import hillo from "hillo";
 import {getEndPointUrl} from "../../old/utils/firebase";
 import {keyBy, mapValues} from "lodash-es";
+import Papa from 'papaparse'
+import readXlsxFile from "read-excel-file";
 
 export function generateCorsUrl(url) {
     return "https://aaden.online/jsonProxy.php?chaos=" + new Date().getTime() + "&url=" + url
@@ -27,6 +29,13 @@ export function getNgrokResourceUrl(deviceId) {
         return protocol + `//ht.api.aaden.io/ik${String(deviceId).padStart(4, '0')}/Resource/`
     }
     return protocol + `//ik${String(deviceId).padStart(4, '0')}.ngrok.aaden.io/Resource/`
+}
+
+export function getNgrokPHPUrl(deviceId) {
+    if (deviceId > 6000 && deviceId < 9000) {
+        return protocol + `//ht.api.aaden.io/ik${String(deviceId).padStart(4, '0')}/PHP/`
+    }
+    return protocol + `//ik${String(deviceId).padStart(4, '0')}.ngrok.aaden.io/PHP/`
 }
 
 export async function uploadFile(file) {

@@ -5,7 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1777049f-9f7a-4424-9005-71635bd2b339" name="Changes" comment="jiaruxingongneng">
-      <change beforePath="$PROJECT_DIR$/src/views/store-management/check-reservation.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/store-management/check-reservation.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/store/aaden/readFiles/category.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/store/aaden/readFiles/dish.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/store/aaden/readFiles/print.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/store/aaden/readFiles/readFiles.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/tools/dishes-upload.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/router/routes/default-routes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/router/routes/default-routes.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/aaden/utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/aaden/utils.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,8 +30,8 @@
         <option value="Vue Options API Component" />
         <option value="TypeScript File" />
         <option value="Vue Single File Component" />
-        <option value="JavaScript File" />
         <option value="Vue Composition API Component" />
+        <option value="JavaScript File" />
       </list>
     </option>
   </component>
@@ -111,11 +120,11 @@
       <recent name="C:\Users\juhao\Documents\GitHub\aaden-vue-customer-serivce-tool\src\views" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="F:\Code\aaden-vue-customer-serivce-tool\src\store\aaden\readFiles" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/.junie/doc/epics/inventory" />
       <recent name="$PROJECT_DIR$/.junie/doc/epics" />
       <recent name="C:\Users\juhao\Documents\GitHub\aaden-vue-customer-serivce-tool\src\store\aaden" />
-      <recent name="$PROJECT_DIR$/src" />
     </key>
   </component>
   <component name="RunManager" selected="npm.dev">
@@ -316,7 +325,10 @@
       <workItem from="1763465225852" duration="336000" />
       <workItem from="1763465569731" duration="8000" />
       <workItem from="1763618441032" duration="2326000" />
-      <workItem from="1764236089722" duration="2316000" />
+      <workItem from="1764236089722" duration="2696000" />
+      <workItem from="1764915660212" duration="13240000" />
+      <workItem from="1765178835906" duration="6018000" />
+      <workItem from="1765257089113" duration="17840000" />
     </task>
     <task id="LOCAL-00001" summary="加入包裹记录功能和库存管理相关优化">
       <option name="closed" value="true" />

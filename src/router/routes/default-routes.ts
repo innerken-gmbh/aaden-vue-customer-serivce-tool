@@ -147,4 +147,19 @@ export default [
       },
     ],
   },
+  {
+    menuUrl: '/tool',
+    menuName: '客服工具',
+    badge: 'dot',
+    iconPrefix: 'iconfont',
+    icon: 'file-text',
+    parentPath: '',
+    children: [
+      {
+        parentPath: '/tool',
+        menuUrl: '/tools/dishes-upload',
+        menuName: '菜品上传',
+      },
+    ],
+  },
 ]
