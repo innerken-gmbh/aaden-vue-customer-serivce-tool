@@ -172,17 +172,17 @@ async function uploadDish(url, rawFileData) {
         currentDish.price = dish.price
         currentDish.langs = [
           {
-            desc: dish.descDE ?? '',
+            desc: dish.desc ? dish.desc : dish.descDE ?? '',
             lang: 'de',
             name: dish.nameDE
           },
           {
-            desc: dish.descZH ?? '',
+            desc: dish.desc ? dish.desc : dish.descZH ?? '',
             lang: 'zh',
             name: dish.nameZH
           },
           {
-            desc: dish.descEN ?? '',
+            desc: dish.desc ? dish.desc : dish.descEN ?? '',
             lang: 'en',
             name: dish.nameEN
           }
