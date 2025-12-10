@@ -38,7 +38,7 @@ export async function addDish(url,item) {
     console.log(item.extraPrintGroupIds)
     item.extraPrintGroupIds = item.extraPrintGroupIds?.join ? item.extraPrintGroupIds.join(',') : ''
 
-    return hillo.postWithUploadFile(url + 'Dishes.php?op=add', {
+    return await hillo.postWithUploadFile(url + 'Dishes.php?op=add', {
         ...item,
         params: JSON.stringify(item),
     })
@@ -52,7 +52,7 @@ export async function updateDish(url,item) {
     }
     item.isActive = item.isActive ? 1 : 0
 
-    return hillo.postWithUploadFile(url + 'Dishes.php?op=update', {
+    return await hillo.postWithUploadFile(url + 'Dishes.php?op=update', {
         ...item,
         params: JSON.stringify(item),
     })

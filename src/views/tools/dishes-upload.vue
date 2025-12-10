@@ -159,6 +159,9 @@ async function uploadDish(url, rawFileData) {
   const dishList = allList.list
   const addDishReqs = []
   const updateDishReqs = []
+  const allUpdateResults = []
+  const allAddResults = []
+
   for (const dish of rawFileData) {
     if (dishCodeDict.includes(dish.code.toLowerCase())) {
       const currentDish = dishList.find(it => it.code.toLowerCase() === dish.code.toLowerCase())
@@ -187,6 +190,21 @@ async function uploadDish(url, rawFileData) {
         currentDish.printGroupId = dish.printCatId
         currentDish.categoryId = categoryDict.find(it => it.langs.find(x => x.lang === 'ZH').name.toLowerCase() === dish.catNameZH.toLowerCase())?.id ?? currentDish.categoryId
         updateDishReqs.push(updateDish(url, currentDish))
+
+        // 当updateDishReqs长度达到10时，执行一次Promise.all
+        if (updateDishReqs.length === 10) {
+          step.value = '执行一批10个产品更新请求' + `<br>` + step.value
+          try {
+            const batchResults = await Promise.all(updateDishReqs)
+            allUpdateResults.push(...batchResults)
+            step.value = '完成一批10个产品更新请求' + `<br>` + step.value
+          } catch (error) {
+            console.error('更新产品批次请求失败:', error)
+            throw error
+          }
+          // 清空数组，准备下一批
+          updateDishReqs.length = 0
+        }
       } else {
         step.value = dish.nameZH + '系统已经存在,无需更新' + `<br>` + step.value
       }
@@ -217,19 +235,68 @@ async function uploadDish(url, rawFileData) {
         printGroupId: dish.printCatId,
         categoryId: categoryDict.find(it => it.langs.find(x => x.lang === 'ZH').name.toLowerCase() === dish.catNameZH.toLowerCase())?.id ?? ''
       }
+      // await addDish(url, newDish)
       addDishReqs.push(addDish(url, newDish))
+
+      // 当addDishReqs长度达到10时，执行一次Promise.all
+      if (addDishReqs.length === 10) {
+        step.value = '执行一批10个产品新增请求' + `<br>` + step.value
+        try {
+          const batchResults = await Promise.all(addDishReqs)
+          allAddResults.push(...batchResults)
+          step.value = '完成一批10个产品新增请求' + `<br>` + step.value
+        } catch (error) {
+          console.error('新增产品批次请求失败:', error)
+          throw error
+        }
+        // 清空数组，准备下一批
+        addDishReqs.length = 0
+      }
     }
   }
+
   try {
-    step.value = '开始处理产品更新的请求' + `<br>` + step.value
-    await Promise.all(updateDishReqs)
-    step.value = '结束处理产品更新的请求' + `<br>` + step.value
-    step.value = '开始处理产品新增的请求' + `<br>` + step.value
-    await Promise.all(addDishReqs)
-    step.value = '结束处理产品新增的请求' + `<br>` + step.value
+    // 处理剩余的updateDishReqs
+    if (updateDishReqs.length > 0) {
+      step.value = '开始处理剩余的产品更新请求' + `<br>` + step.value
+      const remainingResults = await batchRequests(updateDishReqs, 5)
+      allUpdateResults.push(...remainingResults)
+      step.value = '结束处理剩余的产品更新请求' + `<br>` + step.value
+    }
+
+    // 处理剩余的addDishReqs
+    if (addDishReqs.length > 0) {
+      step.value = '开始处理剩余的产品新增请求' + `<br>` + step.value
+      const remainingResults = await batchRequests(addDishReqs, 5)
+      allAddResults.push(...remainingResults)
+      step.value = '结束处理剩余的产品新增请求' + `<br>` + step.value
+    }
   } catch (e) {
     console.log(e, 'dish相关')
   }
+}
+
+async function batchRequests(requests, batchSize = 5) {
+  const results = [];
+
+  // 按批次处理
+  for (let i = 0; i < requests.length; i += batchSize) {
+    const batch = requests.slice(i, i + batchSize);
+    console.log(`开始第 ${Math.floor(i / batchSize) + 1} 批请求，数量: ${batch.length}`);
+
+    try {
+      // 执行当前批次的所有请求
+      const batchResults = await Promise.all(batch);
+      results.push(...batchResults);
+      console.log(`第 ${Math.floor(i / batchSize) + 1} 批请求完成`);
+    } catch (error) {
+      console.error(`第 ${Math.floor(i / batchSize) + 1} 批请求失败:`, error);
+      // 可以根据需要决定是否继续
+      throw error;
+    }
+  }
+
+  return results;
 }
 
 function clearData() {

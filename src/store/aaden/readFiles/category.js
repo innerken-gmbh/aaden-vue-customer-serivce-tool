@@ -17,8 +17,7 @@ export async function getCategoryNameByZHDEEN(url) {
 }
 
 export async function addCategory(url,item) {
-    item.catTypeId = item.dishesCategoryTypeId
-    return hillo.post(url + 'Category.php?op=add', {
+    return await hillo.post(url + 'Category.php?op=add', {
         ...item,
         langs: JSON.stringify(item.langs)
     })
@@ -35,7 +34,7 @@ export async function updateCategory (url,item) {
     if (item.attributeGroupId) {
         item.appliedAttributeGroup = item.attributeGroupId
     }
-    return hillo.postWithUploadFile(url + 'Category.php?op=update', {
+    return await hillo.postWithUploadFile(url + 'Category.php?op=update', {
         ...item,
         langs: JSON.stringify(item.langs)
     })

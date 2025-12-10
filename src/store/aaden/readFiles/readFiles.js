@@ -185,13 +185,12 @@ export async function uploadData(newDataList, url) {
 
 
 export function hashCodeWithFiles (info) {
-    console.log(info,'info')
-    return info.nameZH.toLowerCase() + '-' + info.nameDE.toLowerCase() + '-' + info.nameEN.toLowerCase() + '-' + info.price.toString()
+    return info.nameZH.toLowerCase() + '-' + info.nameDE.toLowerCase() + '-' + info.nameEN.toLowerCase() + '-' + parseFloat(info.price).toFixed(2)
 }
 
 export function hashCodeWithSystem (info) {
     const ZhName = info.langs.find(lang => lang.lang === 'ZH')?.name.toLowerCase()
     const DeName = info.langs.find(lang => lang.lang === 'DE')?.name.toLowerCase()
     const EnName = info.langs.find(lang => lang.lang === 'EN')?.name.toLowerCase()
-    return ZhName + '-' + DeName + '-' + EnName + '-' + info.price
+    return ZhName + '-' + DeName + '-' + EnName + '-' + info.price.toString()
 }
