@@ -1,8 +1,6 @@
 import hillo from "hillo";
 import {getEndPointUrl} from "../../old/utils/firebase";
 import {keyBy, mapValues} from "lodash-es";
-import Papa from 'papaparse'
-import readXlsxFile from "read-excel-file";
 
 export function generateCorsUrl(url) {
     return "https://aaden.online/jsonProxy.php?chaos=" + new Date().getTime() + "&url=" + url
@@ -99,4 +97,57 @@ export function sleep (ms) {
 
 export function priceDisplay (price) {
     return price + ' €'
+}
+
+export function addDotTillUnique(key, set) {
+    while (set.has(key)) {
+        console.log('因为' + key + '重复,加一个点')
+        key += '.'
+    }
+    return key
+}
+
+export function getDeName(objWithLangs) {
+    return objWithLangs.langs?.find(l => l.lang === 'DE')?.name ?? "Keine Name"
+}
+
+export function setDeName(objWithLangs, name) {
+    objWithLangs.langs.find(l => l.lang === 'DE').name = name
+}
+
+export function changeKeyToRemote(list, key, map) {
+    list.forEach(i => {
+        i[key] = map[i[key]]
+    })
+}
+
+export function getKeySet(list, key) {
+    return list.reduce((set, i) => {
+        const value = i[key]
+        if (Array.isArray(value)) {
+            value.forEach(d => {
+                set.add(d)
+            })
+        } else {
+            set.add(i[key])
+        }
+        return set
+    }, new Set())
+}
+
+export function treeShaking(list, key, filterKey, list2) {
+    const set = getKeySet(list, key)
+    console.log(set, filterKey, list2)
+    return filterListWithSet(set, list2, filterKey)
+}
+
+export function filterListWithSet(set, list, filterKey) {
+    return list.filter(i => set.has(i[filterKey]))
+}
+
+export function listToDict(arr, key, outKey = null) {
+    return arr.reduce((obj, i) => {
+        obj[i[key]] = outKey ? i[outKey] : i
+        return obj
+    }, {})
 }

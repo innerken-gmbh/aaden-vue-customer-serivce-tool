@@ -160,6 +160,11 @@ export default [
         menuUrl: '/tools/dishes-upload',
         menuName: '菜品上传',
       },
+      {
+        parentPath: '/tool',
+        menuUrl: '/tools/dishes-copy',
+        menuName: '菜品复制',
+      },
     ],
   },
 ]

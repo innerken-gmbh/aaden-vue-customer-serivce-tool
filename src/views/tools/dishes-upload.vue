@@ -12,11 +12,6 @@ import {groupBy, uniqBy} from "lodash-es";
 const file = ref(null);
 const fileData = ref([]);
 const loading = ref(false);
-const categoryInfo = ref([])
-const dishInfo = ref([])
-const printSectionInfo = ref([])
-const dishMap = ref(new Map([]))
-const printerSectionMap = ref(new Map([]))
 const currentUrl = ref('')
 const deviceId = ref('')
 const log = ref([])
