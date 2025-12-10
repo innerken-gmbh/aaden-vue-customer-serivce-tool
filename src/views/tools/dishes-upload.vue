@@ -157,6 +157,8 @@ async function uploadDish(url, rawFileData) {
   const allList = (await getDishCodeList(url))
   const dishCodeDict = allList.codeList
   const dishList = allList.list
+  const addDishReqs = []
+  const updateDishReqs = []
   for (const dish of rawFileData) {
     if (dishCodeDict.includes(dish.code.toLowerCase())) {
       const currentDish = dishList.find(it => it.code.toLowerCase() === dish.code.toLowerCase())
@@ -184,7 +186,7 @@ async function uploadDish(url, rawFileData) {
         ]
         currentDish.printGroupId = dish.printCatId
         currentDish.categoryId = categoryDict.find(it => it.langs.find(x => x.lang === 'ZH').name.toLowerCase() === dish.catNameZH.toLowerCase())?.id ?? currentDish.categoryId
-        await updateDish(url, currentDish)
+        updateDishReqs.push(updateDish(url, currentDish))
       } else {
         step.value = dish.nameZH + '系统已经存在,无需更新' + `<br>` + step.value
       }
@@ -215,8 +217,18 @@ async function uploadDish(url, rawFileData) {
         printGroupId: dish.printCatId,
         categoryId: categoryDict.find(it => it.langs.find(x => x.lang === 'ZH').name.toLowerCase() === dish.catNameZH.toLowerCase())?.id ?? ''
       }
-      await addDish(url, newDish)
+      addDishReqs.push(addDish(url, newDish))
     }
+  }
+  try {
+    step.value = '开始处理产品更新的请求' + `<br>` + step.value
+    await Promise.all(updateDishReqs)
+    step.value = '结束处理产品更新的请求' + `<br>` + step.value
+    step.value = '开始处理产品新增的请求' + `<br>` + step.value
+    await Promise.all(addDishReqs)
+    step.value = '结束处理产品新增的请求' + `<br>` + step.value
+  } catch (e) {
+    console.log(e, 'dish相关')
   }
 }
 
