@@ -18,9 +18,15 @@ export function parseCsv(file) {
 
 export async function parseExcel(file) {
     const res = await readXlsxFile(file)
+    // Process the result to remove \u200b characters
+    const processedRes = res.map(row =>
+        row.map(value =>
+            typeof value === 'string' ? value.replace(/\u200b/g, '') : value
+        )
+    )
 
-    const header = res[0]
-    return res.splice(1).map(body => {
+    const header = processedRes[0]
+    return processedRes.splice(1).map(body => {
         return Object.assign(...header.map((k, i) => ({[k]: body[i]})))
     })
 }

@@ -7,7 +7,6 @@
     <list default="true" id="1777049f-9f7a-4424-9005-71635bd2b339" name="Changes" comment="jiaruxingongneng">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/store/aaden/readFiles/readFiles.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/aaden/readFiles/readFiles.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/tools/dishes-upload.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/tools/dishes-upload.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -324,7 +323,7 @@
       <workItem from="1765257089113" duration="19751000" />
       <workItem from="1765344994082" duration="15845000" />
       <workItem from="1765370009079" duration="705000" />
-      <workItem from="1765431235297" duration="2594000" />
+      <workItem from="1765431235297" duration="4179000" />
     </task>
     <task id="LOCAL-00001" summary="加入包裹记录功能和库存管理相关优化">
       <option name="closed" value="true" />
