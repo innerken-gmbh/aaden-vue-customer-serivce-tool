@@ -41,8 +41,8 @@ async function handleFileUpload() {
     } else {
       IKUtils.showError('File Type is not csv or xlsx')
     }
-    console.log(fileData.value, 'fileData')
     fileData.value = fileData.value.filter(it => it.code)
+    console.log(fileData.value, 'fileData')
     await uploadPrepare(fileData.value)
     loading.value  = false
   }
@@ -190,6 +190,7 @@ async function uploadDish(url, rawFileData) {
             name: dish.nameEN
           }
         ]
+        currentDish.isActive = dish.isActive
         currentDish.printGroupId = dish.printCatId
         currentDish.categoryId = categoryDict.find(it => it.langs.find(x => x.lang === 'ZH').name.toLowerCase() === dish.catNameZH.toLowerCase())?.id ?? currentDish.categoryId
         updateDishReqs.push(updateDish(url, currentDish))
@@ -235,6 +236,7 @@ async function uploadDish(url, rawFileData) {
             name: dish.nameEN
           }
         ],
+        isActive: dish.isActive,
         printGroupId: dish.printCatId,
         categoryId: categoryDict.find(it => it.langs.find(x => x.lang === 'ZH').name.toLowerCase() === dish.catNameZH.toLowerCase())?.id ?? ''
       }
