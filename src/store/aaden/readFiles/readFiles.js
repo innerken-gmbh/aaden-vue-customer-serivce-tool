@@ -10,7 +10,8 @@ export function parseCsv(file) {
     return new Promise((resolve, reject) => {
         Papa.parse(file, Object.assign({}, parseDefaultOption, {
             complete: res => resolve(res.data.filter(d => d)),
-            error: res => reject(res)
+            error: res => reject(res),
+            transform: (value) => typeof value === 'string' ? value.replace(/\u200b/g, '') : value
         }))
     })
 }

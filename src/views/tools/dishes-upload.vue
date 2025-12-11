@@ -42,6 +42,7 @@ async function handleFileUpload() {
       IKUtils.showError('File Type is not csv or xlsx')
     }
     console.log(fileData.value, 'fileData')
+    fileData.value = fileData.value.filter(it => it.code)
     await uploadPrepare(fileData.value)
     loading.value  = false
   }
@@ -120,17 +121,17 @@ async function uploadCategory(url, rawFileData) {
           langs: [
             {
               desc: '',
-              lang: 'de',
+              lang: 'DE',
               name: dish.catNameDE
             },
             {
               desc: '',
-              lang: 'zh',
+              lang: 'ZH',
               name: dish.catNameZH
             },
             {
               desc: '',
-              lang: 'en',
+              lang: 'EN',
               name: dish.catNameEN
             }
           ],
@@ -168,22 +169,24 @@ async function uploadDish(url, rawFileData) {
       const hashCodeByFiles = hashCodeWithFiles(dish)
       const hashCodeBySystem = hashCodeWithSystem(currentDish)
       if (hashCodeByFiles !== hashCodeBySystem) {
+        console.log(hashCodeByFiles, hashCodeBySystem,'hash')
+        console.log(dish,currentDish,'dish')
         step.value = dish.nameZH + '系统已经存在,正在更新' + `<br>` + step.value
         currentDish.price = dish.price
         currentDish.langs = [
           {
             desc: dish.desc ? dish.desc : dish.descDE ?? '',
-            lang: 'de',
+            lang: 'DE',
             name: dish.nameDE
           },
           {
             desc: dish.desc ? dish.desc : dish.descZH ?? '',
-            lang: 'zh',
+            lang: 'ZH',
             name: dish.nameZH
           },
           {
             desc: dish.desc ? dish.desc : dish.descEN ?? '',
-            lang: 'en',
+            lang: 'EN',
             name: dish.nameEN
           }
         ]
@@ -218,17 +221,17 @@ async function uploadDish(url, rawFileData) {
         langs: [
           {
             desc: dish.descDE ?? '',
-            lang: 'de',
+            lang: 'DE',
             name: dish.nameDE
           },
           {
             desc: dish.descZH ?? '',
-            lang: 'zh',
+            lang: 'ZH',
             name: dish.nameZH
           },
           {
             desc: dish.descEN ?? '',
-            lang: 'en',
+            lang: 'EN',
             name: dish.nameEN
           }
         ],
