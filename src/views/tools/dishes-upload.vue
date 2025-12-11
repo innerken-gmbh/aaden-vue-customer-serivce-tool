@@ -166,8 +166,16 @@ async function uploadDish(url, rawFileData) {
   for (const dish of rawFileData) {
     if (dishCodeDict.includes(dish.code.toLowerCase())) {
       const currentDish = dishList.find(it => it.code.toLowerCase() === dish.code.toLowerCase())
-      const hashCodeByFiles = hashCodeWithFiles(dish)
-      const hashCodeBySystem = hashCodeWithSystem(currentDish)
+      let hashCodeByFiles = ''
+      let hashCodeBySystem = ''
+      if (dish.isActive !== undefined && dish.isActive !== null) {
+        hashCodeByFiles = hashCodeWithFiles(dish, true)
+        hashCodeBySystem = hashCodeWithSystem(currentDish, true)
+      } else {
+        hashCodeByFiles = hashCodeWithFiles(dish, false)
+        hashCodeBySystem = hashCodeWithSystem(currentDish, false)
+      }
+
       if (hashCodeByFiles !== hashCodeBySystem) {
         console.log(hashCodeByFiles, hashCodeBySystem,'hash')
         console.log(dish,currentDish,'dish')
@@ -190,7 +198,7 @@ async function uploadDish(url, rawFileData) {
             name: dish.nameEN
           }
         ]
-        currentDish.isActive = dish.isActive
+        currentDish.isActive = dish.isActive ? dish.isActive : currentDish.isActive
         currentDish.printGroupId = dish.printCatId
         currentDish.categoryId = categoryDict.find(it => it.langs.find(x => x.lang === 'ZH').name.toLowerCase() === dish.catNameZH.toLowerCase())?.id ?? currentDish.categoryId
         updateDishReqs.push(updateDish(url, currentDish))
@@ -236,7 +244,7 @@ async function uploadDish(url, rawFileData) {
             name: dish.nameEN
           }
         ],
-        isActive: dish.isActive,
+        isActive: dish.isActive ? dish.isActive : '1',
         printGroupId: dish.printCatId,
         categoryId: categoryDict.find(it => it.langs.find(x => x.lang === 'ZH').name.toLowerCase() === dish.catNameZH.toLowerCase())?.id ?? ''
       }
