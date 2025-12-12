@@ -50,7 +50,7 @@ export async function updateDish(url,item) {
     if (item.file) {
         item.imageExt = item.file.name.split('.')[1]
     }
-    item.isActive = item.isActive ? 1 : 0
+    item.isActive = item.isActive.toString() === '1' ? 1 : 0
 
     return await hillo.postWithUploadFile(url + 'Dishes.php?op=update', {
         ...item,

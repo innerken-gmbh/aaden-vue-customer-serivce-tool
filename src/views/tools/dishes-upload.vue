@@ -204,12 +204,12 @@ async function uploadDish(url, rawFileData) {
         updateDishReqs.push(updateDish(url, currentDish))
 
         // 当updateDishReqs长度达到10时，执行一次Promise.all
-        if (updateDishReqs.length === 10) {
-          step.value = '执行一批10个产品更新请求' + `<br>` + step.value
+        if (updateDishReqs.length === 30) {
+          step.value = '执行一批30个产品更新请求' + `<br>` + step.value
           try {
             const batchResults = await Promise.all(updateDishReqs)
             allUpdateResults.push(...batchResults)
-            step.value = '完成一批10个产品更新请求' + `<br>` + step.value
+            step.value = '完成一批30个产品更新请求' + `<br>` + step.value
           } catch (error) {
             console.error('更新产品批次请求失败:', error)
             throw error
@@ -252,12 +252,12 @@ async function uploadDish(url, rawFileData) {
       addDishReqs.push(addDish(url, newDish))
 
       // 当addDishReqs长度达到10时，执行一次Promise.all
-      if (addDishReqs.length === 10) {
-        step.value = '执行一批10个产品新增请求' + `<br>` + step.value
+      if (addDishReqs.length === 30) {
+        step.value = '执行一批30个产品新增请求' + `<br>` + step.value
         try {
           const batchResults = await Promise.all(addDishReqs)
           allAddResults.push(...batchResults)
-          step.value = '完成一批10个产品新增请求' + `<br>` + step.value
+          step.value = '完成一批30个产品新增请求' + `<br>` + step.value
         } catch (error) {
           console.error('新增产品批次请求失败:', error)
           throw error
