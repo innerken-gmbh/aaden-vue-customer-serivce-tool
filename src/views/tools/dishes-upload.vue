@@ -168,17 +168,11 @@ async function uploadDish(url, rawFileData) {
       const currentDish = dishList.find(it => it.code.toLowerCase() === dish.code.toLowerCase())
       let hashCodeByFiles = ''
       let hashCodeBySystem = ''
-      if (dish.isActive !== undefined && dish.isActive !== null) {
-        hashCodeByFiles = hashCodeWithFiles(dish, true)
-        hashCodeBySystem = hashCodeWithSystem(currentDish, true)
-      } else {
-        hashCodeByFiles = hashCodeWithFiles(dish, false)
-        hashCodeBySystem = hashCodeWithSystem(currentDish, false)
-      }
-
+      const hasIsActive = dish.isActive !== undefined && dish.isActive !== null;
+      const keyInstruction = dish.keyInstruction !== undefined && dish.keyInstruction !== null;
+      hashCodeByFiles = hashCodeWithFiles(dish, hasIsActive, keyInstruction);
+      hashCodeBySystem = hashCodeWithSystem(currentDish, hasIsActive, keyInstruction);
       if (hashCodeByFiles !== hashCodeBySystem) {
-        console.log(hashCodeByFiles, hashCodeBySystem,'hash')
-        console.log(dish,currentDish,'dish')
         step.value = dish.nameZH + '系统已经存在,正在更新' + `<br>` + step.value
         currentDish.price = dish.price
         currentDish.langs = [
@@ -199,6 +193,7 @@ async function uploadDish(url, rawFileData) {
           }
         ]
         currentDish.isActive = dish.isActive ? dish.isActive : currentDish.isActive
+        currentDish.keyInstruction = dish.keyInstruction ? dish.keyInstruction : currentDish.keyInstruction
         currentDish.printGroupId = dish.printCatId
         currentDish.categoryId = categoryDict.find(it => it.langs.find(x => x.lang === 'ZH').name.toLowerCase() === dish.catNameZH.toLowerCase())?.id ?? currentDish.categoryId
         updateDishReqs.push(updateDish(url, currentDish))
@@ -245,6 +240,7 @@ async function uploadDish(url, rawFileData) {
           }
         ],
         isActive: dish.isActive ? dish.isActive : '1',
+        keyInstruction: dish.keyInstruction ? dish.keyInstruction : '',
         printGroupId: dish.printCatId,
         categoryId: categoryDict.find(it => it.langs.find(x => x.lang === 'ZH').name.toLowerCase() === dish.catNameZH.toLowerCase())?.id ?? ''
       }

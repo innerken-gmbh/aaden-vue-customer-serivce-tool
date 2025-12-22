@@ -6,7 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="1777049f-9f7a-4424-9005-71635bd2b339" name="Changes" comment="jiaruxingongneng">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/store/aaden/readFiles/dish.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/aaden/readFiles/dish.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/aaden/readFiles/readFiles.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/aaden/readFiles/readFiles.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/tools/dishes-upload.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/tools/dishes-upload.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
