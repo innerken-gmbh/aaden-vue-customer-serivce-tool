@@ -165,6 +165,11 @@ export default [
         menuUrl: '/tools/dishes-copy',
         menuName: '菜品复制',
       },
+      {
+        parentPath: '/tool',
+        menuUrl: '/tools/tax-injected',
+        menuName: '改税列表',
+      },
     ],
   },
 ]
