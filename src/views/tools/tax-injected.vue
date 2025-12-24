@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref, h, computed } from "vue";
-import { NDataTable, NButton, NSpace, NPopconfirm, useMessage, NSelect } from 'naive-ui';
+import { NDataTable, NButton, NSpace, NPopconfirm, useMessage, NSelect, NInput, NPagination } from 'naive-ui';
 import { getTaxInjectedList,updateInjectedList,deleteInjectedList } from "@/store/aaden/tools/tax-injected";
 import dayjs from "dayjs";
 
@@ -9,11 +9,14 @@ const tableList = ref([]);
 const loading = ref(false);
 const selectedStatus = ref(null);
 const selectedDeviceId = ref(null);
+const pagination = ref({
+  page: 1,
+  pageSize: 10,
+  itemCount: 0
+});
 
 // Compute unique status values from tableList for the dropdown
-const statusOptions = ref(['All','None','Injected','Done','Admin'].map(it => {
-  return { label: it, value: it }
-}))
+const statusOptions = ref([{label: '全部', value: 'All'},{label: '未操作', value: 'None'},{label: '已注入', value: 'Injected'},{label: '已完成', value: 'Done'},{label: '已忽略', value: 'Admin'}])
 
 // Filter tableList based on selected status and deviceId
 const filteredList = computed(() => {
@@ -29,8 +32,32 @@ const filteredList = computed(() => {
     filtered = filtered.filter(item => item.deviceId.includes(selectedDeviceId.value));
   }
 
+  // Update pagination item count
+  pagination.value.itemCount = filtered.length;
+  pagination.value.page = 1
+
   return filtered;
 });
+
+// Paginated list for display
+const paginatedList = computed(() => {
+  const { page, pageSize } = pagination.value;
+  const startIndex = (page - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+  return filteredList.value.slice(startIndex, endIndex);
+});
+
+// Handle page change
+const handlePageChange = (currentPage) => {
+  pagination.value.page = currentPage;
+};
+
+// Handle page size change
+const handlePageSizeChange = (pageSize) => {
+  pagination.value.pageSize = pageSize;
+  // Reset to first page when changing page size
+  pagination.value.page = 1;
+};
 
 onMounted(async () => {
   await reload();
@@ -39,7 +66,18 @@ onMounted(async () => {
 async function reload () {
   loading.value = true;
   try {
-    tableList.value = await getTaxInjectedList();
+    tableList.value = (await getTaxInjectedList()).map(it => {
+      if (it.status === 'None') {
+        it.statusDisplay = '未操作'
+      } else if (it.status === 'Injected') {
+        it.statusDisplay = '已注入'
+      } else if (it.status === 'Done') {
+        it.statusDisplay = '已完成'
+      } else if (it.status === 'Admin') {
+        it.statusDisplay = '已忽略'
+      }
+      return it
+    });
     console.log(tableList.value, 'tableList.value');
   } catch (error) {
     console.error('Failed to load data:', error);
@@ -81,6 +119,10 @@ const columns = computed(() => [
   {
     title: 'Status',
     key: 'status',
+  },
+  {
+    title: 'Status Display',
+    key: 'statusDisplay',
   },
   {
     title: 'Operation',
@@ -140,11 +182,29 @@ const columns = computed(() => [
 
     <n-data-table
       :columns="columns"
-      :data="filteredList"
+      :data="paginatedList"
       :loading="loading"
       :bordered="false"
       :row-key="row => row.deviceId"
+      :pagination="false"
     />
+
+    <div class="flex justify-center mt-4">
+      <n-pagination
+        v-model:page="pagination.page"
+        :page-size="pagination.pageSize"
+        :item-count="pagination.itemCount"
+        show-size-picker
+        :page-sizes="[10, 20, 30, 50]"
+        show-quick-jumper
+        @update:page="handlePageChange"
+        @update:page-size="handlePageSizeChange"
+      >
+        <template #prefix="{ itemCount }">
+          共 {{ itemCount }} 项
+        </template>
+      </n-pagination>
+    </div>
   </div>
 </template>
 
