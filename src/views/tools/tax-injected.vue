@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref, h, computed } from "vue";
-import { NDataTable, NButton, NSpace, NPopconfirm, useMessage, NSelect, NInput, NPagination } from 'naive-ui';
+import { NDataTable, NButton, NSpace, NPopconfirm, useMessage, NSelect, NInput, NPagination, NModal, NForm, NFormItem } from 'naive-ui';
 import { getTaxInjectedList,updateInjectedList,deleteInjectedList } from "@/store/aaden/tools/tax-injected";
 import dayjs from "dayjs";
 
@@ -14,6 +14,11 @@ const pagination = ref({
   pageSize: 10,
   itemCount: 0
 });
+
+// Comment dialog state
+const showCommentDialog = ref(false);
+const currentComment = ref('');
+const currentRow = ref(null);
 
 // Compute unique status values from tableList for the dropdown
 const statusOptions = ref([{label: '全部', value: 'All'},{label: '未操作', value: 'None'},{label: '已注入', value: 'Injected'},{label: '已完成', value: 'Done'},{label: '已忽略', value: 'Admin'}])
@@ -98,13 +103,43 @@ const handleUpdate = async (row) => {
   const updateInfo = {
     deviceId: row.deviceId,
     status: 'Admin',
-    date: dayjs().format('YYYY-MM-DDTHH:mm:ss')
+    date: dayjs().format('YYYY-MM-DDTHH:mm:ss'),
+    note: ''
   }
   await updateInjectedList(updateInfo)
 
   message.success(`${row.deviceId}  忽略成功！`);
   await reload();
   // Implement actual update functionality here
+};
+
+// Handle opening the comment dialog
+const handleOpenComment = (row) => {
+  currentRow.value = row;
+  currentComment.value = row.note || '';
+  showCommentDialog.value = true;
+};
+
+// Handle saving the comment
+const handleSaveComment = async () => {
+  if (!currentRow.value) return;
+
+  const updateInfo = {
+    deviceId: currentRow.value.deviceId,
+    status: currentRow.value.status,
+    date: dayjs().format('YYYY-MM-DDTHH:mm:ss'),
+    note: currentComment.value
+  };
+
+  try {
+    await updateInjectedList(updateInfo);
+    message.success('备注保存成功！');
+    showCommentDialog.value = false;
+    await reload();
+  } catch (error) {
+    console.error('Failed to save comment:', error);
+    message.error('备注保存失败');
+  }
 };
 
 const columns = computed(() => [
@@ -125,11 +160,22 @@ const columns = computed(() => [
     key: 'statusDisplay',
   },
   {
+    title: '备注',
+    key: 'note',
+    render(row) {
+      return row.note || '—';
+    }
+  },
+  {
     title: 'Operation',
     key: 'actions',
     render(row) {
       return h(NSpace, { size: 8 }, {
         default: () => [
+          h(NButton, {
+            size: 'small',
+            onClick: () => handleOpenComment(row)
+          }, { default: () => '备注' }),
           h(NButton, {
             size: 'small',
             onClick: () => handleUpdate(row)
@@ -206,6 +252,36 @@ const columns = computed(() => [
       </n-pagination>
     </div>
   </div>
+
+  <!-- Comment Dialog -->
+  <n-modal
+    v-model:show="showCommentDialog"
+    preset="card"
+    title="备注"
+    style="max-width: 600px"
+  >
+    <n-form>
+      <n-form-item>
+        <n-input
+          v-model:value="currentComment"
+          type="textarea"
+          placeholder="请输入备注内容"
+          :autosize="{ minRows: 3, maxRows: 10 }"
+        />
+      </n-form-item>
+      <div class="flex justify-end gap-2 mt-4">
+        <n-button @click="showCommentDialog = false">
+          取消
+        </n-button>
+        <n-button
+          type="primary"
+          @click="handleSaveComment"
+        >
+          保存
+        </n-button>
+      </div>
+    </n-form>
+  </n-modal>
 </template>
 
 <style scoped lang="scss">

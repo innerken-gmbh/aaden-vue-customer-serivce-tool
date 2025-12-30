@@ -330,7 +330,10 @@
       <workItem from="1766467008931" duration="950000" />
       <workItem from="1766475310301" duration="18000" />
       <workItem from="1766477960752" duration="1198000" />
-      <workItem from="1766565074310" duration="3135000" />
+      <workItem from="1766565074310" duration="4608000" />
+      <workItem from="1766639561260" duration="4787000" />
+      <workItem from="1766726151858" duration="431000" />
+      <workItem from="1767074873838" duration="1483000" />
     </task>
     <task id="LOCAL-00001" summary="加入包裹记录功能和库存管理相关优化">
       <option name="closed" value="true" />
