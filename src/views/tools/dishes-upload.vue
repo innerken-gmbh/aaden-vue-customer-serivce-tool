@@ -107,7 +107,7 @@ async function uploadCategory(url, rawFileData) {
   const addedCategories = new Set()
 
   for (const dish of rawFileData) {
-    const categoryName = dish.catNameZH.toLowerCase() + dish.catNameDE.toLowerCase() + dish.catNameEN.toLowerCase()
+    const categoryName = dish.catNameZH.toLowerCase() + dish.catNameDE.toLowerCase() + dish.catNameEN.toLowerCase() + dish.catTypeId
     if(categoryNameDict.includes(categoryName)){
       console.log(categoryName + '已存在')
     } else {
@@ -170,8 +170,9 @@ async function uploadDish(url, rawFileData) {
       let hashCodeBySystem = ''
       const hasIsActive = dish.isActive !== undefined && dish.isActive !== null;
       const keyInstruction = dish.keyInstruction !== undefined && dish.keyInstruction !== null;
+      const dishesCategoryTypeId = categoryDict.find(it => it?.id?.toString() === currentDish?.categoryId?.toString())?.dishesCategoryTypeId ?? ''
       hashCodeByFiles = hashCodeWithFiles(dish, hasIsActive, keyInstruction);
-      hashCodeBySystem = hashCodeWithSystem(currentDish, hasIsActive, keyInstruction);
+      hashCodeBySystem = hashCodeWithSystem(currentDish, hasIsActive, keyInstruction, dishesCategoryTypeId);
       if (hashCodeByFiles !== hashCodeBySystem) {
         step.value = dish.nameZH + '系统已经存在,正在更新' + `<br>` + step.value
         currentDish.price = dish.price
@@ -195,7 +196,7 @@ async function uploadDish(url, rawFileData) {
         currentDish.isActive = dish.isActive ? dish.isActive : currentDish.isActive
         currentDish.keyInstruction = dish.keyInstruction ? dish.keyInstruction : currentDish.keyInstruction
         currentDish.printGroupId = dish.printCatId
-        currentDish.categoryId = categoryDict.find(it => it.langs.find(x => x.lang === 'ZH').name.toLowerCase() === dish.catNameZH.toLowerCase())?.id ?? currentDish.categoryId
+        currentDish.categoryId = categoryDict.filter(it => it.langs.find(x => x.lang === 'ZH').name.toLowerCase() === dish.catNameZH.toLowerCase()).find(it => it.dishesCategoryTypeId === dish.catTypeId)?.id ?? currentDish.categoryId
         updateDishReqs.push(updateDish(url, currentDish))
 
         // 当updateDishReqs长度达到10时，执行一次Promise.all

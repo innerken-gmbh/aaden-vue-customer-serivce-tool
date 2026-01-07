@@ -12,13 +12,14 @@ export async function getCategoryNameByZHDEEN(url) {
         const ZhName = it.langs.find(lang => lang.lang === 'ZH')?.name.toLowerCase()
         const DeName = it.langs.find(lang => lang.lang === 'DE')?.name.toLowerCase()
         const EnName = it.langs.find(lang => lang.lang === 'EN')?.name.toLowerCase()
-        return ZhName + DeName + EnName
+        const dishesCategoryTypeId = it.dishesCategoryTypeId
+        return ZhName + DeName + EnName + dishesCategoryTypeId
     })
 }
 
 export async function addCategory(url,item) {
     return await hillo.post(url + 'Category.php?op=add', {
-        ...item,
+        catTypeId: item.catTypeId,
         langs: JSON.stringify(item.langs)
     })
 }
