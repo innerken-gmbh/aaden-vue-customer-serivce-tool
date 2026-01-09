@@ -162,6 +162,11 @@ export default [
       },
       {
         parentPath: '/tool',
+        menuUrl: '/tools/dishes-check',
+        menuName: '菜品校验',
+      },
+      {
+        parentPath: '/tool',
         menuUrl: '/tools/dishes-copy',
         menuName: '菜品复制',
       },
