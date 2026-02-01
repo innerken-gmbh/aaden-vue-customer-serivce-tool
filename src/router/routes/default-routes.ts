@@ -170,10 +170,20 @@ export default [
         menuUrl: '/tools/dishes-copy',
         menuName: '菜品复制',
       },
+      // {
+      //   parentPath: '/tool',
+      //   menuUrl: '/tools/normal-dishes-upload',
+      //   menuName: '通用菜品上传',
+      // },
       {
         parentPath: '/tool',
         menuUrl: '/tools/tax-injected',
         menuName: '改税列表',
+      },
+      {
+        parentPath: '/tool',
+        menuUrl: '/tools/cotti-key',
+        menuName: '库迪Key',
       },
     ],
   },

@@ -192,7 +192,7 @@ export async function uploadData(newDataList, url) {
 
 
 export function hashCodeWithFiles(info, haveIsActive = false, keyInstruction = false) {
-    let result = info.nameZH.toLowerCase() + '-' + info.nameDE.toLowerCase() + '-' + info.nameEN.toLowerCase() + '-' + parseFloat(info.price).toFixed(2) + '-' + info.catTypeId;
+    let result = info.nameZH.toLowerCase() + '-' + info.nameDE.toLowerCase() + '-' + info.nameEN.toLowerCase() + '-' + parseFloat(info.price).toFixed(2) + '-' + info.catTypeId + '-' + info.printCatId;
     if (haveIsActive) {
         result += '-' + info.isActive.toString();
     }
@@ -206,7 +206,7 @@ export function hashCodeWithSystem(info, haveIsActive = false, keyInstruction = 
     const ZhName = info.langs.find(lang => lang.lang === 'ZH')?.name.toLowerCase()
     const DeName = info.langs.find(lang => lang.lang === 'DE')?.name.toLowerCase()
     const EnName = info.langs.find(lang => lang.lang === 'EN')?.name.toLowerCase()
-    let result = ZhName + '-' + DeName + '-' + EnName + '-' + info.price.toString() + '-' + dishesCategoryTypeId;
+    let result = ZhName + '-' + DeName + '-' + EnName + '-' + info.price.toString() + '-' + dishesCategoryTypeId + '-' + info.printGroupId;
     if (haveIsActive) {
         result += '-' + info.isActive.toString();
     }
