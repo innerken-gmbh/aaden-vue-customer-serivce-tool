@@ -2,6 +2,7 @@ import { computed, ref } from 'vue'
 import type { ID, Product } from '@/repo/inventory/types'
 import { listProducts, getProduct, createProduct, updateProduct, deleteProduct, adjustProductStock } from '@/repo/inventory/products.repo'
 import { createStockRecord } from '@/repo/inventory/stock-records.repo'
+import { exportToCSV } from '@/utils/csvExport'
 
 export function useProductsVM() {
   const loading = ref(false)
@@ -162,6 +163,33 @@ export function useProductsVM() {
     }
   }
 
+  function doExport() {
+    const headers = ['货物编号', '货物名称', '实物库存', '已预订', '在途中', '启用', '备注', '更新时间']
+    const rows = filteredItems.value.map(p => [
+      p.code || '',
+      p.name || '',
+      p.stock || 0,
+      p.reservedStock || 0,
+      p.inTransit || 0,
+      p.isActive ? '是' : '否',
+      p.remark || '',
+      p.updatedAt ? fmt(p.updatedAt) : ''
+    ])
+    exportToCSV(headers, rows, `货品列表_${new Date().toISOString().split('T')[0]}`)
+  }
+
+  function fmt(dt: any) {
+    if (!dt) return ''
+    try {
+      const ms = dt.seconds ? dt.seconds * 1000 : new Date(dt).getTime()
+      const d = new Date(ms)
+      const pad = (n: number) => String(n).padStart(2, '0')
+      return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`
+    } catch {
+      return ''
+    }
+  }
+
   return {
     // state
     loading,
@@ -188,6 +216,7 @@ export function useProductsVM() {
     batchRemove,
     applyFilter,
     resetFilter,
+    doExport,
   }
 }
 export default useProductsVM

@@ -1,103 +1,272 @@
 <template>
   <div class="p-4">
     <div class="flex items-center justify-between">
-      <h1 class="text-xl font-semibold">库存管理 · 货品</h1>
+      <h1 class="text-xl font-semibold">
+        库存管理 · 货品
+      </h1>
       <n-space>
-        <n-button type="primary" @click="onCreate" :disabled="loading">新建货品</n-button>
-        <n-button type="info" @click="onStartStocktake" :disabled="loading">开始盘点</n-button>
-        <n-button @click="load" :loading="loading">刷新</n-button>
+        <n-button
+          type="primary"
+          :disabled="loading"
+          @click="onCreate"
+        >
+          新建货品
+        </n-button>
+        <n-button
+          type="info"
+          :disabled="loading"
+          @click="onStartStocktake"
+        >
+          开始盘点
+        </n-button>
+        <n-button
+          :disabled="loading"
+          @click="onExport"
+        >
+          导出
+        </n-button>
+        <n-button
+          :loading="loading"
+          @click="load"
+        >
+          刷新
+        </n-button>
       </n-space>
     </div>
-    <div class="mt-1 text-gray-500">上次盘点：{{ lastStocktakeText }}</div>
+    <div class="mt-1 text-gray-500">
+      上次盘点：{{ lastStocktakeText }}
+    </div>
 
     <div class="mt-3 flex flex-wrap items-end justify-between gap-3">
-      <n-space align="end" item-style="display: flex; align-items: end; gap: 8px;">
-        <n-input v-model:value="keyword" placeholder="名称" clearable style="width: 220px" />
-        <n-input-number v-model:value="stockMin" placeholder="最小库存" :min="0" style="width: 140px" />
+      <n-space
+        align="end"
+        item-style="display: flex; align-items: end; gap: 8px;"
+      >
+        <n-input
+          v-model:value="keyword"
+          placeholder="名称"
+          clearable
+          style="width: 220px"
+        />
+        <n-input-number
+          v-model:value="stockMin"
+          placeholder="最小库存"
+          :min="0"
+          style="width: 140px"
+        />
         <span class="text-gray-400">-</span>
-        <n-input-number v-model:value="stockMax" placeholder="最大库存" :min="0" style="width: 140px" />
-        <n-button @click="applyFilter" :loading="loading">搜索</n-button>
-        <n-button @click="onClear" :disabled="loading">清空</n-button>
+        <n-input-number
+          v-model:value="stockMax"
+          placeholder="最大库存"
+          :min="0"
+          style="width: 140px"
+        />
+        <n-button
+          :loading="loading"
+          @click="applyFilter"
+        >
+          搜索
+        </n-button>
+        <n-button
+          :disabled="loading"
+          @click="onClear"
+        >
+          清空
+        </n-button>
       </n-space>
       <n-space>
-        <n-button type="error" :disabled="!selectedIds.length || loading" @click="onBatchDelete">批量删除</n-button>
+        <n-button
+          type="error"
+          :disabled="!selectedIds.length || loading"
+          @click="onBatchDelete"
+        >
+          批量删除
+        </n-button>
       </n-space>
     </div>
 
-    <n-alert v-if="error" type="error" class="mt-3">{{ error }}</n-alert>
+    <n-alert
+      v-if="error"
+      type="error"
+      class="mt-3"
+    >
+      {{ error }}
+    </n-alert>
 
-    <n-spin :show="loading" class="mt-4 w-full">
+    <n-spin
+      :show="loading"
+      class="mt-4 w-full"
+    >
       <n-data-table
+        v-model:checked-row-keys="selectedIds"
         :columns="columns"
         :data="pagedItems"
         :bordered="false"
         :row-key="rowKey"
         checkable
-        v-model:checked-row-keys="selectedIds"
       />
     </n-spin>
 
     <div class="mt-3 flex justify-end">
-      <n-pagination v-model:page="page" :page-size="pageSize" :page-count="pageCount" :page-slot="7" />
+      <n-pagination
+        v-model:page="page"
+        :page-size="pageSize"
+        :page-count="pageCount"
+        :page-slot="7"
+      />
     </div>
 
-    <n-modal v-model:show="showEdit" preset="card" :title="editing?.id ? '编辑货品' : '新建货品'" style="max-width: 520px">
-      <n-form ref="formRef" :model="form" :rules="rules" label-placement="left" label-width="96">
-        <n-form-item label="货物编号" path="code">
-          <n-input v-model:value="form.code" placeholder="唯一编号" />
+    <n-modal
+      v-model:show="showEdit"
+      preset="card"
+      :title="editing?.id ? '编辑货品' : '新建货品'"
+      style="max-width: 520px"
+    >
+      <n-form
+        ref="formRef"
+        :model="form"
+        :rules="rules"
+        label-placement="left"
+        label-width="96"
+      >
+        <n-form-item
+          label="货物编号"
+          path="code"
+        >
+          <n-input
+            v-model:value="form.code"
+            placeholder="唯一编号"
+          />
         </n-form-item>
-        <n-form-item label="货物名称" path="name">
-          <n-input v-model:value="form.name" placeholder="请输入名称" />
+        <n-form-item
+          label="货物名称"
+          path="name"
+        >
+          <n-input
+            v-model:value="form.name"
+            placeholder="请输入名称"
+          />
         </n-form-item>
-        <n-form-item label="当前库存" path="stock">
-          <n-input-number v-model:value="form.stock" :min="0" disabled />
+        <n-form-item
+          label="当前库存"
+          path="stock"
+        >
+          <n-input-number
+            v-model:value="form.stock"
+            :min="0"
+            disabled
+          />
         </n-form-item>
         <n-form-item>
-          <div class="text-gray-500 text-sm">库存不可直接编辑，请通过列表中的“入库/出库”进行调整。</div>
+          <div class="text-gray-500 text-sm">
+            库存不可直接编辑，请通过列表中的“入库/出库”进行调整。
+          </div>
         </n-form-item>
-        <n-form-item label="启用" path="isActive">
+        <n-form-item
+          label="启用"
+          path="isActive"
+        >
           <n-switch v-model:value="form.isActive" />
         </n-form-item>
-        <n-form-item label="备注" path="remark">
-          <n-input v-model:value="form.remark" type="textarea" :autosize="{ minRows: 2 }" />
+        <n-form-item
+          label="备注"
+          path="remark"
+        >
+          <n-input
+            v-model:value="form.remark"
+            type="textarea"
+            :autosize="{ minRows: 2 }"
+          />
         </n-form-item>
         <div class="flex justify-end gap-2 mt-2">
-          <n-button @click="showEdit = false">取消</n-button>
-          <n-button type="primary" :loading="loading" @click="onSubmit">保存</n-button>
+          <n-button @click="showEdit = false">
+            取消
+          </n-button>
+          <n-button
+            type="primary"
+            :loading="loading"
+            @click="onSubmit"
+          >
+            保存
+          </n-button>
         </div>
       </n-form>
     </n-modal>
 
-    <n-modal v-model:show="showAdjust" preset="card" :title="adjustForm.type === 'IN' ? '入库' : '出库'" style="max-width: 420px">
-      <n-form :model="adjustForm" label-placement="left" label-width="88">
+    <n-modal
+      v-model:show="showAdjust"
+      preset="card"
+      :title="adjustForm.type === 'IN' ? '入库' : '出库'"
+      style="max-width: 420px"
+    >
+      <n-form
+        :model="adjustForm"
+        label-placement="left"
+        label-width="88"
+      >
         <n-form-item label="数量">
-          <n-input-number v-model:value="adjustForm.qty" :min="1" />
+          <n-input-number
+            v-model:value="adjustForm.qty"
+            :min="1"
+          />
         </n-form-item>
         <n-form-item label="备注">
-          <n-input v-model:value="adjustForm.remark" placeholder="可选" />
+          <n-input
+            v-model:value="adjustForm.remark"
+            placeholder="可选"
+          />
         </n-form-item>
         <div class="flex justify-end gap-2 mt-2">
-          <n-button @click="showAdjust = false">取消</n-button>
-          <n-button type="primary" :loading="loading" @click="onSubmitAdjust">确认</n-button>
+          <n-button @click="showAdjust = false">
+            取消
+          </n-button>
+          <n-button
+            type="primary"
+            :loading="loading"
+            @click="onSubmitAdjust"
+          >
+            确认
+          </n-button>
         </div>
       </n-form>
     </n-modal>
 
     <!-- 盘点弹窗 -->
-    <n-modal v-model:show="showStocktake" preset="card" title="开始盘点" style="max-width: 1100px">
+    <n-modal
+      v-model:show="showStocktake"
+      preset="card"
+      title="开始盘点"
+      style="max-width: 1100px"
+    >
       <div class="mb-2 flex items-center gap-3">
         <span class="text-gray-600">说明：修改数量时必须填写备注；提交后会自动生成入库/出库记录并调整库存。</span>
       </div>
       <div style="max-height: 60vh; overflow-y: auto;">
-        <n-data-table :columns="stocktakeColumns" :data="stocktakeRows" :bordered="false" :row-key="(r:any)=>r.productId" />
+        <n-data-table
+          :columns="stocktakeColumns"
+          :data="stocktakeRows"
+          :bordered="false"
+          :row-key="(r:any)=>r.productId"
+        />
       </div>
       <div class="mt-3 flex items-center gap-2">
         <span class="text-gray-600">本次备注：</span>
-        <n-input v-model:value="stocktakeRemark" placeholder="可选，用于本次盘点整体备注" />
+        <n-input
+          v-model:value="stocktakeRemark"
+          placeholder="可选，用于本次盘点整体备注"
+        />
       </div>
       <div class="flex justify-end gap-2 mt-4">
-        <n-button @click="showStocktake = false">取消</n-button>
-        <n-button type="primary" :loading="submittingStocktake" @click="onSubmitStocktake">提交</n-button>
+        <n-button @click="showStocktake = false">
+          取消
+        </n-button>
+        <n-button
+          type="primary"
+          :loading="submittingStocktake"
+          @click="onSubmitStocktake"
+        >
+          提交
+        </n-button>
       </div>
     </n-modal>
   </div>
@@ -113,7 +282,7 @@ import { createStocktake, listStocktakes } from '@/repo/inventory/stocktakes.rep
 
 const router = useRouter()
 const message = useMessage()
-const { loading, error, editing, items, load, edit, save, remove, adjust, keyword, stockMin, stockMax, page, pageSize, pageCount, pagedItems, selectedIds, applyFilter, resetFilter, batchRemove } = useProductsVM() as any
+const { loading, error, editing, items, load, edit, save, remove, adjust, keyword, stockMin, stockMax, page, pageSize, pageCount, pagedItems, selectedIds, applyFilter, resetFilter, batchRemove, doExport } = useProductsVM() as any
 
 // 最近一次盘点时间
 const lastStocktakeAt = ref<any>(null)
@@ -310,6 +479,10 @@ async function onSubmitAdjust() {
   } catch (e) {
     // 错误通过全局 alert 展示
   }
+}
+
+function onExport() {
+  doExport()
 }
 
 
