@@ -5,9 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1777049f-9f7a-4424-9005-71635bd2b339" name="Changes" comment="jiaruxingongneng">
+      <change afterPath="$PROJECT_DIR$/src/views/tools/normal-dishes-upload.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/inventory/products/list.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/inventory/products/list.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/vm/inventory/useProductsVM.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/vm/inventory/useProductsVM.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/aaden/businessLayer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/aaden/businessLayer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/store-management/device-bind.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/store-management/device-bind.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,8 +44,22 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="McpProjectServerCommands">
-    <commands />
-    <urls />
+    <McpServerCommand>
+      <option name="enabled" value="true" />
+      <option name="name" />
+      <option name="programPath" />
+      <option name="arguments" />
+      <option name="workingDirectory" />
+      <envs />
+    </McpServerCommand>
+    <McpServerCommand>
+      <option name="enabled" value="true" />
+      <option name="name" />
+      <option name="programPath" />
+      <option name="arguments" />
+      <option name="workingDirectory" />
+      <envs />
+    </McpServerCommand>
   </component>
   <component name="PhpWorkspaceProjectConfiguration" interpreter_name="PHP" />
   <component name="ProjectColorInfo">{

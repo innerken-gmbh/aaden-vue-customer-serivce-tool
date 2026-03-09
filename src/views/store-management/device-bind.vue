@@ -1,5 +1,5 @@
 <template>
-  <div class="main-container pa-4">
+  <div class="d-flex main-container pa-4">
     <v-card
       class="pa-4"
       max-width="600px"
@@ -77,13 +77,48 @@
         </div>
       </div>
     </v-card>
+    <v-spacer />
+    <v-card
+      class="pa-4"
+      max-width="600px"
+    >
+      <div class="d-flex align-center justify-center text-h5 mb-4">
+        查询Binding Key
+      </div>
+      <div class="d-flex flex-column">
+        <div
+          class="d-flex align-center justify-center"
+        >
+          <div>
+            DeviceId
+          </div>
+          <v-spacer />
+          <v-text-field
+            v-model="checkDeviceId"
+            clearable
+            width="500px"
+          />
+        </div>
+        <div class="d-flex align-center justify-center">
+          <v-btn
+            :loading="loading"
+            color="blue lighten-2"
+            variant="outlined"
+            width="100%"
+            @click="searchBindingKey"
+          >
+            查询
+          </v-btn>
+        </div>
+      </div>
+    </v-card>
   </div>
 </template>
 
 <script lang="ts" setup>
 
 import {onMounted, ref} from "vue";
-import {bindDeviceWithMain, bindDeviceWithoutMain} from "@/store/aaden/businessLayer";
+import {bindDeviceWithMain, bindDeviceWithoutMain, getBindingKeyByDeviceId} from "@/store/aaden/businessLayer";
 
 const deviceId = ref('')
 const uid = ref('')
@@ -92,10 +127,15 @@ const error = ref(false)
 const errorMessages = ref('')
 const isMain = ref(false)
 const bindingKey = ref('')
+const checkDeviceId = ref('')
 
 onMounted(async () => {
 
 })
+
+async function searchBindingKey () {
+  bindingKey.value = await getBindingKeyByDeviceId(checkDeviceId.value)
+}
 
 async function bindDeviceWithUid () {
   loading.value = true
