@@ -11,7 +11,10 @@ export function parseCsv(file) {
         Papa.parse(file, Object.assign({}, parseDefaultOption, {
             complete: res => resolve(res.data.filter(d => d)),
             error: res => reject(res),
-            transform: (value) => typeof value === 'string' ? value.replace(/\u200b/g, '') : value
+            transform: (value) => {
+                if (value === null || value === undefined) return '';
+                return typeof value === 'string' ? value.replace(/\u200b/g, '') : value
+            }
         }))
     })
 }
@@ -20,9 +23,10 @@ export async function parseExcel(file) {
     const res = await readXlsxFile(file)
     // Process the result to remove \u200b characters
     const processedRes = res.map(row =>
-        row.map(value =>
-            typeof value === 'string' ? value.replace(/\u200b/g, '') : value
-        )
+        row.map(value => {
+            if (value === null || value === undefined) return ''
+            return typeof value === 'string' ? value.replace(/\u200b/g, '') : value
+        })
     )
 
     const header = processedRes[0]

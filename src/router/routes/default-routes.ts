@@ -170,6 +170,16 @@ export default [
         menuUrl: '/tools/dishes-copy',
         menuName: '菜品复制',
       },
+      {
+        parentPath: '/tool',
+        menuUrl: '/tools/attribute-group-upload',
+        menuName: '属性组上传',
+      },
+      {
+        parentPath: '/tool',
+        menuUrl: '/tools/attribute-upload',
+        menuName: '属性上传',
+      },
       // {
       //   parentPath: '/tool',
       //   menuUrl: '/tools/normal-dishes-upload',
@@ -184,6 +194,21 @@ export default [
         parentPath: '/tool',
         menuUrl: '/tools/cotti-key',
         menuName: '库迪Key',
+      },
+    ],
+  },
+  {
+    menuUrl: '/adyen',
+    menuName: 'Adyen管理',
+    badge: 'dot',
+    iconPrefix: 'iconfont',
+    icon: 'file-text',
+    parentPath: '',
+    children: [
+      {
+        parentPath: '/ayden',
+        menuUrl: '/ayden/ayden-rules',
+        menuName: 'Ayden规则',
       },
     ],
   },

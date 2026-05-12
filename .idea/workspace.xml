@@ -5,10 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1777049f-9f7a-4424-9005-71635bd2b339" name="Changes" comment="jiaruxingongneng">
-      <change afterPath="$PROJECT_DIR$/src/views/tools/normal-dishes-upload.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/store/aaden/businessLayer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/aaden/businessLayer.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/store-management/device-bind.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/store-management/device-bind.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/router/routes/default-routes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/router/routes/default-routes.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/aaden/readFiles/AttributeGroup.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/aaden/readFiles/AttributeGroup.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/aaden/readFiles/readFiles.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/aaden/readFiles/readFiles.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/tools/attribute-group-upload.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/tools/attribute-group-upload.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,8 +29,8 @@
         <option value="Vue Options API Component" />
         <option value="TypeScript File" />
         <option value="Vue Single File Component" />
-        <option value="JavaScript File" />
         <option value="Vue Composition API Component" />
+        <option value="JavaScript File" />
       </list>
     </option>
   </component>
@@ -182,7 +183,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-WS-253.29346.242" />
+        <option value="bundled-js-predefined-d6986cc7102b-09060db00ec0-JavaScript-WS-251.26927.40" />
       </set>
     </attachedChunks>
   </component>
@@ -355,6 +356,16 @@
       <workItem from="1767781187447" duration="4026000" />
       <workItem from="1767955279574" duration="2731000" />
       <workItem from="1768029673091" duration="8049000" />
+      <workItem from="1774339783471" duration="7048000" />
+      <workItem from="1774415927901" duration="811000" />
+      <workItem from="1776337018306" duration="1229000" />
+      <workItem from="1776402832952" duration="218000" />
+      <workItem from="1776403317665" duration="662000" />
+      <workItem from="1776662027300" duration="2278000" />
+      <workItem from="1776668485836" duration="9183000" />
+      <workItem from="1776752240920" duration="1813000" />
+      <workItem from="1778477746310" duration="17735000" />
+      <workItem from="1778564726267" duration="6483000" />
     </task>
     <task id="LOCAL-00001" summary="加入包裹记录功能和库存管理相关优化">
       <option name="closed" value="true" />

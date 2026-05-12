@@ -2,7 +2,8 @@
 import { ref, h } from "vue";
 import IKUtils from "innerken-js-utils";
 import {parseCsv,parseExcel, hashCodeWithFiles,hashCodeWithSystem} from "../../store/aaden/readFiles/readFiles"
-import {addAttributeGroup,updateAttributeGroup,getAttributeGroup,hashAttributeGroupWithFiles,hashAttributeGroupWithSystem,hashAttributeName} from "../../store/aaden/readFiles/AttributeGroup"
+import {addAttribute,updateAttribute,getAttribute,hashAttributeName,hashAttributeWithFiles,hashAttributeWithSystem} from "../../store/aaden/readFiles/Attribute"
+import {getAttributeGroup} from "../../store/aaden/readFiles/AttributeGroup"
 import {getNgrokPHPUrl} from "../../store/aaden/utils"
 
 
@@ -62,110 +63,156 @@ async function uploadPrepare(rawFileData) {
     }
   })
   if (log.value.length === 0) {
-    await uploadAttributeGroup(currentUrl.value, rawFileData)
+    await uploadAttribute(currentUrl.value, rawFileData)
     step.value = '文件上传完毕！' + step.value
   } else {
     step.value = '文件有问题,结束上传' + `<br>` + step.value
   }
 }
 
-async function uploadAttributeGroup (url, rawFileData) {
-  step.value = '开始上传AttributeGroup' + `<br>` + step.value
-  const attributeGroupDict = (await getAttributeGroup(url))
+async function uploadAttribute (url, rawFileData) {
+  step.value = '开始上传Attribute' + `<br>` + step.value
+  const attributeDict = (await getAttribute(url))
+  const attributeGroupDict = await getAttributeGroup(url)
   let hashByFiles = ''
   let hashBySystem = ''
-  const addAttributeGroupReqs = []
-  const updateAttributeGroupReqs = []
+  const addAttributeReqs = []
+  const updateAttributeReqs = []
   const allAddResults = []
   const allUpdateResults = []
+  console.log(attributeDict,'dict')
   for (const item of rawFileData) {
-    const isOld = attributeGroupDict.find(it => Array.isArray(it.langs) && it.langs.some(lang => lang?.name === item.nameZH))
+    const isOld = attributeDict.find(it => Array.isArray(it.langs) && it.langs.some(lang => lang?.name === item.nameZH))
+    const fileAttributeGroupId = attributeGroupDict.find(a => Array.isArray(a.langs) && a.langs.some(b => b?.name === item.attributeGroupName))?.id
     if (isOld) {
-      hashByFiles = hashAttributeGroupWithFiles(item)
-      hashBySystem = hashAttributeGroupWithSystem(isOld)
-      if (hashByFiles !== hashBySystem) {
-        step.value = item.nameZH + '系统已经存在,正在更新' + `<br>` + step.value
-        const oldAttributeGroup = IKUtils.deepCopy(isOld)
-        oldAttributeGroup.required = item.required === '1'
-        oldAttributeGroup.multiSelect = item.multiSelect === '1'
-        oldAttributeGroup.asTeaMakerAttribute = item.asTeaMakerAttribute
-        oldAttributeGroup.isActive =  item.isActive.toString() === '1'
-        updateAttributeGroupReqs.push(updateAttributeGroup(url, oldAttributeGroup))
-        if (updateAttributeGroupReqs.length === 30) {
-          step.value = '执行一批30个属性组更新请求' + `<br>` + step.value
-          try {
-            const batchResults = await Promise.all(updateAttributeGroupReqs)
-            allUpdateResults.push(...batchResults)
-            step.value = '完成一批30个属性组更新请求' + `<br>` + step.value
-          } catch (error) {
-            console.error('更新产品批次请求失败:', error)
-            throw error
-          }
-          // 清空数组，准备下一批
-          updateAttributeGroupReqs.length = 0
+      if (fileAttributeGroupId.toString() !== isOld.attributeGroupId) {
+        const newAttribute = {
+          image: '',
+          langs: [
+            {
+              desc: item.descDE,
+              lang: 'DE',
+              name: item.nameDE
+            },
+            {
+              desc: item.descZH,
+              lang: 'ZH',
+              name: item.nameZH
+            },
+            {
+              desc: item.descEN,
+              lang: 'EN',
+              name: item.nameEN
+            }
+          ],
+          priceMod: item.priceMod,
+          attributeGroupId: fileAttributeGroupId,
+          value: item.sort,
+          dishesCategoryTypeId: item.dishesCategoryTypeId,
+          frontendHide: item.frontendHide === '1',
+          useTeaMaker: item.useTeaMaker,
+          teaMakerCode: item.teaMakerCode ?? '',
+          instructions: item.instructions ?? '',
+          isActive: item.isActive,
+        }
+        addAttributeReqs.push(addAttribute(url, newAttribute))
+      } else {
+        hashByFiles = hashAttributeWithFiles(item)
+        hashBySystem = hashAttributeWithSystem(isOld)
+        console.log(hashBySystem,hashByFiles, 'hashBySystem')
+        if (hashByFiles !== hashBySystem) {
+          step.value = item.nameZH + '系统已经存在,正在更新' + `<br>` + step.value
+          const oldAttribute = IKUtils.deepCopy(isOld)
+          oldAttribute.priceMod = item.priceMod
+          oldAttribute.value = item.sort
+          oldAttribute.dishesCategoryTypeId = item.dishesCategoryTypeId
+          oldAttribute.frontendHide = item.frontendHide.toString() === '1'
+          oldAttribute.useTeaMaker = item.useTeaMaker
+          oldAttribute.teaMakerCode = item.teaMakerCode ?? ''
+          oldAttribute.instruction = item.instructions ?? ''
+          oldAttribute.isActive = item.isActive.toString() === '1'
+          updateAttributeReqs.push(updateAttribute(url, oldAttribute))
         }
       }
     } else {
-      const newAttributeGroup = {
-        printTitle: '',
-        name: '',
+      const newAttribute = {
+        image: '',
         langs: [
           {
+            desc: item.descDE,
             lang: 'DE',
             name: item.nameDE
           },
           {
+            desc: item.descZH,
             lang: 'ZH',
             name: item.nameZH
           },
           {
+            desc: item.descEN,
             lang: 'EN',
             name: item.nameEN
           }
         ],
-        required: item.required,
-        multiSelect: item.multiSelect,
-        isActive: item.isActive.toString() === '1',
-        maxCount: -1,
-        asTeamakerAttribute: item.asTeamakerAttribute,
-        asShuTuoUnit: 0
+        priceMod: item.priceMod,
+        attributeGroupId: fileAttributeGroupId,
+        value: item.sort,
+        dishesCategoryTypeId: item.dishesCategoryTypeId,
+        frontendHide: item.frontendHide.toString() === '1',
+        useTeaMaker: item.useTeaMaker,
+        teaMakerCode: item.teaMakerCode,
+        instructions: item.instructions,
+        isActive: item.isActive.toString() === '1'
       }
-      addAttributeGroupReqs.push(addAttributeGroup(url, newAttributeGroup))
-      if (addAttributeGroupReqs.length === 30) {
-        step.value = '执行一批30个属性组新增请求' + `<br>` + step.value
-        try {
-          const batchResults = await Promise.all(addAttributeGroupReqs)
-          allAddResults.push(...batchResults)
-          step.value = '完成一批30个属性组新增请求' + `<br>` + step.value
-        } catch (error) {
-          console.error('新增产品批次请求失败:', error)
-          throw error
-        }
-        // 清空数组，准备下一批
-        addAttributeGroupReqs.length = 0
+      addAttributeReqs.push(addAttribute(url, newAttribute))
+    }
+    if (addAttributeReqs.length === 30) {
+      step.value = '执行一批30个属性新增请求' + `<br>` + step.value
+      try {
+        const batchResults = await Promise.all(addAttributeReqs)
+        allAddResults.push(...batchResults)
+        step.value = '完成一批30个属性新增请求' + `<br>` + step.value
+      } catch (error) {
+        console.error('新增产品批次请求失败:', error)
+        throw error
       }
+      // 清空数组，准备下一批
+      addAttributeReqs.length = 0
+    }
+    if (updateAttributeReqs.length === 30) {
+      step.value = '执行一批30个属性组更新请求' + `<br>` + step.value
+      try {
+        const batchResults = await Promise.all(updateAttributeReqs)
+        allUpdateResults.push(...batchResults)
+        step.value = '完成一批30个属性组更新请求' + `<br>` + step.value
+      } catch (error) {
+        console.error('更新产品批次请求失败:', error)
+        throw error
+      }
+      // 清空数组，准备下一批
+      updateAttributeReqs.length = 0
     }
   }
   try {
     // 处理剩余的updateDishReqs
-    if (updateAttributeGroupReqs.length > 0) {
+    if (updateAttributeReqs.length > 0) {
       step.value = '开始处理剩余的属性组更新请求' + `<br>` + step.value
-      const remainingResults = await batchRequests(updateAttributeGroupReqs, 5)
+      const remainingResults = await batchRequests(updateAttributeReqs, 5)
       allUpdateResults.push(...remainingResults)
       step.value = '结束处理剩余的属性组更新请求' + `<br>` + step.value
     }
 
     // 处理剩余的addDishReqs
-    if (addAttributeGroupReqs.length > 0) {
+    if (addAttributeReqs.length > 0) {
       step.value = '开始处理剩余的属性组新增请求' + `<br>` + step.value
-      const remainingResults = await batchRequests(addAttributeGroupReqs, 5)
+      const remainingResults = await batchRequests(addAttributeReqs, 5)
       allAddResults.push(...remainingResults)
       step.value = '结束处理剩余的属性组新增请求' + `<br>` + step.value
     }
   } catch (e) {
     console.log(e, 'attributeGroup相关')
   }
-  console.log(attributeGroupDict, 'attributeGroupDict')
+  console.log(attributeDict, 'attributeDict')
 }
 
 async function batchRequests(requests, batchSize = 5) {
@@ -203,7 +250,7 @@ function clearData() {
 
 <template>
   <div class="main-container pa-4">
-    <n-card title="菜品属性组上传">
+    <n-card title="菜品属性上传">
       <div class="upload-section">
         <n-space vertical>
           <div class="text-body-1 mb-2">

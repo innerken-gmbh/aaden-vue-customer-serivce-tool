@@ -21,11 +21,11 @@ export async function updateAttributeGroup(url,item) {
 }
 
 
-export function hashAttributeWithFiles(info) {
+export function hashAttributeGroupWithFiles(info) {
     return info.required + '-' + info.multiSelect + '-' + info.asTeaMakerAttribute + '-' + info.isActive;
 }
 
-export function hashAttributeWithSystem(info) {
+export function hashAttributeGroupWithSystem(info) {
     return info.required + '-' + info.multiSelect + '-' + info.asTeaMakerAttribute + '-' + info.isActive;
 }
 
