@@ -25,8 +25,8 @@ export function hashAttributeName (langs) {
 }
 
 export function hashAttributeWithFiles(info) {
-    return info.aPriceMod.toFixed(2) + '-' + info.aSort + '-' + info.aDishesCategoryTypeId + '-' + info.aFrontendHide + '-' + info.aUseTeaMaker + '-' + info.aTeaMakerCode + '-' + info.aInstructions + '-' + info.aIsActive;
+    return info.aPriceMod.toFixed(2)  + '-' + info.aDishesCategoryTypeId + '-' + info.aFrontendHide + '-' + info.aUseTeaMaker + '-' + info.aTeaMakerCode + '-' + info.aInstruction + '-' + info.aIsActive;
 }
 
 export function hashAttributeWithSystem(info) {
-    return info.priceMod + '-' + info.value + '-' + info.dishesCategoryTypeId + '-' + info.frontendHide + '-' + info.useTeaMaker + '-' + info.teaMakerCode + '-' + info.instruction + '-' + info.isActive;}
+    return info.priceMod  + '-' + info.dishesCategoryTypeId + '-' + info.frontendHide + '-' + info.useTeaMaker + '-' + info.teaMakerCode + '-' + info.instruction + '-' + info.isActive;}

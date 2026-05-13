@@ -81,7 +81,7 @@ function checkFilesAttributeGroupLog (rawFileData) {
           reason: `与第 ${existed.index + 2} 行相比，agNameDE相同的行，${key}必须保持一致！`
         })
       }
-      return;
+      return true;
     }
     if (!existed) {
       allFilesAttributeGroup.value.unshift({
@@ -99,6 +99,7 @@ function checkFilesAttributeGroupLog (rawFileData) {
       existed.index = idx
     }
   }
+  return false;
 }
 
 function checkFilesAttributeLog (rawFileData) {
@@ -121,11 +122,12 @@ function checkFilesAttributeLog (rawFileData) {
         value: name,
         reason: `与第 ${firstIdx + 2} 行相比，aNameDE重复！`
       });
-      return; // 发现第一组重复后立刻返回
+      return true; // 发现第一组重复后立刻返回
     } else {
       seenIndexMap.set(name, idx);
     }
   }
+  return false;
 }
 
 async function uploadAttributeGroup (url,attributeGroupDict) {
@@ -142,7 +144,7 @@ async function uploadAttributeGroup (url,attributeGroupDict) {
       hashByFiles = hashAttributeGroupWithFiles(item)
       hashBySystem = hashAttributeGroupWithSystem(isOld)
       if (hashByFiles !== hashBySystem) {
-        step.value = item.name + '系统已经存在,正在更新' + `<br>` + step.value
+        step.value = item.aNameDE + '系统已经存在,正在更新' + `<br>` + step.value
         const oldAttributeGroup = IKUtils.deepCopy(isOld)
         oldAttributeGroup.required = item.required
         oldAttributeGroup.multiSelect = item.multiSelect
@@ -244,8 +246,16 @@ async function getAttributeGroupId (url,rawFileData) {
 
 async function uploadAll (url, rawFileData) {
   step.value = '开始上传Attribute' + `<br>` + step.value
-  checkFilesAttributeGroupLog(rawFileData)
-  checkFilesAttributeLog(rawFileData)
+  const groupHasError = checkFilesAttributeGroupLog(rawFileData)
+  if (groupHasError) {
+    // 如果分组校验有问题，立刻停止后续上传流程
+    return
+  }
+  const attrHasError = checkFilesAttributeLog(rawFileData)
+  if (attrHasError) {
+    // 如果属性校验有问题，立刻停止后续上传流程
+    return
+  }
   const attributeGroupDict = (await getAttributeGroup(url))
   await uploadAttributeGroup(url, attributeGroupDict)
   await getAttributeGroupId(url,rawFileData)
@@ -262,56 +272,24 @@ async function uploadAttribute (url) {
   const allAddResults = []
   const allUpdateResults = []
   for (const item of filesWithGroupId.value) {
-    const isOld = attributeDict.find(it => Array.isArray(it.langs) && it.langs.some(lang => lang?.name === item.aNameDE))
+    const isOld = attributeDict.filter(it => Array.isArray(it.langs) && it.langs.some(lang => lang?.name === item.aNameDE)).find(it => it.attributeGroupId === item.attributeGroupId)
+    console.log(isOld,'isOld')
     if (isOld) {
-      if (item.attributeGroupId !== isOld.attributeGroupId) {
-        const newAttribute = {
-          image: '',
-          langs: [
-            {
-              desc: item.aDescDE ?? '',
-              lang: 'DE',
-              name: item.aNameDE
-            },
-            {
-              desc: item.aDescZH ? item.aDescZH : (item.aDescDE ? item.aDescDE : ''),
-              lang: 'ZH',
-              name: item.nameZH ? item.aNameZH : item.aNameDE
-            },
-            {
-              desc: item.aDescEN ? item.aDescEN : (item.aDescDE ? item.aDescDE : ''),
-              lang: 'EN',
-              name: item.nameEN ? item.aNameEN : item.aNameDE
-            }
-          ],
-          priceMod: item.aPriceMod,
-          attributeGroupId: item.attributeGroupId,
-          value: item.aSort ? item.aSort : 1,
-          dishesCategoryTypeId: item.aDishesCategoryTypeId,
-          frontendHide: item.aFrontendHide === '1',
-          useTeaMaker: item.aUseTeaMaker,
-          teaMakerCode: item.aTeaMakerCode ?? '',
-          instructions: item.aInstructions ?? '',
-          isActive: item.aIsActive,
-        }
-        addAttributeReqs.push(addAttribute(url, newAttribute))
-      } else {
-        hashByFiles = hashAttributeWithFiles(item)
-        hashBySystem = hashAttributeWithSystem(isOld)
-        console.log(hashBySystem,hashByFiles, 'hashBySystem')
-        if (hashByFiles !== hashBySystem) {
-          step.value = item.nameZH + '系统已经存在,正在更新' + `<br>` + step.value
-          const oldAttribute = IKUtils.deepCopy(isOld)
-          oldAttribute.priceMod = item.aPriceMod
-          oldAttribute.value = item.aSort
-          oldAttribute.dishesCategoryTypeId = item.aDishesCategoryTypeId
-          oldAttribute.frontendHide = item.aFrontendHide.toString() === '1'
-          oldAttribute.useTeaMaker = item.aUseTeaMaker
-          oldAttribute.teaMakerCode = item.aTeaMakerCode ?? ''
-          oldAttribute.instruction = item.aInstructions ?? ''
-          oldAttribute.isActive = item.aIsActive.toString() === '1'
-          updateAttributeReqs.push(updateAttribute(url, oldAttribute))
-        }
+      hashByFiles = hashAttributeWithFiles(item)
+      hashBySystem = hashAttributeWithSystem(isOld)
+      console.log(hashBySystem,hashByFiles, 'hashBySystem')
+      if (hashByFiles !== hashBySystem) {
+        step.value = item.aNameDE + '系统已经存在,正在更新' + `<br>` + step.value
+        const oldAttribute = IKUtils.deepCopy(isOld)
+        oldAttribute.priceMod = item.aPriceMod
+        oldAttribute.value = item.aSort
+        oldAttribute.dishesCategoryTypeId = item.aDishesCategoryTypeId
+        oldAttribute.frontendHide = item.aFrontendHide.toString() === '1'
+        oldAttribute.useTeaMaker = item.aUseTeaMaker
+        oldAttribute.teaMakerCode = item.aTeaMakerCode ?? ''
+        oldAttribute.instruction = item.aInstruction ?? ''
+        oldAttribute.isActive = item.aIsActive.toString() === '1'
+        updateAttributeReqs.push(updateAttribute(url, oldAttribute))
       }
     } else {
       const newAttribute = {
@@ -340,7 +318,7 @@ async function uploadAttribute (url) {
         frontendHide: item.aFrontendHide === '1',
         useTeaMaker: item.aUseTeaMaker,
         teaMakerCode: item.aTeaMakerCode ?? '',
-        instructions: item.aInstructions ?? '',
+        instructions: item.aInstruction ?? '',
         isActive: item.aIsActive,
       }
       addAttributeReqs.push(addAttribute(url, newAttribute))
