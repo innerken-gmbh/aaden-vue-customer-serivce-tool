@@ -25,7 +25,7 @@ export function hashAttributeName (langs) {
 }
 
 export function hashAttributeWithFiles(info) {
-    return info.priceMod.toFixed(2) + '-' + info.sort + '-' + info.dishesCategoryTypeId + '-' + info.frontendHide + '-' + info.useTeaMaker + '-' + info.teaMakerCode + '-' + info.instruction + '-' + info.isActive;
+    return info.aPriceMod.toFixed(2) + '-' + info.aSort + '-' + info.aDishesCategoryTypeId + '-' + info.aFrontendHide + '-' + info.aUseTeaMaker + '-' + info.aTeaMakerCode + '-' + info.aInstructions + '-' + info.aIsActive;
 }
 
 export function hashAttributeWithSystem(info) {

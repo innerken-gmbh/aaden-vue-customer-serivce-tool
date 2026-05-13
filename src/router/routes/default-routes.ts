@@ -170,11 +170,11 @@ export default [
         menuUrl: '/tools/dishes-copy',
         menuName: '菜品复制',
       },
-      {
-        parentPath: '/tool',
-        menuUrl: '/tools/attribute-group-upload',
-        menuName: '属性组上传',
-      },
+      // {
+      //   parentPath: '/tool',
+      //   menuUrl: '/tools/attribute-group-upload',
+      //   menuName: '属性组上传',
+      // },
       {
         parentPath: '/tool',
         menuUrl: '/tools/attribute-upload',

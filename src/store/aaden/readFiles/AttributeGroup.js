@@ -32,3 +32,13 @@ export function hashAttributeGroupWithSystem(info) {
 export function hashAttributeName (langs) {
     return langs.map(lang => lang.name)
 }
+
+
+export function hashAttributeGroupValue (info) {
+    return info.agMultiSelect + '-' + info.agRequired + '-' + info.agAsTeaMakerAttribute + '-' + info.agIsActive;
+}
+
+export function getErrorKey (index) {
+    const keys = ['agMultiSelect','agRequired','agAsTeaMakerAttribute','agIsActive']
+    return index.map(i => keys[i])
+}
