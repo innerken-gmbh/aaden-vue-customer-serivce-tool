@@ -21,12 +21,3 @@ const entity = {
 
 export default entity
 
-export async function flipAttributes (baseUrl, id, agId, aId) {
-  return (await hillo.post(baseUrl + 'Dishes.php?op=flipAttributes', {
-    idAgIdAIds: JSON.stringify([{
-      id,
-      agId,
-      aId
-    }])
-  })).content
-}

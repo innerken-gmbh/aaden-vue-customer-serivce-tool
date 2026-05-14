@@ -5,9 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1777049f-9f7a-4424-9005-71635bd2b339" name="Changes" comment="jiaruxingongneng">
+      <change afterPath="$PROJECT_DIR$/src/views/tools/attribute-bind.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/router/routes/default-routes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/router/routes/default-routes.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/aaden/model/attribute.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/aaden/model/attribute.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/aaden/model/dish.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/aaden/model/dish.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/store/aaden/readFiles/Attribute.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/aaden/readFiles/Attribute.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/tools/attribute-upload.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/tools/attribute-upload.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,8 +30,8 @@
         <option value="Vue Options API Component" />
         <option value="TypeScript File" />
         <option value="Vue Single File Component" />
-        <option value="Vue Composition API Component" />
         <option value="JavaScript File" />
+        <option value="Vue Composition API Component" />
       </list>
     </option>
   </component>
@@ -364,7 +367,8 @@
       <workItem from="1776752240920" duration="1813000" />
       <workItem from="1778477746310" duration="17735000" />
       <workItem from="1778564726267" duration="19236000" />
-      <workItem from="1778649448892" duration="8222000" />
+      <workItem from="1778649448892" duration="16104000" />
+      <workItem from="1778735668430" duration="6186000" />
     </task>
     <task id="LOCAL-00001" summary="加入包裹记录功能和库存管理相关优化">
       <option name="closed" value="true" />

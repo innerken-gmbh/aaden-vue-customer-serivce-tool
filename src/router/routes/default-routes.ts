@@ -180,6 +180,11 @@ export default [
         menuUrl: '/tools/attribute-upload',
         menuName: '属性上传',
       },
+      {
+        parentPath: '/tool',
+        menuUrl: '/tools/attribute-bind',
+        menuName: '属性绑定',
+      },
       // {
       //   parentPath: '/tool',
       //   menuUrl: '/tools/normal-dishes-upload',
