@@ -151,7 +151,7 @@ async function uploadAttributeGroup (url,attributeGroupDict) {
         oldAttributeGroup.asTeaMakerAttribute = item.asTeaMakerAttribute
         oldAttributeGroup.isActive =  item.isActive
         updateAttributeGroupReqs.push(updateAttributeGroup(url, oldAttributeGroup))
-        if (updateAttributeGroupReqs.length === 30) {
+        if (updateAttributeGroupReqs.length === 1) {
           step.value = '执行一批30个属性组更新请求' + `<br>` + step.value
           try {
             const batchResults = await Promise.all(updateAttributeGroupReqs)
@@ -187,11 +187,11 @@ async function uploadAttributeGroup (url,attributeGroupDict) {
         multiSelect: item.multiSelect,
         isActive: item.isActive,
         maxCount: -1,
-        asTeamakerAttribute: item.asTeaMakerAttribute,
+        asTeaMakerAttribute: item.asTeaMakerAttribute,
         asShuTuoUnit: 0
       }
       addAttributeGroupReqs.push(addAttributeGroup(url, newAttributeGroup))
-      if (addAttributeGroupReqs.length === 30) {
+      if (addAttributeGroupReqs.length === 1) {
         step.value = '执行一批30个属性组新增请求' + `<br>` + step.value
         try {
           const batchResults = await Promise.all(addAttributeGroupReqs)
@@ -209,14 +209,14 @@ async function uploadAttributeGroup (url,attributeGroupDict) {
   try {
     if (updateAttributeGroupReqs.length > 0) {
       step.value = '开始处理剩余的属性组更新请求' + `<br>` + step.value
-      const remainingResults = await batchRequests(updateAttributeGroupReqs, 5)
+      const remainingResults = await batchRequests(updateAttributeGroupReqs, 1)
       allUpdateResults.push(...remainingResults)
       step.value = '结束处理剩余的属性组更新请求' + `<br>` + step.value
     }
 
     if (addAttributeGroupReqs.length > 0) {
       step.value = '开始处理剩余的属性组新增请求' + `<br>` + step.value
-      const remainingResults = await batchRequests(addAttributeGroupReqs, 5)
+      const remainingResults = await batchRequests(addAttributeGroupReqs, 1)
       allAddResults.push(...remainingResults)
       step.value = '结束处理剩余的属性组新增请求' + `<br>` + step.value
     }
@@ -259,6 +259,7 @@ async function uploadAll (url, rawFileData) {
   const attributeGroupDict = (await getAttributeGroup(url))
   await uploadAttributeGroup(url, attributeGroupDict)
   await getAttributeGroupId(url,rawFileData)
+  setTimeout(() => {},3000)
   await uploadAttribute(url)
 }
 
@@ -284,11 +285,11 @@ async function uploadAttribute (url) {
         oldAttribute.priceMod = item.aPriceMod
         oldAttribute.value = item.aSort
         oldAttribute.dishesCategoryTypeId = item.aDishesCategoryTypeId
-        oldAttribute.frontendHide = item.aFrontendHide.toString() === '1'
+        oldAttribute.frontendHide = item.aFrontendHide
         oldAttribute.useTeaMaker = item.aUseTeaMaker
         oldAttribute.teaMakerCode = item.aTeaMakerCode ?? ''
         oldAttribute.instruction = item.aInstruction ?? ''
-        oldAttribute.isActive = item.aIsActive.toString() === '1'
+        oldAttribute.isActive = item.aIsActive
         updateAttributeReqs.push(updateAttribute(url, oldAttribute))
       }
     } else {
@@ -315,15 +316,15 @@ async function uploadAttribute (url) {
         attributeGroupId: item.attributeGroupId,
         value: item.aSort ? item.aSort : 1,
         dishesCategoryTypeId: item.aDishesCategoryTypeId,
-        frontendHide: item.aFrontendHide === '1',
+        frontendHide: item.aFrontendHide,
         useTeaMaker: item.aUseTeaMaker,
         teaMakerCode: item.aTeaMakerCode ?? '',
-        instructions: item.aInstruction ?? '',
+        instruction: item.aInstruction ?? '',
         isActive: item.aIsActive,
       }
       addAttributeReqs.push(addAttribute(url, newAttribute))
     }
-    if (addAttributeReqs.length === 30) {
+    if (addAttributeReqs.length === 1) {
       step.value = '执行一批30个属性新增请求' + `<br>` + step.value
       try {
         const batchResults = await Promise.all(addAttributeReqs)
@@ -336,7 +337,7 @@ async function uploadAttribute (url) {
       // 清空数组，准备下一批
       addAttributeReqs.length = 0
     }
-    if (updateAttributeReqs.length === 30) {
+    if (updateAttributeReqs.length === 1) {
       step.value = '执行一批30个属性组更新请求' + `<br>` + step.value
       try {
         const batchResults = await Promise.all(updateAttributeReqs)
@@ -354,7 +355,7 @@ async function uploadAttribute (url) {
     // 处理剩余的updateDishReqs
     if (updateAttributeReqs.length > 0) {
       step.value = '开始处理剩余的属性组更新请求' + `<br>` + step.value
-      const remainingResults = await batchRequests(updateAttributeReqs, 5)
+      const remainingResults = await batchRequests(updateAttributeReqs, 1)
       allUpdateResults.push(...remainingResults)
       step.value = '结束处理剩余的属性组更新请求' + `<br>` + step.value
     }
@@ -362,7 +363,7 @@ async function uploadAttribute (url) {
     // 处理剩余的addDishReqs
     if (addAttributeReqs.length > 0) {
       step.value = '开始处理剩余的属性组新增请求' + `<br>` + step.value
-      const remainingResults = await batchRequests(addAttributeReqs, 5)
+      const remainingResults = await batchRequests(addAttributeReqs, 1)
       allAddResults.push(...remainingResults)
       step.value = '结束处理剩余的属性组新增请求' + `<br>` + step.value
     }
