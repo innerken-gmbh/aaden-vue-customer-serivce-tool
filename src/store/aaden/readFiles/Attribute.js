@@ -40,3 +40,9 @@ export async function flipAttributes (baseUrl, id, agId, aId) {
         }])
     })).content
 }
+
+export async function setDishesAttrMasks (url ,params) {
+    return await hillo.post(url + 'Dishes.php?op=setDishesAttrMasks', {
+        params: JSON.stringify(params)
+    })
+}
