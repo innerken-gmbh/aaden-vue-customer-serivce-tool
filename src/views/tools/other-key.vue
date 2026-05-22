@@ -164,7 +164,6 @@ const columns = computed(() => [
   <div>
     <div class="mb-4 flex justify-end">
       <n-radio-group
-        v-model:value="managerValue"
         @update:value="onManagerChange"
       >
         <n-radio-button
