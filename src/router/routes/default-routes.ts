@@ -200,6 +200,11 @@ export default [
         menuUrl: '/tools/cotti-key',
         menuName: '库迪Key',
       },
+      {
+        parentPath: '/tool',
+        menuUrl: '/tools/other-key',
+        menuName: '其他Key',
+      },
     ],
   },
   {

@@ -5,8 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1777049f-9f7a-4424-9005-71635bd2b339" name="Changes" comment="jiaruxingongneng">
+      <change afterPath="$PROJECT_DIR$/src/store/aaden/tools/other-key.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/tools/other-key.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/tools/attribute-upload.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/tools/attribute-upload.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/router/routes/default-routes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/router/routes/default-routes.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,8 +28,8 @@
         <option value="Vue Options API Component" />
         <option value="TypeScript File" />
         <option value="Vue Single File Component" />
-        <option value="JavaScript File" />
         <option value="Vue Composition API Component" />
+        <option value="JavaScript File" />
       </list>
     </option>
   </component>
@@ -364,7 +366,13 @@
       <workItem from="1778477746310" duration="17735000" />
       <workItem from="1778564726267" duration="19236000" />
       <workItem from="1778649448892" duration="16104000" />
-      <workItem from="1778735668430" duration="12077000" />
+      <workItem from="1778735668430" duration="15812000" />
+      <workItem from="1778822471579" duration="3729000" />
+      <workItem from="1779167566110" duration="101000" />
+      <workItem from="1779167683134" duration="966000" />
+      <workItem from="1779184402914" duration="1375000" />
+      <workItem from="1779429373743" duration="137000" />
+      <workItem from="1779429812619" duration="4393000" />
     </task>
     <task id="LOCAL-00001" summary="加入包裹记录功能和库存管理相关优化">
       <option name="closed" value="true" />
