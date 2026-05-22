@@ -4,7 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1777049f-9f7a-4424-9005-71635bd2b339" name="Changes" comment="jiaruxingongneng" />
+    <list default="true" id="1777049f-9f7a-4424-9005-71635bd2b339" name="Changes" comment="jiaruxingongneng">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/aaden/model/attribute.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/aaden/model/attribute.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/aaden/readFiles/Attribute.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/aaden/readFiles/Attribute.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/tools/attribute-bind.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/tools/attribute-bind.vue" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -130,7 +135,7 @@
       <recent name="C:\Users\juhao\Documents\GitHub\aaden-vue-customer-serivce-tool\src\store\aaden" />
     </key>
   </component>
-  <component name="RunManager" selected="npm.dev">
+  <component name="RunManager" selected="npm.build">
     <configuration name="build" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/package.json" />
       <command value="run" />
@@ -168,8 +173,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="npm.dev" />
         <item itemvalue="npm.build" />
+        <item itemvalue="npm.dev" />
         <item itemvalue="npm.serve" />
       </list>
     </recent_temporary>
@@ -367,7 +372,7 @@
       <workItem from="1779167683134" duration="966000" />
       <workItem from="1779184402914" duration="1375000" />
       <workItem from="1779429373743" duration="137000" />
-      <workItem from="1779429812619" duration="4553000" />
+      <workItem from="1779429812619" duration="5373000" />
     </task>
     <task id="LOCAL-00001" summary="加入包裹记录功能和库存管理相关优化">
       <option name="closed" value="true" />

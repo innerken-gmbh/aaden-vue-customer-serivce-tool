@@ -31,15 +31,6 @@ export function hashAttributeWithFiles(info) {
 export function hashAttributeWithSystem(info) {
     return info.priceMod  + '-' + info.dishesCategoryTypeId + '-' + info.frontendHide + '-' + info.useTeaMaker + '-' + info.teaMakerCode + '-' + info.instruction + '-' + info.isActive;}
 
-export async function flipAttributes (baseUrl, id, agId, aId) {
-    return (await hillo.post(baseUrl + 'Dishes.php?op=flipAttributes', {
-        idAgIdAIds: JSON.stringify([{
-            id,
-            agId,
-            aId
-        }])
-    })).content
-}
 
 export async function setDishesAttrMasks (url ,params) {
     return await hillo.post(url + 'Dishes.php?op=setDishesAttrMasks', {

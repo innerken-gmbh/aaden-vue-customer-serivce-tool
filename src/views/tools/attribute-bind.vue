@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import { ref, h } from "vue";
+import {ref} from "vue";
 import IKUtils from "innerken-js-utils";
-import {parseCsv,parseExcel, hashCodeWithFiles,hashCodeWithSystem} from "../../store/aaden/readFiles/readFiles"
-import {addAttribute,setDishesAttrMasks,getAttribute,hashAttributeName,hashAttributeWithFiles,hashAttributeWithSystem,flipAttributes} from "../../store/aaden/readFiles/Attribute"
-import {addAttributeGroup,hashAttributeGroupValue,getErrorKey,updateAttributeGroup,getAttributeGroup,hashAttributeGroupWithFiles,hashAttributeGroupWithSystem} from "../../store/aaden/readFiles/AttributeGroup"
+import {parseCsv, parseExcel} from "../../store/aaden/readFiles/readFiles"
+import {getAttribute, setDishesAttrMasks} from "../../store/aaden/readFiles/Attribute"
 import {getDishList, updateDish} from '../../store/aaden/readFiles/dish'
 import {getNgrokPHPUrl} from "../../store/aaden/utils"
-import {uniq, uniqBy} from "lodash-es";
+import {uniq} from "lodash-es";
 
 
 const file = ref(null);
