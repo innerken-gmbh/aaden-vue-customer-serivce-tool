@@ -171,3 +171,10 @@ export async function setDebugInfo (info) {
 export async function getBindingKeyByDeviceId (deviceId) {
     return (await hillo.get(baseUrl + 'report/shop/' + deviceId, {})).bindingUUID
 }
+
+export async function unbindingDevice (deviceId, uuid) {
+    return (await hillo.post(baseUrl + 'user-stores/unbind', {
+        firebaseUid: uuid,
+        deviceId: deviceId
+    }))
+}
