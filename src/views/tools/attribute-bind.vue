@@ -40,7 +40,7 @@ async function handleFileUpload() {
     } else {
       IKUtils.showError('File Type is not csv or xlsx')
     }
-    console.log(fileData.value, 'fileData')
+    fileData.value = fileData.value.filter(it => it.Code)
     await uploadPrepare(fileData.value)
     loading.value  = false
   }
