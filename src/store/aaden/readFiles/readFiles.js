@@ -224,3 +224,134 @@ export function hashCodeWithSystem(info, haveIsActive = false, keyInstruction = 
 export function hashCodeByCompare(info) {
     return info.nameZH.toLowerCase() + '-' + info.nameDE.toLowerCase() + '-' + info.nameEN.toLowerCase() + '-' + parseFloat(info.price).toFixed(2) + '-' + info.catTypeId + '-' + info.keyInstruction + '-' + info.isActive + info.catNameZH.toLowerCase() + '-' + info.catNameDE.toLowerCase() + '-' + info.catNameEN.toLowerCase() + '-' + info.printCatId
 }
+
+
+export async function detectChineseEncoding(file) {
+    const buffer = await file.arrayBuffer();
+    const bytes = new Uint8Array(buffer);
+
+    // 1. 先检查 BOM
+    if (bytes.length >= 3) {
+        // UTF-8 BOM: EF BB BF
+        if (bytes[0] === 0xEF && bytes[1] === 0xBB && bytes[2] === 0xBF) {
+            return {
+                encoding: 'UTF-8',
+                hasBOM: true,
+                bomOffset: 3  // 实际文本从第4字节开始
+            };
+        }
+
+        // UTF-16 LE BOM: FF FE
+        if (bytes[0] === 0xFF && bytes[1] === 0xFE) {
+            return {
+                encoding: 'UTF-16LE',
+                hasBOM: true,
+                bomOffset: 2
+            };
+        }
+
+        // UTF-16 BE BOM: FE FF
+        if (bytes[0] === 0xFE && bytes[1] === 0xFF) {
+            return {
+                encoding: 'UTF-16BE',
+                hasBOM: true,
+                bomOffset: 2
+            };
+        }
+    }
+
+    // 2. 无 BOM，通过内容分析判断
+    return analyzeContent(bytes);
+}
+
+function analyzeContent(bytes) {
+    let utf8Score = 0;
+    let gbScore = 0;
+    let i = 0;
+
+    while (i < bytes.length) {
+        const b1 = bytes[i];
+
+        // ASCII 字符
+        if (b1 < 0x80) {
+            i++;
+            continue;
+        }
+
+        // 跳过 BOM 字节（防止文件中间出现）
+        if (b1 === 0xEF && i + 2 < bytes.length) {
+            const b2 = bytes[i + 1];
+            const b3 = bytes[i + 2];
+            if (b2 === 0xBB && b3 === 0xBF) {
+                i += 3;
+                continue;
+            }
+        }
+
+        // GB2312/GBK 双字节检测
+        // GBK 范围更广：第一字节 0x81-0xFE，第二字节 0x40-0xFE(除0x7F)
+        if (b1 >= 0x81 && b1 <= 0xFE && i + 1 < bytes.length) {
+            const b2 = bytes[i + 1];
+            if ((b2 >= 0x40 && b2 <= 0x7E) || (b2 >= 0x80 && b2 <= 0xFE)) {
+                gbScore += 2;
+                i += 2;
+                continue;
+            }
+        }
+
+        // UTF-8 三字节序列（中文主要范围）
+        if ((b1 & 0xF0) === 0xE0 && i + 2 < bytes.length) {
+            const b2 = bytes[i + 1];
+            const b3 = bytes[i + 2];
+
+            if ((b2 & 0xC0) === 0x80 && (b3 & 0xC0) === 0x80) {
+                const codePoint = ((b1 & 0x0F) << 12) |
+                    ((b2 & 0x3F) << 6) |
+                    (b3 & 0x3F);
+
+                // 检查是否在中文 Unicode 范围
+                if ((codePoint >= 0x4E00 && codePoint <= 0x9FFF) ||  // CJK统一汉字
+                    (codePoint >= 0x3400 && codePoint <= 0x4DBF) ||  // CJK扩展A
+                    (codePoint >= 0x20000 && codePoint <= 0x2A6DF)) { // CJK扩展B
+                    utf8Score += 3;
+                    i += 3;
+                    continue;
+                }
+            }
+        }
+
+        // UTF-8 四字节序列（部分生僻字、emoji）
+        if ((b1 & 0xF8) === 0xF0 && i + 3 < bytes.length) {
+            const b2 = bytes[i + 1];
+            const b3 = bytes[i + 2];
+            const b4 = bytes[i + 3];
+
+            if ((b2 & 0xC0) === 0x80 &&
+                (b3 & 0xC0) === 0x80 &&
+                (b4 & 0xC0) === 0x80) {
+                utf8Score++;
+                i += 4;
+                continue;
+            }
+        }
+
+        i++;
+    }
+
+    // 根据得分判断编码
+    let encoding;
+    if (utf8Score > gbScore) {
+        encoding = 'UTF-8';
+    } else if (gbScore > utf8Score) {
+        encoding = 'GB2312/GBK';
+    } else {
+        encoding = 'UTF-8';  // 默认 UTF-8
+    }
+
+    return {
+        encoding: encoding,
+        hasBOM: false,
+        bomOffset: 0,
+        confidence: Math.max(utf8Score, gbScore) / (Math.max(bytes.length, 1))
+    };
+}

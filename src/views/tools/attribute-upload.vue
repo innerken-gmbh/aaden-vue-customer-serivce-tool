@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { ref, h } from "vue";
 import IKUtils from "innerken-js-utils";
-import {parseCsv,parseExcel, hashCodeWithFiles,hashCodeWithSystem} from "../../store/aaden/readFiles/readFiles"
-import {addAttribute,updateAttribute,getAttribute,hashAttributeName,hashAttributeWithFiles,hashAttributeWithSystem} from "../../store/aaden/readFiles/Attribute"
+import {parseCsv,parseExcel, detectChineseEncoding} from "../../store/aaden/readFiles/readFiles"
+import {addAttribute,updateAttribute,getAttribute,hashAttributeWithFiles,hashAttributeWithSystem} from "../../store/aaden/readFiles/Attribute"
 import {addAttributeGroup,hashAttributeGroupValue,getErrorKey,updateAttributeGroup,getAttributeGroup,hashAttributeGroupWithFiles,hashAttributeGroupWithSystem} from "../../store/aaden/readFiles/AttributeGroup"
 
 import {getNgrokPHPUrl} from "../../store/aaden/utils"
-import {uniqBy} from "lodash-es";
 
 
 const file = ref(null);
@@ -35,13 +34,19 @@ async function handleFileUpload() {
     loading.value = true;
     const fileType = file.value.name.split('.').pop()?.toLowerCase();
     if (fileType === 'csv') {
+      const encodingType = (await detectChineseEncoding(file.value as any)).encoding;
+      if (encodingType !== 'UTF-8') {
+        IKUtils.showError('请使用UTF-8格式的csv');
+        loading.value = false;
+        return;
+      }
       fileData.value = await parseCsv(file.value)
     } else if (fileType === 'xlsx') {
       fileData.value = await parseExcel(file.value)
     } else {
       IKUtils.showError('File Type is not csv or xlsx')
     }
-    console.log(fileData.value, 'fileData')
+    fileData.value = fileData.value.filter(it => it.aNameDE)
     await uploadPrepare(fileData.value)
     loading.value  = false
   }
@@ -259,7 +264,8 @@ async function uploadAll (url, rawFileData) {
   const attributeGroupDict = (await getAttributeGroup(url))
   await uploadAttributeGroup(url, attributeGroupDict)
   await getAttributeGroupId(url,rawFileData)
-  setTimeout(() => {},3000)
+  // 暂停 3 秒，确保前置数据就绪
+  await new Promise((resolve) => setTimeout(resolve, 3000))
   await uploadAttribute(url)
 }
 
