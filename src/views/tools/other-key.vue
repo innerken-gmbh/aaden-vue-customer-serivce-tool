@@ -54,7 +54,6 @@ const currentDisplay = computed(() => {
 })
 
 function onManagerChange (val) {
-  console.log(val, 'val');
   managerValue.value = val
   reloadData()
 }
@@ -167,7 +166,14 @@ const columns = computed(() => [
 
 <template>
   <div>
-    <div class="mb-4 flex justify-end">
+    <div class="mb-4 d-flex align-center justify-center">
+      <div
+        v-if="currentDisplay"
+        class="text-h5 font-weight-bold"
+      >
+        当前选中：{{ currentDisplay }}
+      </div>
+      <v-spacer />
       <n-radio-group
         @update:value="onManagerChange"
       >
@@ -179,13 +185,6 @@ const columns = computed(() => [
           :label="item.managerName"
         />
       </n-radio-group>
-      <!--      <n-select-->
-      <!--        v-model:value="managerValue"-->
-      <!--        style="width: 300px"-->
-      <!--        label-field="managerName"-->
-      <!--        value-field="uuid"-->
-      <!--        :options="allManagerList"-->
-      <!--      />-->
       <n-button
         v-if="managerValue"
         type="primary"
