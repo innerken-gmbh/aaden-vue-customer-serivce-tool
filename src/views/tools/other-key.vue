@@ -181,6 +181,7 @@ const columns = computed(() => [
           v-for="(item,index) in allManagerList"
           :key="index"
           class="mr-4"
+          :style="{ backgroundColor: item.uuid === managerValue ? '#4caf50' : '',color:item.uuid === managerValue ? 'white' : '' }"
           :value="item.uuid"
           :label="item.managerName"
         />
