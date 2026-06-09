@@ -49,7 +49,12 @@ async function reloadData () {
   }
 }
 
+const currentDisplay = computed(() => {
+  return allManagerList.value.find(it => it.uuid === managerValue.value)?.managerName ?? '';
+})
+
 function onManagerChange (val) {
+  console.log(val, 'val');
   managerValue.value = val
   reloadData()
 }
@@ -182,6 +187,7 @@ const columns = computed(() => [
       <!--        :options="allManagerList"-->
       <!--      />-->
       <n-button
+        v-if="managerValue"
         type="primary"
         @click="handleAdd"
       >
@@ -210,6 +216,9 @@ const columns = computed(() => [
         aria-modal="true"
       >
         <n-form>
+          <div class="text-h5 mb-2">
+            {{ currentDisplay }}
+          </div>
           <n-form-item
             label="Device ID"
             :required="modalType === 'add'"
