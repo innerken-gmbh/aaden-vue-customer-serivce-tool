@@ -102,6 +102,14 @@ async function handleSubmit() {
   loading.value = true;
   try {
     console.log(formData.value);
+    // Validate deviceId only when adding
+    if (modalType.value === 'add') {
+      if (!/^\d{4}$/.test(formData.value.deviceId)) {
+        message.error('Device ID 必须为4位纯数字');
+        return;
+      }
+    }
+
     if (modalType.value === 'add') {
       await addApiKey(formData.value.deviceId, formData.value.remark, managerValue.value, formData.value.externalKey);
       message.success('Added successfully');
@@ -116,6 +124,18 @@ async function handleSubmit() {
     message.error('Failed to submit');
   } finally {
     loading.value = false;
+  }
+}
+
+const rules = {
+  deviceId: {
+    required: true,
+    validator: (rule, value) => {
+      if (!value) return new Error('请输入DeviceId')
+      if (!/^\d{4}$/.test(value)) return new Error('请输入4位数字')
+      return true
+    },
+    trigger: ['blur', 'input'] // 失去焦点或输入时触发
   }
 }
 
@@ -215,7 +235,11 @@ const columns = computed(() => [
         role="dialog"
         aria-modal="true"
       >
-        <n-form>
+        <n-form
+          ref="formRef"
+          :model="formData"
+          :rules="rules"
+        >
           <n-form-item
             label="管理组"
           >
@@ -227,10 +251,12 @@ const columns = computed(() => [
           <n-form-item
             label="Device ID"
             :required="modalType === 'add'"
+            path="deviceId"
           >
             <n-input
               v-model:value="formData.deviceId"
               placeholder="请输入DeviceId"
+              maxlength="4"
               :disabled="modalType !== 'add'"
             />
           </n-form-item>
