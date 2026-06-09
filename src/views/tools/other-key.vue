@@ -215,9 +215,14 @@ const columns = computed(() => [
         aria-modal="true"
       >
         <n-form>
-          <div class="text-h5 mb-2">
-            {{ currentDisplay }}
-          </div>
+          <n-form-item
+            label="管理组"
+          >
+            <n-input
+              :placeholder="currentDisplay"
+              disabled
+            />
+          </n-form-item>
           <n-form-item
             label="Device ID"
             :required="modalType === 'add'"
