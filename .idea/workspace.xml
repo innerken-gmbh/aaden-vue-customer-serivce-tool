@@ -6,8 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="1777049f-9f7a-4424-9005-71635bd2b339" name="Changes" comment="jiaruxingongneng">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/store/aaden/businessLayer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/aaden/businessLayer.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/store-management/device-bind.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/store-management/device-bind.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/dashboard/work-place.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/dashboard/work-place.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -373,7 +372,14 @@
       <workItem from="1779429373743" duration="137000" />
       <workItem from="1779429812619" duration="7060000" />
       <workItem from="1779696077521" duration="845000" />
-      <workItem from="1779699214254" duration="572000" />
+      <workItem from="1779699214254" duration="1775000" />
+      <workItem from="1779783252518" duration="2818000" />
+      <workItem from="1780651617813" duration="210000" />
+      <workItem from="1780983275262" duration="7099000" />
+      <workItem from="1780999382314" duration="4423000" />
+      <workItem from="1781175282099" duration="1069000" />
+      <workItem from="1781241701515" duration="598000" />
+      <workItem from="1781602195419" duration="245000" />
     </task>
     <task id="LOCAL-00001" summary="加入包裹记录功能和库存管理相关优化">
       <option name="closed" value="true" />
