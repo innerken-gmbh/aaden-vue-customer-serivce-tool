@@ -537,8 +537,18 @@ function displayAddress(address) {
         :headers="headers"
         @click:row="clickItem"
       >
+        <!--        <template #[`item.timestamp`]="{ item }">-->
+        <!--          {{ fromNowTimestamp(item.timestamp) }}-->
+        <!--        </template>-->
         <template #[`item.timestamp`]="{ item }">
-          {{ fromNowTimestamp(item.timestamp) }}
+          <v-tooltip bottom>
+            <template #activator="{props }">
+              <div v-bind="props">
+                {{ fromNowTimestamp(item.timestamp) }}
+              </div>
+            </template>
+            <span>{{ fromNowTimeDisplay(item.timestamp) }}</span>
+          </v-tooltip>
         </template>
         <template #[`item.lastBackupTime`]="{ item }">
           <v-tooltip bottom>
