@@ -2,16 +2,14 @@
 import { onMounted, ref, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { getAydenRules, addSplitConfigurationRule, removeSplitConfigurationRule } from '@/store/ayden/aydenRules'
+import IKUtils from "innerken-js-utils";
 
 // Tabs 当前激活索引
 const activeIndex = ref<number>(0)
 
-// 访问控制：仅当 URL 查询参数中包含 ?User=WuWenZe 时允许访问
-const route = useRoute()
 const hasAccess = computed(() => {
-  const u = (route.query as Record<string, unknown>)?.User as unknown
-  const val = Array.isArray(u) ? u[0] : u
-  return val === 'WuWenZe'
+  const user = IKUtils.getQueryString('User')
+  return user === 'WuWenZe'
 })
 
 // 规则列表：期望结构为 [{ description: string, rules: any[] }, ...]
