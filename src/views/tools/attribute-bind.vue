@@ -66,7 +66,6 @@ async function uploadPrepare(rawFileData) {
 
 async function uploadAll (url, rawFileData) {
   step.value = '开始给产品绑定Attribute' + `<br>` + step.value
-
   // 1) 计算一个数组：包含 rawFileData 中（去重后）除了 Code 以外的所有键
   const nonCodeKeys = Array.from(
     new Set(
@@ -76,7 +75,7 @@ async function uploadAll (url, rawFileData) {
   const attributeDict = (await getAttribute(url))
   const currentAttributeInfo = []
   for (const key of nonCodeKeys) {
-    const currentInfo = attributeDict.find(it => Array.isArray(it.langs) && it.langs.some(lang => lang?.name === key))
+    const currentInfo = attributeDict.find((ag) => ag.uniqueId === key)
     if (currentInfo) {
       currentAttributeInfo.push(currentInfo)
     }
@@ -93,7 +92,7 @@ async function uploadAll (url, rawFileData) {
     const masks = []
     nonCodeKeys.forEach((key) => {
       if (row[key].toString() === '1') {
-        const attributeInfo = currentAttributeInfo.find(it => Array.isArray(it.langs) && it.langs.some(lang => lang?.name === key))
+        const attributeInfo = currentAttributeInfo.find(it => it.uniqueId === key)
         masks.push({agId:attributeInfo.attributeGroupId,aId:attributeInfo.id})
       }
     })

@@ -71,7 +71,7 @@ const filesWithGroupId = ref([])
 function checkFilesAttributeGroupLog (rawFileData) {
   for (const [idx, item] of rawFileData.entries()) {
     const value = hashAttributeGroupValue(item);
-    const existed = allFilesAttributeGroup.value.find((ag) => ag.name === item.agNameDE);
+    const existed = allFilesAttributeGroup.value.find((ag) => ag.uid === item.agUid);
     if (existed && existed.value !== value) {
       const diffIndexes = value.split('-').reduce((indexes, item, idx) => {
         if (item !== existed.value.split('-')[idx]) indexes.push(idx);
@@ -83,7 +83,7 @@ function checkFilesAttributeGroupLog (rawFileData) {
         log.value.push({
           index: idx + 2,
           value: key,
-          reason: `与第 ${existed.index + 2} 行相比，agNameDE相同的行，${key}必须保持一致！`
+          reason: `与第 ${existed.index + 2} 行相比，agUid相同的行，${key}必须保持一致！`
         })
       }
       return true;
@@ -99,6 +99,7 @@ function checkFilesAttributeGroupLog (rawFileData) {
         multiSelect: item.agMultiSelect,
         isActive: item.agIsActive,
         asTeaMakerAttribute: item.agAsTeaMakerAttribute,
+        uid: item.agUid,
       });
     } else {
       existed.index = idx
@@ -108,28 +109,28 @@ function checkFilesAttributeGroupLog (rawFileData) {
 }
 
 function checkFilesAttributeLog (rawFileData) {
-  // 检查 rawFileData 中 aNameDE 是否存在重复。如果发现重复，
+  // 检查 rawFileData 中 aUid 是否存在重复。如果发现重复，
   // 在 log 中分别记录这两条数据的行号（索引+2，对应表格中的真实行号），然后立即返回。
-  const seenIndexMap = new Map(); // aNameDE -> first index
+  const seenIndexMap = new Map(); // aUid -> first index
   for (const [idx, item] of rawFileData.entries()) {
-    const name = item?.aNameDE?.toString()?.trim();
-    if (!name) continue;
-    if (seenIndexMap.has(name)) {
-      const firstIdx = seenIndexMap.get(name);
+    const uid = item?.aUid?.toString()?.trim();
+    if (!uid) continue;
+    if (seenIndexMap.has(uid)) {
+      const firstIdx = seenIndexMap.get(uid);
       // 为首次出现和当前重复项各写一条日志
       log.value.push({
         index: firstIdx + 2,
-        value: rawFileData[firstIdx]?.aNameDE ?? name,
-        reason: `与第 ${idx + 2} 行相比，aNameDE重复！`
+        value: rawFileData[firstIdx]?.aUid ?? uid,
+        reason: `与第 ${idx + 2} 行相比，aUid重复！`
       });
       log.value.push({
         index: idx + 2,
-        value: name,
-        reason: `与第 ${firstIdx + 2} 行相比，aNameDE重复！`
+        value: uid,
+        reason: `与第 ${firstIdx + 2} 行相比，aUid重复！`
       });
       return true; // 发现第一组重复后立刻返回
     } else {
-      seenIndexMap.set(name, idx);
+      seenIndexMap.set(uid, idx);
     }
   }
   return false;
@@ -144,12 +145,12 @@ async function uploadAttributeGroup (url,attributeGroupDict) {
   const allAddResults = []
   const allUpdateResults = []
   for (const item of allFilesAttributeGroup.value) {
-    const isOld = attributeGroupDict.find(it => Array.isArray(it.langs) && it.langs.some(lang => lang?.name === item.name))
+    const isOld = attributeGroupDict.find(it => it.uniqueId === item.uid)
     if (isOld) {
       hashByFiles = hashAttributeGroupWithFiles(item)
       hashBySystem = hashAttributeGroupWithSystem(isOld)
       if (hashByFiles !== hashBySystem) {
-        step.value = item.aNameDE + '系统已经存在,正在更新' + `<br>` + step.value
+        step.value = item.uid + '系统已经存在,正在更新' + `<br>` + step.value
         const oldAttributeGroup = IKUtils.deepCopy(isOld)
         oldAttributeGroup.required = item.required
         oldAttributeGroup.multiSelect = item.multiSelect
@@ -157,11 +158,11 @@ async function uploadAttributeGroup (url,attributeGroupDict) {
         oldAttributeGroup.isActive =  item.isActive
         updateAttributeGroupReqs.push(updateAttributeGroup(url, oldAttributeGroup))
         if (updateAttributeGroupReqs.length === 1) {
-          step.value = '执行一批30个属性组更新请求' + `<br>` + step.value
+          step.value = '执行一个属性组更新请求' + `<br>` + step.value
           try {
             const batchResults = await Promise.all(updateAttributeGroupReqs)
             allUpdateResults.push(...batchResults)
-            step.value = '完成一批30个属性组更新请求' + `<br>` + step.value
+            step.value = '完成一个属性组更新请求' + `<br>` + step.value
           } catch (error) {
             console.error('更新产品批次请求失败:', error)
             throw error
@@ -193,15 +194,16 @@ async function uploadAttributeGroup (url,attributeGroupDict) {
         isActive: item.isActive,
         maxCount: -1,
         asTeaMakerAttribute: item.asTeaMakerAttribute,
-        asShuTuoUnit: 0
+        asShuTuoUnit: 0,
+        uniqueId: item.uid
       }
       addAttributeGroupReqs.push(addAttributeGroup(url, newAttributeGroup))
       if (addAttributeGroupReqs.length === 1) {
-        step.value = '执行一批30个属性组新增请求' + `<br>` + step.value
+        step.value = '执行一个属性组新增请求' + `<br>` + step.value
         try {
           const batchResults = await Promise.all(addAttributeGroupReqs)
           allAddResults.push(...batchResults)
-          step.value = '完成一批30个属性组新增请求' + `<br>` + step.value
+          step.value = '完成一个属性组新增请求' + `<br>` + step.value
         } catch (error) {
           console.error('新增产品批次请求失败:', error)
           throw error
@@ -234,12 +236,13 @@ async function getAttributeGroupId (url,rawFileData) {
   const attributeGroupDict = (await getAttributeGroup(url))
   // 先把系统中的 attributeGroupId 映射到 allFilesAttributeGroup 中（按名称匹配）
   allFilesAttributeGroup.value.forEach((file) => {
-    file.attributeGroupId = attributeGroupDict.find(it => Array.isArray(it.langs) && it.langs.some(lang => lang?.name === file.name))?.id
+    file.attributeGroupId = attributeGroupDict.find((ag) => ag.uniqueId === file.uid)?.id
   })
+  console.log(allFilesAttributeGroup.value, '321')
   // 再把 attributeGroupId 写回到原始的 rawFileData 中（按 agNameDE 与文件中的分组名匹配）
   if (Array.isArray(rawFileData)) {
     for (const row of rawFileData) {
-      const matched = allFilesAttributeGroup.value.find(ag => ag.name === row.agNameDE)
+      const matched = allFilesAttributeGroup.value.find(ag => ag.uid === row.agUid)
       if (matched && matched.attributeGroupId) {
         row.attributeGroupId = matched.attributeGroupId
       }
@@ -251,12 +254,12 @@ async function getAttributeGroupId (url,rawFileData) {
 
 async function uploadAll (url, rawFileData) {
   step.value = '开始上传Attribute' + `<br>` + step.value
-  const groupHasError = checkFilesAttributeGroupLog(rawFileData)
+  const groupHasError = await checkFilesAttributeGroupLog(rawFileData)
   if (groupHasError) {
     // 如果分组校验有问题，立刻停止后续上传流程
     return
   }
-  const attrHasError = checkFilesAttributeLog(rawFileData)
+  const attrHasError = await checkFilesAttributeLog(rawFileData)
   if (attrHasError) {
     // 如果属性校验有问题，立刻停止后续上传流程
     return
@@ -279,14 +282,14 @@ async function uploadAttribute (url) {
   const allAddResults = []
   const allUpdateResults = []
   for (const item of filesWithGroupId.value) {
-    const isOld = attributeDict.filter(it => Array.isArray(it.langs) && it.langs.some(lang => lang?.name === item.aNameDE)).find(it => it.attributeGroupId === item.attributeGroupId)
-    console.log(isOld,'isOld')
+    const isOld = attributeDict.find(it => it.uniqueId === item.aUid)
+    console.log(isOld,'AttributeIsOld')
     if (isOld) {
       hashByFiles = hashAttributeWithFiles(item)
       hashBySystem = hashAttributeWithSystem(isOld)
-      console.log(hashBySystem,hashByFiles, 'hashBySystem')
+      console.log(hashBySystem, hashByFiles, '321')
       if (hashByFiles !== hashBySystem) {
-        step.value = item.aNameDE + '系统已经存在,正在更新' + `<br>` + step.value
+        step.value = item.aUid + '系统已经存在,正在更新' + `<br>` + step.value
         const oldAttribute = IKUtils.deepCopy(isOld)
         oldAttribute.priceMod = item.aPriceMod
         oldAttribute.value = item.aSort
@@ -296,6 +299,7 @@ async function uploadAttribute (url) {
         oldAttribute.teaMakerCode = item.aTeaMakerCode ?? ''
         oldAttribute.instruction = item.aInstruction ?? ''
         oldAttribute.isActive = item.aIsActive
+        oldAttribute.attributeGroupId = item.attributeGroupId
         updateAttributeReqs.push(updateAttribute(url, oldAttribute))
       }
     } else {
@@ -327,6 +331,7 @@ async function uploadAttribute (url) {
         teaMakerCode: item.aTeaMakerCode ?? '',
         instruction: item.aInstruction ?? '',
         isActive: item.aIsActive,
+        uniqueId: item.aUid,
       }
       addAttributeReqs.push(addAttribute(url, newAttribute))
     }

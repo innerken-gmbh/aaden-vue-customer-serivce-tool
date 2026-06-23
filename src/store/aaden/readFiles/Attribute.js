@@ -26,11 +26,11 @@ export function hashAttributeName (langs) {
 
 export function hashAttributeWithFiles(info) {
     const priceMod = parseFloat(info.aPriceMod).toFixed(2)
-    return priceMod  + '-' + info.aDishesCategoryTypeId + '-' + info.aFrontendHide + '-' + info.aUseTeaMaker + '-' + info.aTeaMakerCode + '-' + info.aInstruction + '-' + info.aIsActive;
+    return info.attributeGroupId + '-' + priceMod  + '-' + info.aDishesCategoryTypeId + '-' + info.aFrontendHide + '-' + info.aUseTeaMaker + '-' + info.aTeaMakerCode + '-' + info.aInstruction + '-' + info.aIsActive;
 }
 
 export function hashAttributeWithSystem(info) {
-    return info.priceMod  + '-' + info.dishesCategoryTypeId + '-' + info.frontendHide + '-' + info.useTeaMaker + '-' + info.teaMakerCode + '-' + info.instruction + '-' + info.isActive;}
+    return info.attributeGroupId + '-' + info.priceMod  + '-' + info.dishesCategoryTypeId + '-' + info.frontendHide + '-' + info.useTeaMaker + '-' + info.teaMakerCode + '-' + info.instruction + '-' + info.isActive;}
 
 
 export async function setDishesAttrMasks (url ,params) {

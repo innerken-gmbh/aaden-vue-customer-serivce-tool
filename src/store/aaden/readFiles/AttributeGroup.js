@@ -35,10 +35,10 @@ export function hashAttributeName (langs) {
 
 
 export function hashAttributeGroupValue (info) {
-    return info.agMultiSelect + '-' + info.agRequired + '-' + info.agAsTeaMakerAttribute + '-' + info.agIsActive;
+    return info.agNameDE + '-' + info.agMultiSelect + '-' + info.agRequired + '-' + info.agAsTeaMakerAttribute + '-' + info.agIsActive;
 }
 
 export function getErrorKey (index) {
-    const keys = ['agMultiSelect','agRequired','agAsTeaMakerAttribute','agIsActive']
+    const keys = ['agMultiSelect','agRequired','agAsTeaMakerAttribute','agIsActive','agNameDE']
     return index.map(i => keys[i])
 }
