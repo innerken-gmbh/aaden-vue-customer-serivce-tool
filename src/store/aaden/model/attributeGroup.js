@@ -5,6 +5,9 @@ import attribute from './attribute'
 const entity = {
   name: 'attributeGroup',
   add: async function (baseUrl, attrGroup) {
+    if (!attrGroup.uniqueId) {
+      attrGroup.uniqueId = 'null'
+    }
     return (await hillo.post(baseUrl + 'Category.php?op=addAttributeGroup', attrGroup)).content
   },
   /**

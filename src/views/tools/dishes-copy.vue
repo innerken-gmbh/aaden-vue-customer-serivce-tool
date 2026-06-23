@@ -16,6 +16,7 @@ function updateKeys (val) {
 }
 
 let loading = ref(false)
+const searchLoading = ref(false)
 
 const dishList = reactive([])
 const categoryList = reactive([])
@@ -59,7 +60,7 @@ async function prepare () {
   consoleCache.length = 0
   const res = await prepareData(deviceId.value, new Set(keys), targetDeviceId.value)
   Object.assign(preparedData, res)
-  console.log(preparedData)
+  console.log(preparedData, 'preparedData')
   loading.value = false
 }
 
@@ -69,6 +70,7 @@ async function paste () {
 
 async function updateDeviceId () {
   console.log(deviceId.value)
+  searchLoading.value = true
   try {
     dishList.length = 0
     categoryList.length = 0
@@ -77,7 +79,7 @@ async function updateDeviceId () {
   } catch (e) {
     console.warn('we got error', e)
   }
-
+  searchLoading.value = false
 }
 </script>
 
@@ -93,7 +95,10 @@ async function updateDeviceId () {
             v-model:value="deviceId"
             :placeholder="'老的DeviceId'"
           />
-          <n-button @click="updateDeviceId">
+          <n-button
+            :loading="searchLoading"
+            @click="updateDeviceId"
+          >
             查询
           </n-button>
         </div>

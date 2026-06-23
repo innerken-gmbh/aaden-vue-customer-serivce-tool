@@ -5,6 +5,9 @@ const entity = {
   name: 'attribute',
 
   add: async function (baseUrl, attr) {
+    if (!attr.uniqueId) {
+      attr.uniqueId = 'null'
+    }
     return (await hillo.postWithUploadFile(baseUrl + 'Category.php?op=addAttribute', attr)).content
   },
   /**

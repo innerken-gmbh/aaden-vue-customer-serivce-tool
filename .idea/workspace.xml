@@ -6,10 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="1777049f-9f7a-4424-9005-71635bd2b339" name="Changes" comment="jiaruxingongneng">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/store/aaden/readFiles/Attribute.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/aaden/readFiles/Attribute.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/store/aaden/readFiles/AttributeGroup.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/aaden/readFiles/AttributeGroup.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/tools/attribute-bind.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/tools/attribute-bind.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/tools/attribute-upload.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/tools/attribute-upload.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/aaden/model/attribute.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/aaden/model/attribute.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/aaden/model/attributeGroup.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/aaden/model/attributeGroup.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/aaden/tools/dish-copy.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/aaden/tools/dish-copy.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/tools/dishes-copy.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/tools/dishes-copy.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -389,7 +389,8 @@
       <workItem from="1782105493589" duration="4852000" />
       <workItem from="1782191797944" duration="609000" />
       <workItem from="1782196854920" duration="41000" />
-      <workItem from="1782197157114" duration="6438000" />
+      <workItem from="1782197157114" duration="6618000" />
+      <workItem from="1782231969602" duration="3196000" />
     </task>
     <task id="LOCAL-00001" summary="加入包裹记录功能和库存管理相关优化">
       <option name="closed" value="true" />
