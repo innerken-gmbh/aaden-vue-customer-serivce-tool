@@ -7,7 +7,7 @@ import {useDialogStore} from "@/store/aaden/dialogStore";
 import MiniActionButton from "@/views/BaseWidget/basic/button/MiniActionButton.vue";
 import JSpace from "@/views/BaseWidget/basic/JSpace.vue";
 import DeviceDetailPage from "@/views/dashboard/DeviceDetailPage.vue";
-import {getNgrokUrl} from "@/old/utils/firebase";
+import {createEvent, editTseStatus, getNgrokUrl} from "@/old/utils/firebase";
 import {recordSchema} from "@/old/utils/recordSchema";
 import dayjs from "dayjs";
 import {allProductCodeList, softProductCodeList, useSubscriptionStore} from "@/store/aaden/saasSubscription";
@@ -23,11 +23,12 @@ import {
   loadPaymentLog
 } from "@/store/aaden/payment";
 import {createAppInvite, createInvite, getShopBlId, getShopInfo, inviteSchema} from "@/store/aaden/businessLayer";
+import {VSelect} from "vuetify/components";
 
 const deviceEchoLog = useDeviceEchoLog()
 const myFood = ref('糖醋里脊')
 const totalStatusList = ref([{name:'尚未上云',value:'尚未上云'},{name:'脚本未部署',value:'script not found'},{name:'服务器错误',value:'server error'},{name:'未知错误',value:'unexpected error'},{name:'不使用TSE',value:'not using TSE'},{name:'没有模板',value:'template is null'},{name:'无需替换',value:'already done'},{name:'模板上没有TSE片段',value:'no TSE fragment'},{name:'可以自动替换模板',value:'ready to replace'},{name:'模板替换完成',value:'replace done'}])
-
+const totalTseStatusList = ref([{name:'未知的',value: 'Unknown'},{name:'启用的',value: 'Enabled'},{name:'停用的',value: 'Disabled'},{name:'忽略的',value: 'Ignored'}])
 const rawNgrokUrl = "https://ngrok.aaden.io:4433?hostname=localhost&&username=aaden&&password=SW5uZXJrZW4zMjIu&&port="
 
 
@@ -55,10 +56,23 @@ onMounted(async () => {
   await deviceEchoLog.updateDeviceLog()
 })
 
-function showZHName (text) {
-  return totalStatusList.value.find(it => it.value === text).name
+async function editTse (item) {
+  selectedDevice.value = item
+  const info = await dialogStore.editItem(tseOperatorSchema.value)
+  info.deviceId = item.deviceId
+  await dialogStore.waitFor(async () => {
+    await editTseStatus(info)
+    await createEvent(info)
+  })
 }
 
+function showZHName (text) {
+  return totalStatusList.value.find(it => it.value === text)?.name ?? ''
+}
+
+function showTseZHName (text) {
+  return totalTseStatusList.value.find(it => it.value === text)?.name ?? 'Unknown'
+}
 function showCurrentColor(text) {
   if (text === 'not using TSE' || text === 'script not found') {
     return 'yellow'
@@ -66,6 +80,22 @@ function showCurrentColor(text) {
     return 'green'
   } else {
     return 'red'
+  }
+}
+
+function showTseTime (item) {
+  return '修改时间:' + fromNowTimeDisplay(item.tseStatus?.lastStatusChangedTimestamp) + ' | ' + '更新时间:' + fromNowTimeDisplay(item.tseStatus?.lastUpdateTimestamp)
+}
+
+function showCurrentTseColor(text) {
+  if (text === 'Unknown') {
+    return 'yellow'
+  } else if (text === 'Enabled') {
+    return 'green'
+  } else if (text === 'Disabled') {
+    return 'red'
+  } else {
+    return 'blue'
   }
 }
 
@@ -90,6 +120,36 @@ function getSchema() {
     ]
   }
 }
+
+const tseOperatorSchema = computed(() => {
+  return {
+    title: 'DeviceId:' + selectedDevice?.value?.deviceId + '的tse操作记录',
+    subtitle: '可要好好修改，不要改错了',
+    schemas: [
+      {
+        key: 'status',
+        name: '状态',
+        component: VSelect,
+        componentProps: {
+          items: [{value: 'Unknown',name: '未知的'},{value: 'Enabled',name: '开启的'},{value: 'Disabled',name: '关闭的'},{value: 'Ignored',name: '忽略的'}],
+          itemValue: 'value',
+          itemTitle: 'name'
+        },
+      },
+      {
+        key: 'note',
+        name: '记录内容',
+        component: VSelect,
+        componentProps: {
+          items: [{value: '小橘子',name: '小橘子'},{value: '小菠萝',name: '小菠萝'},{value: '小芒果',name: '小芒果'},{value: '小苹果',name: '小苹果'},{value: '小樱桃',name: '小樱桃'}],
+          itemValue: 'value',
+          itemTitle: 'name'
+        },
+        hint: '是谁干的鸭'
+      },
+    ]
+  }
+})
 
 const dialogStore = useDialogStore()
 const store = useDeviceEchoLog()
@@ -402,9 +462,13 @@ const headers = ref([
     title: '门店名称',
     key: 'deviceName',
   },
+  // {
+  //   title: 'summaryStatus',
+  //   key: 'summaryStatus',
+  // },
   {
-    title: 'summaryStatus',
-    key: 'summaryStatus',
+    title: 'TseStatus',
+    key: 'tseStatus.status',
   },
   {title: '上次备份', key: 'lastBackupTime'},
   {title: 'Cli | Backend', key: 'version', align: 'end'},
@@ -504,14 +568,23 @@ function displayAddress(address) {
             deviceEchoLog.activeDeviceLogs.filter(it => it.ngrokOnline).length
           }}
         </dashboard-label>
+        <!--        <v-select-->
+        <!--          v-model="deviceEchoLog.summaryStatus"-->
+        <!--          label="SummaryStatus"-->
+        <!--          clearable-->
+        <!--          hide-details-->
+        <!--          item-title="name"-->
+        <!--          item-value="value"-->
+        <!--          :items="totalStatusList"-->
+        <!--        />-->
         <v-select
-          v-model="deviceEchoLog.summaryStatus"
-          label="SummaryStatus"
+          v-model="deviceEchoLog.tseStatus"
+          label="tseStatus"
           clearable
           hide-details
           item-title="name"
           item-value="value"
-          :items="totalStatusList"
+          :items="totalTseStatusList"
         />
         <v-text-field
           v-model="deviceEchoLog.search"
@@ -537,9 +610,6 @@ function displayAddress(address) {
         :headers="headers"
         @click:row="clickItem"
       >
-        <!--        <template #[`item.timestamp`]="{ item }">-->
-        <!--          {{ fromNowTimestamp(item.timestamp) }}-->
-        <!--        </template>-->
         <template #[`item.timestamp`]="{ item }">
           <v-tooltip bottom>
             <template #activator="{props }">
@@ -560,6 +630,22 @@ function displayAddress(address) {
             <span>{{ fromNowTimeDisplay(item.lastBackupTime) }}</span>
           </v-tooltip>
         </template>
+        <template #[`item.tseStatus.status`]="{ item }">
+          <v-tooltip bottom>
+            <template #activator="{props }">
+              <div v-bind="props">
+                <v-card
+                  elevation="0"
+                  :color="showCurrentTseColor(item.tseStatus.status)"
+                  class="pa-2 d-flex justify-center align-center"
+                >
+                  {{ showTseZHName(item.tseStatus.status) }}
+                </v-card>
+              </div>
+            </template>
+            <div>{{ showTseTime(item) }}</div>
+          </v-tooltip>
+        </template>
         <template #[`item.deviceName`]="{ item }">
           <div v-html="displayAddress(item.deviceName)" />
         </template>
@@ -571,15 +657,15 @@ function displayAddress(address) {
             {{ formatRestaurantInfo(item.restaurantInfo) }}
           </span>
         </template>
-        <template #[`item.summaryStatus`]="{ item }">
-          <v-card
-            elevation="0"
-            :color="showCurrentColor(item.summaryStatus)"
-            class="pa-2 d-flex justify-center align-center"
-          >
-            {{ showZHName(item.summaryStatus) }}
-          </v-card>
-        </template>
+        <!--        <template #[`item.summaryStatus`]="{ item }">-->
+        <!--          <v-card-->
+        <!--            elevation="0"-->
+        <!--            :color="showCurrentColor(item.summaryStatus)"-->
+        <!--            class="pa-2 d-flex justify-center align-center"-->
+        <!--          >-->
+        <!--            {{ showZHName(item.summaryStatus) }}-->
+        <!--          </v-card>-->
+        <!--        </template>-->
         <template #[`item.version`]="{ item }">
           <div
             class="d-flex justify-end"
@@ -662,6 +748,10 @@ function displayAddress(address) {
             <mini-action-button
               text="邀请码"
               @click="addAppInvite(item)"
+            />
+            <mini-action-button
+              text="TSE"
+              @click="editTse(item)"
             />
           </j-space>
         </template>

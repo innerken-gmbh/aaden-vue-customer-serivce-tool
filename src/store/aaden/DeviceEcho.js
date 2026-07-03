@@ -2,7 +2,7 @@ import {defineStore} from 'pinia'
 import {getDeviceStatus, getDeviceSummaryStatus, getEndPointUrl, getEventListForDeviceId} from '@/old/utils/firebase'
 import hillo from 'hillo'
 import dayjs from 'dayjs'
-import {getAllSubscriptionForStore} from "../../old/utils/firebase";
+import {getAllSubscriptionForStore, getDeviceTseStatus} from "../../old/utils/firebase";
 import {baseUrl, getDeviceLogByDeviceId, getRecentNgrokStatus} from "./cloud-v2-api";
 import {groupBy} from "lodash-es";
 import {colorList} from "@/store/aaden/saasSubscription";
@@ -17,6 +17,7 @@ export const useDeviceEchoLog = defineStore('deviceLog', {
             deviceLogs: [],
             search: '',
             summaryStatus: '',
+            tseStatus: '',
             currentBackendVersion: '',
             cliVersion: '',
             lastUpdateTimestamp: '',
@@ -35,10 +36,11 @@ export const useDeviceEchoLog = defineStore('deviceLog', {
             let currentList = this.deviceLogs.filter(it => !this.search || it.deviceId.startsWith(this.search))
             if (this.summaryStatus) {
                 return currentList.filter(it => it.summaryStatus === this.summaryStatus)
+            } else if (this.tseStatus) {
+                return currentList.filter(it => it.tseStatus.status === this.tseStatus)
             } else {
                 return currentList
             }
-
         }
     },
     actions: {
@@ -78,20 +80,20 @@ export const useDeviceEchoLog = defineStore('deviceLog', {
         },
         async updateDeviceLog() {
             this.loading = true
-            const res = (await getDeviceSummaryStatus())
-            let currentList = []
-            for (const item in res) {
-                res[item].forEach(x => {
-                    currentList.push({status: item, deviceId: x})
-                })
-            }
+            // const res = (await getDeviceSummaryStatus())
+            const tseStatus = await getDeviceTseStatus()
+            // let currentList = []
+            // for (const item in res) {
+            //     res[item].forEach(x => {
+            //         currentList.push({status: item, deviceId: x})
+            //     })
+            // }
             this.deviceLogs = (await getDeviceStatus()).map(it => {
                 it.channelInfo = frontendChannel(it.frontendVersion)
-                it.summaryStatus = currentList.find(a => a.deviceId === it.deviceId)?.status ? currentList.find(a => a.deviceId === it.deviceId)?.status : '尚未上云'
+                // it.summaryStatus = currentList.find(a => a.deviceId === it.deviceId)?.status ? currentList.find(a => a.deviceId === it.deviceId)?.status : '尚未上云'
+                it.tseStatus = tseStatus.find(a => a.deviceId === it.deviceId) ? tseStatus.find(a => a.deviceId === it.deviceId) : {status: 'Unknown', deviceId: it.deviceId}
                 return it
             })
-            // const list = this.deviceLogs.filter(it => it.summaryStatus === '尚未上云').map(it => it.deviceId)
-            // console.log(list,'list')
             const {version} = await hillo.get(
                 'https://api.aaden.online/proxy.php?url=https://aaden-backend.s3.eu-central-1.amazonaws.com/raw/package.json',
                 {}
@@ -176,7 +178,7 @@ export function fromNowTimestamp(timestamp) {
 
 export function fromNowTimeDisplay(timestamp) {
     if (timestamp) {
-        return dayjs(timestamp).format('dddd, MMMM DD, YYYY, h:mm:ss a')
+        return dayjs(timestamp).format('YYYY-MM-DD dddd h:mm:ss a')
     } else {
         return '日期有古怪'
     }

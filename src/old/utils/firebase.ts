@@ -9,6 +9,7 @@ import {
 import {DocumentData, getDoc, getDocs, getFirestore, Query, QuerySnapshot,collection,query,setDoc,doc} from 'firebase/firestore'
 import hillo from "hillo";
 import { stripUndefinedDeep } from '@/utils/clean'
+import {VFileInput, VSelect} from "vuetify/components";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -63,8 +64,31 @@ export async function getDeviceSummaryStatus() {
     return await hillo.get(url + "/ensureTseQr2025/summaryCurrentStatus")
 }
 
+export async function getDeviceTseStatus() {
+    return await hillo.get(url + "/deviceTseList/getList")
+}
+
+
+
+
+export async function editTseStatus(info: any) {
+    return hillo.jsonPost(url + '/deviceTseList/save', {
+        ...info,
+    })
+}
+
 export async function getEventListForDeviceId(deviceId) {
     return await hillo.get(url + "/deviceLog/eventList/" + deviceId)
+}
+
+export async function createEvent(info: any) {
+    return hillo.jsonPost(url + '/deviceLog/createEvent', {
+        deviceId: info.deviceId,
+        content: JSON.stringify(info.note + '客服平台上修改了TSE状态！'),
+        type: '人工操作',
+        appendUrl: '',
+        operator: '客服平台'
+    })
 }
 
 export function getNgrokUrl(deviceId: string) {
