@@ -162,6 +162,61 @@
           </div>
         </div>
       </v-card>
+      <v-spacer />
+      <v-card
+        class="pa-4"
+        max-width="600px"
+      >
+        <div class="d-flex align-center justify-center text-h5 mb-4">
+          查询Uuid
+        </div>
+        <div class="d-flex flex-column">
+          <div
+            class="d-flex align-center justify-center"
+          >
+            <div>
+              DeviceId
+            </div>
+            <v-spacer />
+            <v-text-field
+              v-model="checkUuidWithDeviceId"
+              clearable
+              width="500px"
+            />
+          </div>
+          <template
+            v-if="currentUuidList.length > 0"
+          >
+            <v-card
+              v-for="item in currentUuidList"
+              :key="item.deviceId"
+              elevation="0"
+              class="pa-4 d-flex align-center justify-center"
+            >
+              <div>
+                <v-icon
+                  v-if="item.isOwner"
+                  color="green"
+                >
+                  mdi-check-decagram
+                </v-icon>UUID: {{ item.firebaseUid }}
+              </div>
+              <v-spacer />
+              <div>EMAIL: {{ item.email }}</div>
+            </v-card>
+          </template>
+          <div class="d-flex align-center justify-center">
+            <v-btn
+              color="blue lighten-2"
+              variant="outlined"
+              width="100%"
+              @click="findUuidWithDeviceId"
+            >
+              查询Uuid
+            </v-btn>
+          </div>
+        </div>
+      </v-card>
     </div>
   </div>
 </template>
@@ -169,7 +224,7 @@
 <script lang="ts" setup>
 
 import {onMounted, ref} from "vue";
-import {unbindingDevice,bindDeviceWithMain, bindDeviceWithoutMain, getBindingKeyByDeviceId} from "@/store/aaden/businessLayer";
+import {unbindingDevice,bindDeviceWithMain, bindDeviceWithoutMain, getBindingKeyByDeviceId, checkDeviceUuid} from "@/store/aaden/businessLayer";
 
 const deviceId = ref('')
 const uid = ref('')
@@ -182,10 +237,17 @@ const checkDeviceId = ref('')
 const unbindUuid = ref('')
 const unbindDeviceId = ref('')
 const unbindLoading = ref(false)
+const checkUuidWithDeviceId = ref('')
+const currentUuidList = ref([])
 
 onMounted(async () => {
 
 })
+
+async function findUuidWithDeviceId () {
+  currentUuidList.value = await checkDeviceUuid(checkUuidWithDeviceId.value)
+  console.log(currentUuidList.value, 'currentUuidList.value')
+}
 
 async function unbind () {
   unbindLoading.value = true

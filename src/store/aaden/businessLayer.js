@@ -178,3 +178,10 @@ export async function unbindingDevice (deviceId, uuid) {
         deviceId: deviceId
     }))
 }
+
+
+export async function checkDeviceUuid (deviceId) {
+    return (await hillo.get(baseUrl + 'user-stores/users-by-device', {
+        deviceId: deviceId
+    }))
+}
