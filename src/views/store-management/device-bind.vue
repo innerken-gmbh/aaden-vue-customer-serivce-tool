@@ -210,6 +210,7 @@
               color="blue lighten-2"
               variant="outlined"
               width="100%"
+              :loading="checkUuidLoading"
               @click="findUuidWithDeviceId"
             >
               查询Uuid
@@ -223,7 +224,7 @@
 
 <script lang="ts" setup>
 
-import {onMounted, ref} from "vue";
+import {onMounted, ref, watch, watchEffect} from "vue";
 import {unbindingDevice,bindDeviceWithMain, bindDeviceWithoutMain, getBindingKeyByDeviceId, checkDeviceUuid} from "@/store/aaden/businessLayer";
 
 const deviceId = ref('')
@@ -239,14 +240,22 @@ const unbindDeviceId = ref('')
 const unbindLoading = ref(false)
 const checkUuidWithDeviceId = ref('')
 const currentUuidList = ref([])
+const checkUuidLoading = ref(false)
 
 onMounted(async () => {
 
 })
 
+watch(checkUuidWithDeviceId, () => {
+  if (!checkUuidWithDeviceId.value) {
+    currentUuidList.value = []
+  }
+})
+
 async function findUuidWithDeviceId () {
+  checkUuidLoading.value = true
   currentUuidList.value = await checkDeviceUuid(checkUuidWithDeviceId.value)
-  console.log(currentUuidList.value, 'currentUuidList.value')
+  checkUuidLoading.value = false
 }
 
 async function unbind () {
