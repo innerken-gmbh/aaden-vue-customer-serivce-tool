@@ -60,61 +60,61 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.000000000000004" />
-      <entry key="MS500" value="1.0013383618794165" />
-      <entry key="S2" value="1.2904142082472014" />
-      <entry key="S5" value="2.2306491875719088" />
-      <entry key="S10" value="3.4146692188612087" />
-      <entry key="S30" value="6.489158826364845" />
-      <entry key="S60" value="9.233569340990716" />
-      <entry key="M2" value="13.703595718078187" />
-      <entry key="M5" value="27.021887513248096" />
-      <entry key="M10" value="42.358729608137395" />
-      <entry key="M15" value="55.953263483593076" />
-      <entry key="M30" value="98.34405980070903" />
-      <entry key="H1" value="164.34065138670283" />
-      <entry key="H2" value="230.96687797672666" />
-      <entry key="H4" value="280.1248413503096" />
-      <entry key="D1" value="332.8743800053687" />
-      <entry key="W1" value="343.2322177759456" />
+      <entry key="MS100" value="1.0000000005499439" />
+      <entry key="MS500" value="1.0151263536466726" />
+      <entry key="S2" value="1.5648502094273242" />
+      <entry key="S5" value="2.4401656096345254" />
+      <entry key="S10" value="3.261247343332847" />
+      <entry key="S30" value="6.59528925061755" />
+      <entry key="S60" value="10.596152446997735" />
+      <entry key="M2" value="16.30571451255309" />
+      <entry key="M5" value="30.5738557851048" />
+      <entry key="M10" value="46.67352940707963" />
+      <entry key="M15" value="60.602201482442744" />
+      <entry key="M30" value="103.30143639521071" />
+      <entry key="H1" value="169.64502646752803" />
+      <entry key="H2" value="236.77829004084163" />
+      <entry key="H4" value="286.40471206706343" />
+      <entry key="D1" value="339.73183772122" />
+      <entry key="W1" value="350.2112226111591" />
     </decayedCancelled>
     <decayedSelected>
-      <entry key="MS100" value="0.04639136158215778" />
-      <entry key="MS500" value="0.5411123222628573" />
-      <entry key="S2" value="0.8576732322945114" />
-      <entry key="S5" value="0.9406551573899479" />
-      <entry key="S10" value="0.991973566354354" />
-      <entry key="S30" value="1.6557501870284508" />
-      <entry key="S60" value="2.90255854703441" />
-      <entry key="M2" value="4.7291117591728975" />
-      <entry key="M5" value="7.7938086427400135" />
-      <entry key="M10" value="10.522937834053232" />
-      <entry key="M15" value="12.667524136873029" />
-      <entry key="M30" value="18.754300242994088" />
-      <entry key="H1" value="27.905821583178334" />
-      <entry key="H2" value="37.12640022153659" />
-      <entry key="H4" value="43.95324133681517" />
-      <entry key="D1" value="51.30588485177677" />
-      <entry key="W1" value="52.75292606535209" />
+      <entry key="MS100" value="2.430356525490185E-151" />
+      <entry key="MS500" value="8.454989749786358E-31" />
+      <entry key="S2" value="5.57806229698107E-8" />
+      <entry key="S5" value="0.002365343075607418" />
+      <entry key="S10" value="0.0844319447751171" />
+      <entry key="S30" value="1.105625357146562" />
+      <entry key="S60" value="2.6867249982271595" />
+      <entry key="M2" value="4.9746408822982575" />
+      <entry key="M5" value="8.675098687386392" />
+      <entry key="M10" value="11.7847484173746" />
+      <entry key="M15" value="14.08476808919282" />
+      <entry key="M30" value="20.33716584501077" />
+      <entry key="H1" value="29.603407801003243" />
+      <entry key="H2" value="38.92794602291333" />
+      <entry key="H4" value="45.83651747025843" />
+      <entry key="D1" value="53.28328885775268" />
+      <entry key="W1" value="54.74960970538554" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.27744853181399654" />
-      <entry key="MS500" value="0.9155899708176056" />
-      <entry key="S2" value="1.7887149516584866" />
-      <entry key="S5" value="2.936494835167471" />
-      <entry key="S10" value="4.235011988751356" />
-      <entry key="S30" value="8.015671087821884" />
-      <entry key="S60" value="12.02853665174131" />
-      <entry key="M2" value="18.34026082695993" />
-      <entry key="M5" value="34.736043305757015" />
-      <entry key="M10" value="52.81983021470991" />
-      <entry key="M15" value="68.56815093435884" />
-      <entry key="M30" value="117.05617292888354" />
-      <entry key="H1" value="192.2139394617038" />
-      <entry key="H2" value="268.07147751634477" />
-      <entry key="H4" value="324.06518767952156" />
-      <entry key="D1" value="384.17776429712404" />
-      <entry key="W1" value="395.98477683920066" />
+      <entry key="MS100" value="0.3842187955857734" />
+      <entry key="MS500" value="0.8387587060400903" />
+      <entry key="S2" value="1.4888187666573054" />
+      <entry key="S5" value="2.391660934593666" />
+      <entry key="S10" value="3.299555361008186" />
+      <entry key="S30" value="7.6198948007373595" />
+      <entry key="S60" value="13.191520551771777" />
+      <entry key="M2" value="21.191487910582534" />
+      <entry key="M5" value="39.16888480418824" />
+      <entry key="M10" value="58.395078368552014" />
+      <entry key="M15" value="74.63302738193147" />
+      <entry key="M30" value="123.59553441659374" />
+      <entry key="H1" value="199.21535763797337" />
+      <entry key="H2" value="275.6841079151957" />
+      <entry key="H4" value="332.2281477611549" />
+      <entry key="D1" value="393.01259042191083" />
+      <entry key="W1" value="404.9604600982462" />
     </decayedShown>
   </component>
   <component name="PhpWorkspaceProjectConfiguration" interpreter_name="PHP" />
@@ -461,7 +461,7 @@
       <workItem from="1783073821984" duration="160000" />
       <workItem from="1783315227945" duration="4264000" />
       <workItem from="1783411659954" duration="3273000" />
-      <workItem from="1783666208313" duration="965000" />
+      <workItem from="1783666208313" duration="3092000" />
     </task>
     <task id="LOCAL-00001" summary="加入包裹记录功能和库存管理相关优化">
       <option name="closed" value="true" />
