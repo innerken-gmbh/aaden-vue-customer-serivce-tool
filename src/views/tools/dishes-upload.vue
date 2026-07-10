@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, h } from "vue";
 import IKUtils from "innerken-js-utils";
-import {parseCsv,parseExcel, hashCodeWithFiles,hashCodeWithSystem} from "../../store/aaden/readFiles/readFiles"
+import {parseCsv,parseExcel, hashCodeWithFiles,hashCodeWithSystem,detectChineseEncoding} from "../../store/aaden/readFiles/readFiles"
 import {getDishCodeList,addDish,updateDish} from "../../store/aaden/readFiles/dish"
 import {loadPrinterGroup} from "../../store/aaden/readFiles/print"
 import {getCategoryNameByZHDEEN, addCategory, getCategory} from "../../store/aaden/readFiles/category"
@@ -35,6 +35,12 @@ async function handleFileUpload() {
     loading.value = true;
     const fileType = file.value.name.split('.').pop()?.toLowerCase();
     if (fileType === 'csv') {
+      const encodingType = (await detectChineseEncoding(file.value as any)).encoding;
+      if (encodingType !== 'UTF-8') {
+        IKUtils.showError('请使用UTF-8格式的csv');
+        loading.value = false;
+        return;
+      }
       fileData.value = await parseCsv(file.value)
     } else if (fileType === 'xlsx') {
       fileData.value = await parseExcel(file.value)
