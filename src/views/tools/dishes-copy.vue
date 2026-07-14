@@ -64,8 +64,12 @@ async function prepare () {
   loading.value = false
 }
 
+const uploading = ref(false)
+
 async function paste () {
+  uploading.value = true
   await uploadPreparedData(preparedData, targetDeviceId.value, log, deviceId.value)
+  loading.value = false
 }
 
 async function updateDeviceId () {
@@ -126,6 +130,7 @@ async function updateDeviceId () {
           <n-button
             v-if="preparedData.dishesList.length>0"
             type="primary"
+            :loading="uploading"
             @click="paste"
           >
             开始上传!
