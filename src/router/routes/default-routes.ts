@@ -58,11 +58,11 @@ export default [
         menuUrl: '/store-management/upload',
         menuName: '商品批量上传(敬请期待)',
       },
-      {
-        parentPath: '/store-management',
-        menuUrl: '/store-management/copy',
-        menuName: '商品复制',
-      },
+      // {
+      //   parentPath: '/store-management',
+      //   menuUrl: '/store-management/copy',
+      //   menuName: '商品复制',
+      // },
       {
         parentPath: '/store-management',
         menuUrl: '/store-management/image-upload',
@@ -160,6 +160,11 @@ export default [
         menuUrl: '/tools/dishes-upload',
         menuName: '菜品上传',
       },
+      // {
+      //   parentPath: '/tool',
+      //   menuUrl: '/tools/normal-dish-upload',
+      //   menuName: 'Normal上菜',
+      // },
       {
         parentPath: '/tool',
         menuUrl: '/tools/dishes-check',
