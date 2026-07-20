@@ -30,18 +30,20 @@ let preparedData = reactive({
 })
 
 const displayDishList = computed(() => {
-  const cat = categoryList
-  const dish = dishList
-  cat.forEach(ct => {
-    ct.label = ct.langs[0].name
-    ct.key = 'category-' + ct.id
-    ct.children = dish.filter(d => d.categoryId === ct.id).map(d => {
-      d.label = d.code + '.' + d.dishName
-      d.key = d.code
-      return d
-    })
+  return categoryList.map(ct => {
+    return {
+      ...ct,
+      label: ct.langs[0]?.name || '',
+      key: 'category-' + ct.id,
+      children: dishList.filter(d => d.categoryId === ct.id).map(d => {
+        return {
+          ...d,
+          label: d.code + '.' + d.dishName,
+          key: d.code
+        }
+      })
+    }
   })
-  return cat
 })
 
 const consoleCache = reactive([])
@@ -51,8 +53,7 @@ function log (text) {
 }
 
 const consoleDisplay = computed(() => {
-  const arr = consoleCache
-  return arr.reverse()
+  return [...consoleCache].reverse()
 })
 
 async function prepare () {
@@ -140,7 +141,10 @@ async function updateDeviceId () {
           v-if="consoleDisplay.length>0"
           style="max-height: calc(100vh - 300px);overflow: scroll;padding: 16px;"
         >
-          <template v-for="info in consoleDisplay">
+          <template
+            v-for="(info, index) in consoleDisplay"
+            :key="index"
+          >
             <p>{{ info }}</p>
           </template>
         </div>

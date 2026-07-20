@@ -5,10 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1777049f-9f7a-4424-9005-71635bd2b339" name="Changes" comment="jiaruxingongneng">
-      <change afterPath="$PROJECT_DIR$/src/views/tools/normal-dish-upload.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/router/routes/default-routes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/router/routes/default-routes.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/tools/dishes-copy.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/tools/dishes-copy.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -472,7 +470,7 @@
       <workItem from="1784179867859" duration="6000" />
       <workItem from="1784188869274" duration="6082000" />
       <workItem from="1784265764413" duration="10121000" />
-      <workItem from="1784524959852" duration="3035000" />
+      <workItem from="1784524959852" duration="5626000" />
     </task>
     <task id="LOCAL-00001" summary="加入包裹记录功能和库存管理相关优化">
       <option name="closed" value="true" />
