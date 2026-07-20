@@ -69,7 +69,7 @@ const uploading = ref(false)
 async function paste () {
   uploading.value = true
   await uploadPreparedData(preparedData, targetDeviceId.value, log, deviceId.value)
-  loading.value = false
+  uploading.value = false
 }
 
 async function updateDeviceId () {
