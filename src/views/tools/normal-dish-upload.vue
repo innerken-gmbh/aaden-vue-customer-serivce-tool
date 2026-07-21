@@ -330,7 +330,7 @@ function clearData() {
 
 <template>
   <div class="main-container pa-4">
-    <n-card title="库迪数据上传">
+    <n-card title="菜品数据上传">
       <div class="upload-section">
         <n-space vertical>
           <div class="text-body-1 mb-2">

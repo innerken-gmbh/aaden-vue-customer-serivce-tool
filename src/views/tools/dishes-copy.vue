@@ -1,5 +1,5 @@
 <script setup>
-import { computed, reactive, ref } from "vue"
+import {computed, reactive, ref} from "vue"
 import {getNgrokPHPUrl} from "@/store/aaden/utils";
 import {prepareData, uploadPreparedData} from "@/store/aaden/tools/dish-copy";
 import dish from '@/store/aaden/model/dish'

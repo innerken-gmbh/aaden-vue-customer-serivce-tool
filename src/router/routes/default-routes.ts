@@ -158,13 +158,13 @@ export default [
       {
         parentPath: '/tool',
         menuUrl: '/tools/dishes-upload',
-        menuName: '菜品上传',
+        menuName: '库迪上菜',
       },
-      // {
-      //   parentPath: '/tool',
-      //   menuUrl: '/tools/normal-dish-upload',
-      //   menuName: 'Normal上菜',
-      // },
+      {
+        parentPath: '/tool',
+        menuUrl: '/tools/normal-dish-upload',
+        menuName: '普通上菜',
+      },
       {
         parentPath: '/tool',
         menuUrl: '/tools/dishes-check',
