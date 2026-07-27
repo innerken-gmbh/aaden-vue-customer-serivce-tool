@@ -1,330 +1,366 @@
 <script setup lang="ts">
-import { ref, h } from "vue";
+import {ref, h, watch} from "vue";
+import DeviceIdSelector from "@/views/components/common/DeviceIdSelector.vue";
 import IKUtils from "innerken-js-utils";
-import {parseCsv,parseExcel, hashCodeWithFiles,hashCodeWithSystem,detectChineseEncoding} from "../../store/aaden/readFiles/readFiles"
-import {getDishCodeList,addDish,updateDish} from "../../store/aaden/readFiles/dish"
-import {loadPrinterGroup} from "../../store/aaden/readFiles/print"
-import {getCategoryNameByZHDEEN, addCategory, getCategory} from "../../store/aaden/readFiles/category"
-import {getNgrokPHPUrl} from "../../store/aaden/utils"
+import {
+  parseCsv,
+  parseExcel,
+  hashCodeWithFiles,
+  hashCodeWithSystem,
+  detectChineseEncoding,
+} from "../../store/aaden/readFiles/readFiles";
+import {
+  getDishCodeList,
+  addDish,
+  updateDish,
+} from "../../store/aaden/readFiles/dish";
+import {loadPrinterGroup} from "../../store/aaden/readFiles/print";
+import {
+  getCategoryNameByZHDEEN,
+  addCategory,
+  getCategory,
+} from "../../store/aaden/readFiles/category";
+import {getNgrokPHPUrl} from "../../store/aaden/utils";
 import {groupBy, uniqBy} from "lodash-es";
-
 
 const file = ref(null);
 const fileData = ref([]);
 const loading = ref(false);
-const currentUrl = ref('')
-const deviceId = ref('')
-const log = ref([])
-const step = ref('')
+const currentUrl = ref("");
+const deviceIds = ref([]);
+const log = ref([]);
+const step = ref(""); // 保留但不再使用
+const currentStep = ref(0);
+const uploadStatus = ref("process");
+const stepLog = ref([]); // 存储每个设备的进度 [{ deviceId, step }]
 
-// 定义数据检查日志表格的列
+// 数据检查日志表格列
 const logColumns = [
-  { title: 'index', key: 'index' },
-  { title: 'value', key: 'value' },
-  { title: 'reason', key: 'reason' }
-]
+  {title: "index", key: "index"},
+  {title: "value", key: "value"},
+  {title: "reason", key: "reason"},
+];
 
 async function handleFileUpload() {
-  if (!deviceId.value) {
-    IKUtils.showError('请先填写设备ID')
-    return
+  if (deviceIds.value.length === 0) {
+    IKUtils.showError("请先填写设备ID");
+    return;
   }
 
   if (file.value) {
-    step.value = '正在阅读文件别慌！' + `<br>` + step.value
+    stepLog.value = []; // 重置
     loading.value = true;
-    const fileType = file.value.name.split('.').pop()?.toLowerCase();
-    if (fileType === 'csv') {
-      const encodingType = (await detectChineseEncoding(file.value as any)).encoding;
-      if (encodingType !== 'UTF-8') {
-        IKUtils.showError('请使用UTF-8格式的csv');
+    const fileType = file.value.name.split(".").pop()?.toLowerCase();
+    if (fileType === "csv") {
+      const encodingType = (await detectChineseEncoding(file.value as any))
+          .encoding;
+      if (encodingType !== "UTF-8") {
+        IKUtils.showError("请使用UTF-8格式的csv");
         loading.value = false;
         return;
       }
-      fileData.value = await parseCsv(file.value)
-    } else if (fileType === 'xlsx') {
-      fileData.value = await parseExcel(file.value)
+      fileData.value = await parseCsv(file.value);
+    } else if (fileType === "xlsx") {
+      fileData.value = await parseExcel(file.value);
     } else {
-      IKUtils.showError('File Type is not csv or xlsx')
+      IKUtils.showError("File Type is not csv or xlsx");
     }
-    fileData.value = fileData.value.filter(it => it.code)
+    fileData.value = fileData.value.filter((it) => it.code);
     try {
-      await uploadPrepare(fileData.value)
+      currentStep.value = 0;
+      uploadStatus.value = "process";
+      for (let i = 0; i < deviceIds.value.length; i++) {
+        const id = deviceIds.value[i];
+        currentStep.value = i;
+        // 初始化该设备的进度
+        stepLog.value.push({deviceId: id, step: "开始处理设备...<br>"});
+        await uploadPrepare(fileData.value, id);
+      }
+      currentStep.value = deviceIds.value.length;
     } catch (e) {
-      console.log(e, 'error')
+      console.log(e, "error");
+      uploadStatus.value = "error";
     }
-    loading.value  = false
+    loading.value = false;
   }
 }
 
-async function uploadPrepare(rawFileData) {
-  log.value = []
+async function uploadPrepare(rawFileData, id) {
+  // 获取当前设备的进度对象
+  const stepItem = stepLog.value.find((item) => item.deviceId === id);
+  if (!stepItem) return;
+
+  // 更新当前设备步骤的函数
+  const updateStep = (msg: string) => {
+    stepItem.step += msg + "<br>";
+  };
+
+  log.value = [];
   // 使用deviceId构建URL
-  currentUrl.value = getNgrokPHPUrl(deviceId.value)
-  const priceCheck = /(^[0-9]\d*(\.\d{1,2})?$)/
-  const appearOnce = {}
+  currentUrl.value = getNgrokPHPUrl(id);
+  const priceCheck = /(^[0-9]\d*(\.\d{1,2})?$)/;
+  const appearOnce = {};
   rawFileData.forEach((dish, index) => {
     // 检查每个dish对象的所有属性值是否包含逗号，除了desc字段
     for (const [key, value] of Object.entries(dish)) {
-      if (key !== 'desc' && value && typeof value === 'string' && value.includes(',')) {
+      if (key !== "desc" && value && typeof value === "string" && value.includes(",")) {
         log.value.push({
           index: index + 2,
           value: key,
-          reason: '该处含有 , 请更换其他符号！'
-        })
+          reason: "该处含有 , 请更换其他符号！",
+        });
       }
     }
     if (!priceCheck.test(dish.price)) {
       log.value.push({
         index: index + 2,
-        value: 'Price',
-        reason: '价格只能填写数字,小数点,且最多2位小数'
-      })
+        value: "Price",
+        reason: "价格只能填写数字,小数点,且最多2位小数",
+      });
     }
 
     // 检查code值是否重复
     if (dish.code) {
-      // 转换为小写进行比较，实现不区分大小写
       const lowerCaseCode = dish.code.toLowerCase();
       if (appearOnce[lowerCaseCode]) {
-        // 如果code已经出现过，添加到log中
         log.value.push({
           index: index + 2,
-          value: 'Code',
-          reason: `${dish.code} 重复，已在第 ${appearOnce[lowerCaseCode]} 行出现过`
-        })
+          value: "Code",
+          reason: `${dish.code} 重复，已在第 ${appearOnce[lowerCaseCode]} 行出现过`,
+        });
       } else {
-        // 记录code首次出现的行号
-        appearOnce[lowerCaseCode] = index + 2
+        appearOnce[lowerCaseCode] = index + 2;
       }
     }
-  })
+  });
+
   if (log.value.length === 0) {
-    await uploadCategory(currentUrl.value, rawFileData)
-    await uploadDish(currentUrl.value, rawFileData)
-    step.value = '文件上传完毕！' + step.value
+    updateStep("文件校验通过，开始上传分类...");
+    await uploadCategory(currentUrl.value, rawFileData, updateStep);
+    updateStep("分类上传完成，开始上传产品...");
+    await uploadDish(currentUrl.value, rawFileData, updateStep);
+    updateStep("文件上传完毕！");
   } else {
-    step.value = '文件有问题,结束上传' + `<br>` + step.value
+    updateStep("文件有问题，结束上传");
   }
 }
 
-async function uploadCategory(url, rawFileData) {
-  step.value = '开始上传Category' + `<br>` + step.value
-  const categoryNameDict = (await getCategoryNameByZHDEEN(url))
-  const categoryReqs = []
-  // Track unique category combinations that have been added to categoryReqs
-  const addedCategories = new Set()
+async function uploadCategory(url, rawFileData, onStep) {
+  onStep("开始获取现有分类...");
+  const categoryNameDict = await getCategoryNameByZHDEEN(url);
+  const categoryReqs = [];
+  const addedCategories = new Set();
 
   for (const dish of rawFileData) {
-    const categoryName = dish.catNameZH.toLowerCase() + dish.catNameDE.toLowerCase() + dish.catNameEN.toLowerCase() + dish.catTypeId
-    if(categoryNameDict.includes(categoryName)){
-      console.log(categoryName + '已存在')
+    const categoryName =
+        dish.catNameZH.toLowerCase() +
+        dish.catNameDE.toLowerCase() +
+        dish.catNameEN.toLowerCase() +
+        dish.catTypeId;
+    if (categoryNameDict.includes(categoryName)) {
+      // 已存在，跳过
     } else {
-      // Create a unique key for this category combination
-      const categoryKey = `${dish.catNameZH.toLowerCase()}_${dish.catNameDE.toLowerCase()}_${dish.catNameEN.toLowerCase()}_${dish.catTypeId}`
-
-      // Only add if this category combination hasn't been added yet
+      const categoryKey =
+          `${dish.catNameZH.toLowerCase()}_${dish.catNameDE.toLowerCase()}_${dish.catNameEN.toLowerCase()}_${dish.catTypeId}`;
       if (!addedCategories.has(categoryKey)) {
-        step.value = '准备新建category:' + dish.catNameZH + `<br>` + step.value
-        categoryReqs.push(addCategory(url,{
-          langs: [
-            {
-              desc: '',
-              lang: 'DE',
-              name: dish.catNameDE
-            },
-            {
-              desc: '',
-              lang: 'ZH',
-              name: dish.catNameZH
-            },
-            {
-              desc: '',
-              lang: 'EN',
-              name: dish.catNameEN
-            }
-          ],
-          catTypeId: dish.catTypeId,
-        }))
-
-        // Mark this category combination as added
-        addedCategories.add(categoryKey)
+        onStep(`准备新建分类: ${dish.catNameZH}`);
+        categoryReqs.push(
+            addCategory(url, {
+              langs: [
+                {desc: "", lang: "DE", name: dish.catNameDE},
+                {desc: "", lang: "ZH", name: dish.catNameZH},
+                {desc: "", lang: "EN", name: dish.catNameEN},
+              ],
+              catTypeId: dish.catTypeId,
+            })
+        );
+        addedCategories.add(categoryKey);
       }
     }
   }
-  try {
-    step.value = '开始新建category' + `<br>` + step.value
-    await Promise.all(categoryReqs)
-    step.value = '新建category结束' + `<br>` + step.value
-  } catch (e) {
-    console.log(e, '新建category')
+
+  if (categoryReqs.length > 0) {
+    onStep(`开始批量创建 ${categoryReqs.length} 个分类...`);
+    try {
+      await Promise.all(categoryReqs);
+      onStep("分类创建完成");
+    } catch (e) {
+      onStep("分类创建出错: " + e.message);
+      console.log(e, "新建category");
+    }
+  } else {
+    onStep("没有需要新建的分类");
   }
 }
 
-async function uploadDish(url, rawFileData) {
-  step.value = '开始检查产品信息' + `<br>` + step.value
-  const categoryDict = (await getCategory(url))
-  const allList = (await getDishCodeList(url))
-  const dishCodeDict = allList.codeList
-  const dishList = allList.list
-  const addDishReqs = []
-  const updateDishReqs = []
-  const allUpdateResults = []
-  const allAddResults = []
+async function uploadDish(url, rawFileData, onStep) {
+  onStep("开始检查产品信息...");
+  const categoryDict = await getCategory(url);
+  const allList = await getDishCodeList(url);
+  const dishCodeDict = allList.codeList;
+  const dishList = allList.list;
+  const addDishReqs = [];
+  const updateDishReqs = [];
+  const allUpdateResults = [];
+  const allAddResults = [];
 
   for (const dish of rawFileData) {
     if (dishCodeDict.includes(dish.code.toLowerCase())) {
-      const currentDish = dishList.find(it => it.code.toLowerCase() === dish.code.toLowerCase())
-      let hashCodeByFiles = ''
-      let hashCodeBySystem = ''
+      const currentDish = dishList.find(
+          (it) => it.code.toLowerCase() === dish.code.toLowerCase()
+      );
+      let hashCodeByFiles = "";
+      let hashCodeBySystem = "";
       const hasIsActive = dish.isActive !== undefined && dish.isActive !== null;
-      const keyInstruction = dish.keyInstruction !== undefined && dish.keyInstruction !== null;
-      const dishesCategoryTypeId = categoryDict.find(it => it?.id?.toString() === currentDish?.categoryId?.toString())?.dishesCategoryTypeId ?? ''
+      const keyInstruction =
+          dish.keyInstruction !== undefined && dish.keyInstruction !== null;
+      const dishesCategoryTypeId =
+          categoryDict.find(
+              (it) => it?.id?.toString() === currentDish?.categoryId?.toString()
+          )?.dishesCategoryTypeId ?? "";
       hashCodeByFiles = hashCodeWithFiles(dish, hasIsActive, keyInstruction);
-      hashCodeBySystem = hashCodeWithSystem(currentDish, hasIsActive, keyInstruction, dishesCategoryTypeId);
+      hashCodeBySystem = hashCodeWithSystem(
+          currentDish,
+          hasIsActive,
+          keyInstruction,
+          dishesCategoryTypeId
+      );
       if (hashCodeByFiles !== hashCodeBySystem) {
-        step.value = dish.nameZH + '系统已经存在,正在更新' + `<br>` + step.value
-        currentDish.price = dish.price
+        onStep(`${dish.nameZH} 系统已存在，正在更新...`);
+        currentDish.price = dish.price;
         currentDish.langs = [
           {
-            desc: dish.desc ? dish.desc : dish.descDE ?? '',
-            lang: 'DE',
-            name: dish.nameDE
+            desc: dish.desc ? dish.desc : dish.descDE ?? "",
+            lang: "DE",
+            name: dish.nameDE,
           },
           {
-            desc: dish.desc ? dish.desc : dish.descZH ?? '',
-            lang: 'ZH',
-            name: dish.nameZH
+            desc: dish.desc ? dish.desc : dish.descZH ?? "",
+            lang: "ZH",
+            name: dish.nameZH,
           },
           {
-            desc: dish.desc ? dish.desc : dish.descEN ?? '',
-            lang: 'EN',
-            name: dish.nameEN
-          }
-        ]
-        currentDish.isActive = dish.isActive ? dish.isActive : currentDish.isActive
-        currentDish.keyInstruction = dish.keyInstruction ? dish.keyInstruction : currentDish.keyInstruction
-        currentDish.printGroupId = dish.printCatId
-        currentDish.categoryId = categoryDict.filter(it => it.langs.find(x => x.lang === 'ZH').name.toLowerCase() === dish.catNameZH.toLowerCase()).find(it => it.dishesCategoryTypeId === dish.catTypeId)?.id ?? currentDish.categoryId
-        updateDishReqs.push(updateDish(url, currentDish))
+            desc: dish.desc ? dish.desc : dish.descEN ?? "",
+            lang: "EN",
+            name: dish.nameEN,
+          },
+        ];
+        currentDish.isActive = dish.isActive ? dish.isActive : currentDish.isActive;
+        currentDish.keyInstruction = dish.keyInstruction
+            ? dish.keyInstruction
+            : currentDish.keyInstruction;
+        currentDish.printGroupId = dish.printCatId;
+        currentDish.categoryId =
+            categoryDict
+                .filter(
+                    (it) =>
+                        it.langs.find((x) => x.lang === "ZH").name.toLowerCase() ===
+                        dish.catNameZH.toLowerCase()
+                )
+                .find((it) => it.dishesCategoryTypeId === dish.catTypeId)?.id ??
+            currentDish.categoryId;
+        updateDishReqs.push(updateDish(url, currentDish));
 
-        // 当updateDishReqs长度达到10时，执行一次Promise.all
         if (updateDishReqs.length === 30) {
-          step.value = '执行一批30个产品更新请求' + `<br>` + step.value
+          onStep("执行一批30个产品更新请求");
           try {
-            const batchResults = await Promise.all(updateDishReqs)
-            allUpdateResults.push(...batchResults)
-            step.value = '完成一批30个产品更新请求' + `<br>` + step.value
+            const batchResults = await Promise.all(updateDishReqs);
+            allUpdateResults.push(...batchResults);
+            onStep("完成一批30个产品更新请求");
           } catch (error) {
-            console.error('更新产品批次请求失败:', error)
-            throw error
+            onStep("更新产品批次请求失败");
+            throw error;
           }
-          // 清空数组，准备下一批
-          updateDishReqs.length = 0
+          updateDishReqs.length = 0;
         }
       } else {
-        step.value = dish.nameZH + '系统已经存在,无需更新' + `<br>` + step.value
+        onStep(`${dish.nameZH} 系统已存在，无需更新`);
       }
     } else {
-      step.value = '正在新建产品' + dish.nameZH + `<br>` + step.value
+      onStep(`正在新建产品: ${dish.nameZH}`);
       const newDish = {
         code: dish.code,
-        color: '#ffffff',
+        color: "#ffffff",
         price: dish.price,
-        image: '',
+        image: "",
         langs: [
-          {
-            desc: dish.descDE ?? '',
-            lang: 'DE',
-            name: dish.nameDE
-          },
-          {
-            desc: dish.descZH ?? '',
-            lang: 'ZH',
-            name: dish.nameZH
-          },
-          {
-            desc: dish.descEN ?? '',
-            lang: 'EN',
-            name: dish.nameEN
-          }
+          {desc: dish.descDE ?? "", lang: "DE", name: dish.nameDE},
+          {desc: dish.descZH ?? "", lang: "ZH", name: dish.nameZH},
+          {desc: dish.descEN ?? "", lang: "EN", name: dish.nameEN},
         ],
-        isActive: dish.isActive ? dish.isActive : '1',
-        keyInstruction: dish.keyInstruction ? dish.keyInstruction : '',
+        isActive: dish.isActive ? dish.isActive : "1",
+        keyInstruction: dish.keyInstruction ? dish.keyInstruction : "",
         printGroupId: dish.printCatId,
-        categoryId: categoryDict.find(it => it.langs.find(x => x.lang === 'ZH').name.toLowerCase() === dish.catNameZH.toLowerCase())?.id ?? ''
-      }
-      // await addDish(url, newDish)
-      addDishReqs.push(addDish(url, newDish))
+        categoryId:
+            categoryDict.find(
+                (it) =>
+                    it.langs.find((x) => x.lang === "ZH").name.toLowerCase() ===
+                    dish.catNameZH.toLowerCase()
+            )?.id ?? "",
+      };
+      addDishReqs.push(addDish(url, newDish));
 
-      // 当addDishReqs长度达到10时，执行一次Promise.all
       if (addDishReqs.length === 30) {
-        step.value = '执行一批30个产品新增请求' + `<br>` + step.value
+        onStep("执行一批30个产品新增请求");
         try {
-          const batchResults = await Promise.all(addDishReqs)
-          allAddResults.push(...batchResults)
-          step.value = '完成一批30个产品新增请求' + `<br>` + step.value
+          const batchResults = await Promise.all(addDishReqs);
+          allAddResults.push(...batchResults);
+          onStep("完成一批30个产品新增请求");
         } catch (error) {
-          console.error('新增产品批次请求失败:', error)
-          throw error
+          onStep("新增产品批次请求失败");
+          throw error;
         }
-        // 清空数组，准备下一批
-        addDishReqs.length = 0
+        addDishReqs.length = 0;
       }
     }
   }
 
+  // 处理剩余请求
   try {
-    // 处理剩余的updateDishReqs
     if (updateDishReqs.length > 0) {
-      step.value = '开始处理剩余的产品更新请求' + `<br>` + step.value
-      const remainingResults = await batchRequests(updateDishReqs, 5)
-      allUpdateResults.push(...remainingResults)
-      step.value = '结束处理剩余的产品更新请求' + `<br>` + step.value
+      onStep("处理剩余的产品更新请求...");
+      const remainingResults = await batchRequests(updateDishReqs, 5);
+      allUpdateResults.push(...remainingResults);
+      onStep("剩余产品更新请求处理完成");
     }
-
-    // 处理剩余的addDishReqs
     if (addDishReqs.length > 0) {
-      step.value = '开始处理剩余的产品新增请求' + `<br>` + step.value
-      const remainingResults = await batchRequests(addDishReqs, 5)
-      allAddResults.push(...remainingResults)
-      step.value = '结束处理剩余的产品新增请求' + `<br>` + step.value
+      onStep("处理剩余的产品新增请求...");
+      const remainingResults = await batchRequests(addDishReqs, 5);
+      allAddResults.push(...remainingResults);
+      onStep("剩余产品新增请求处理完成");
     }
   } catch (e) {
-    console.log(e, 'dish相关')
+    console.log(e, "dish相关");
   }
 }
 
 async function batchRequests(requests, batchSize = 5) {
   const results = [];
-
-  // 按批次处理
   for (let i = 0; i < requests.length; i += batchSize) {
     const batch = requests.slice(i, i + batchSize);
     console.log(`开始第 ${Math.floor(i / batchSize) + 1} 批请求，数量: ${batch.length}`);
-
     try {
-      // 执行当前批次的所有请求
       const batchResults = await Promise.all(batch);
       results.push(...batchResults);
       console.log(`第 ${Math.floor(i / batchSize) + 1} 批请求完成`);
     } catch (error) {
       console.error(`第 ${Math.floor(i / batchSize) + 1} 批请求失败:`, error);
-      // 可以根据需要决定是否继续
       throw error;
     }
   }
-
   return results;
 }
 
 function clearData() {
   file.value = null;
   fileData.value = [];
-  deviceId.value = '';
-  currentUrl.value = '';
+  deviceIds.value = [];
+  currentUrl.value = "";
   log.value = [];
-  step.value = '';
+  step.value = "";
+  currentStep.value = 0;
+  uploadStatus.value = "process";
+  stepLog.value = [];
 }
 </script>
 
@@ -333,12 +369,8 @@ function clearData() {
     <n-card title="库迪数据上传">
       <div class="upload-section">
         <n-space vertical>
-          <div class="text-body-1 mb-2">
-            请填写设备ID
-          </div>
-          <n-input
-            v-model:value="deviceId"
-            placeholder="请输入设备ID"
+          <DeviceIdSelector
+            v-model:value="deviceIds"
             class="mb-4"
           />
 
@@ -371,17 +403,33 @@ function clearData() {
       </div>
 
       <div
-        v-if="step"
+        v-if="deviceIds.length > 0"
+        id="stepLog"
         class="mt-4"
       >
-        <n-card
-          title="处理步骤"
-          class="log-card"
-        >
-          <div
-            class="step-content"
-            v-html="step"
-          />
+        <n-card title="上传进度">
+          <n-tabs
+            type="card"
+            animated
+          >
+            <template
+              v-for="item in deviceIds"
+              :key="item"
+            >
+              <n-tab-pane
+                :name="item"
+                :tab="item"
+              >
+                <div
+                  class="step-content"
+                  v-html="
+                    stepLog.find((s) => s.deviceId === item)?.step ||
+                      '等待开始...'
+                  "
+                />
+              </n-tab-pane>
+            </template>
+          </n-tabs>
         </n-card>
       </div>
 
@@ -389,13 +437,7 @@ function clearData() {
         v-if="!loading && fileData.length > 0"
         class="no-data mt-4"
       >
-        <div>共{{ fileData.length }}条数据</div>
-        <div
-          v-if="currentUrl"
-          class="mt-2"
-        >
-          当前设备URL: {{ currentUrl }}
-        </div>
+        <div>共 {{ fileData.length }} 条数据</div>
         <div
           v-if="log && log.length > 0"
           class="mt-4"
@@ -441,7 +483,8 @@ function clearData() {
   margin-top: 10px;
 }
 
-.log-content, .step-content {
+.log-content,
+.step-content {
   white-space: pre-wrap;
   font-family: monospace;
   background-color: #f5f5f5;
@@ -449,5 +492,6 @@ function clearData() {
   border-radius: 4px;
   max-height: 300px;
   overflow-y: auto;
+  line-height: 1.6;
 }
 </style>
