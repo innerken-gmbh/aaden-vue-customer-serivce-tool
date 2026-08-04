@@ -114,7 +114,6 @@
           size="large"
           type="password"
           show-password-toggle
-          :maxlength="8"
           name="password"
           autocomplete="current-password"
         >
