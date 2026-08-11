@@ -41,6 +41,14 @@ const logColumns = [
   {title: "reason", key: "reason"},
 ];
 
+function stepLogDisplay (log) {
+  if (log) {
+    return log.split('<br>').reverse().join('<br>');
+  } else {
+    return ''
+  }
+}
+
 async function handleFileUpload() {
   if (deviceIds.value.length === 0) {
     IKUtils.showError("请先填写设备ID");
@@ -423,7 +431,7 @@ function clearData() {
                 <div
                   class="step-content"
                   v-html="
-                    stepLog.find((s) => s.deviceId === item)?.step ||
+                    stepLogDisplay(stepLog.find((s) => s.deviceId === item)?.step) ||
                       '等待开始...'
                   "
                 />
