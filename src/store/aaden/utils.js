@@ -41,7 +41,7 @@ export async function uploadFile(file) {
 }
 
 
-async function isNgrokEnabled(deviceId) {
+export async function isNgrokEnabled(deviceId) {
 
     try {
         const result = await hillo.get(getEndPointUrl(deviceId) + 'AccessLog.php?op=deviceId', {}, {

@@ -14,14 +14,12 @@ import {
   addDish,
   updateDish,
 } from "../../store/aaden/readFiles/dish";
-import {loadPrinterGroup} from "../../store/aaden/readFiles/print";
 import {
   getCategoryNameByZHDEEN,
   addCategory,
   getCategory,
 } from "../../store/aaden/readFiles/category";
-import {getNgrokPHPUrl} from "../../store/aaden/utils";
-import {groupBy, uniqBy} from "lodash-es";
+import {getNgrokPHPUrl,isNgrokEnabled} from "../../store/aaden/utils";
 
 const file = ref(null);
 const fileData = ref([]);
@@ -55,6 +53,13 @@ async function handleFileUpload() {
     return;
   }
 
+  for (const device of deviceIds.value) {
+    const checkStatus = await isNgrokEnabled(device);
+    if (!checkStatus) {
+      IKUtils.showError(device + ',这个设备ngrok没开！')
+      return
+    }
+  }
   if (file.value) {
     stepLog.value = []; // 重置
     loading.value = true;
