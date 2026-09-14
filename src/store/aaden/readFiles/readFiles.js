@@ -13,7 +13,7 @@ export function parseCsv(file) {
             error: res => reject(res),
             transform: (value) => {
                 if (value === null || value === undefined) return '';
-                return typeof value === 'string' ? value.replace(/\u200b/g, '') : value
+                return typeof value === 'string' ? value.replace(/\u200b/g, '').trim() : value
             }
         }))
     })
@@ -25,7 +25,7 @@ export async function parseExcel(file) {
     const processedRes = res.map(row =>
         row.map(value => {
             if (value === null || value === undefined) return ''
-            return typeof value === 'string' ? value.replace(/\u200b/g, '') : value
+            return typeof value === 'string' ? value.replace(/\u200b/g, '').trim() : value
         })
     )
 
