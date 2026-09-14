@@ -49,6 +49,7 @@ function stepLogDisplay (log) {
 
 async function handleFileUpload() {
   loading.value = true;
+  log.value = [];
   if (deviceIds.value.length === 0) {
     IKUtils.showError("请先填写设备ID");
     return;
