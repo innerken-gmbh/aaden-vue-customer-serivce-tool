@@ -48,6 +48,7 @@ function stepLogDisplay (log) {
 }
 
 async function handleFileUpload() {
+  loading.value = true;
   if (deviceIds.value.length === 0) {
     IKUtils.showError("请先填写设备ID");
     return;
@@ -56,13 +57,20 @@ async function handleFileUpload() {
   for (const device of deviceIds.value) {
     const checkStatus = await isNgrokEnabled(device);
     if (!checkStatus) {
-      IKUtils.showError(device + ',这个设备ngrok没开！')
-      return
+      log.value.push({
+        index: 'deviceId',
+        value: device,
+        reason: '设备Ngrok没开'
+      })
     }
   }
+  if (log.value.length > 0) {
+    loading.value = false
+    return
+  }
+
   if (file.value) {
     stepLog.value = []; // 重置
-    loading.value = true;
     const fileType = file.value.name.split(".").pop()?.toLowerCase();
     if (fileType === "csv") {
       const encodingType = (await detectChineseEncoding(file.value as any))
@@ -94,8 +102,8 @@ async function handleFileUpload() {
       console.log(e, "error");
       uploadStatus.value = "error";
     }
-    loading.value = false;
   }
+  loading.value = false;
 }
 
 async function uploadPrepare(rawFileData, id) {
@@ -379,7 +387,7 @@ function clearData() {
 
 <template>
   <div class="main-container pa-4">
-    <n-card title="库迪数据上传">
+    <n-card title="库迪数据上传！">
       <div class="upload-section">
         <n-space vertical>
           <DeviceIdSelector
@@ -413,6 +421,22 @@ function clearData() {
             </n-button>
           </n-space>
         </n-space>
+      </div>
+
+      <div
+        v-if="log && log.length > 0"
+        class="mt-4"
+      >
+        <n-card
+          title="数据检查日志"
+          class="log-card"
+        >
+          <n-data-table
+            :columns="logColumns"
+            :data="log"
+            :bordered="false"
+          />
+        </n-card>
       </div>
 
       <div
@@ -451,21 +475,6 @@ function clearData() {
         class="no-data mt-4"
       >
         <div>共 {{ fileData.length }} 条数据</div>
-        <div
-          v-if="log && log.length > 0"
-          class="mt-4"
-        >
-          <n-card
-            title="数据检查日志"
-            class="log-card"
-          >
-            <n-data-table
-              :columns="logColumns"
-              :data="log"
-              :bordered="false"
-            />
-          </n-card>
-        </div>
       </div>
 
       <div
