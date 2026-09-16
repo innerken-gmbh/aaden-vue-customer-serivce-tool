@@ -80,7 +80,7 @@ export const useSubscriptionStore = defineStore("saas-subscription",{
             }
             this.list = currentList.flat()
             this.list.forEach(x => {
-                x.subLinear = getDateProgressLinear(x.subscriptionStartDate,x.subscriptionEndDate)
+                x.subLinear = getDateProgressLinear(x.subscriptionStartDate,x.subscriptionEndDate,x.endDate)
             })
             this.allStatusList = uniq(this.list.map(it => it.status))
             this.loading = false
@@ -97,10 +97,19 @@ export function getZHProductName (productCode) {
     return allProductCodeList.find(it => it.value === productCode).name
 }
 
-export function getDateProgressLinear (startDate,endDate) {
+export function getDateProgressLinear (startDate,endDate,realEndDate) {
     const usedDays = dayjs().diff(dayjs(startDate),'day')
     const allDays = dayjs(endDate).diff(dayjs(startDate),'day')
-    return Math.ceil((usedDays / allDays) * 100)
+    if (realEndDate) {
+        const res = dayjs(realEndDate).diff(dayjs(endDate),'day')
+        if (res <= 0) {
+            return 100
+        }
+    } else {
+        return Math.ceil((usedDays / allDays) * 100)
+    }
+
+
 }
 
 export function formatDate (date) {

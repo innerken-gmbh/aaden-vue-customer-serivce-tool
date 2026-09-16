@@ -92,9 +92,11 @@ const logHeader = ref([
 
 const subHeader = ref([
   {title: '邮箱', key: 'customerEmail',},
-  {title: '项目名称', key: 'productZHName'},
-  {title: '项目进度', key: 'subLinear'},
-  {title: '截止时间', key: 'subscriptionEndDate'},
+  {title: '名称', key: 'productZHName'},
+  {title: '进度', key: 'subLinear'},
+  {title: '状态', key: 'status'},
+  {title: '实际截止', key: 'endDate'},
+  {title: '预计截止', key: 'subscriptionEndDate'},
 ])
 
 const backendHeader = ref([
@@ -133,7 +135,7 @@ function showBigSizeImg (item) {
 <template>
   <v-dialog
     v-model="store.showDetail"
-    max-width="660"
+    max-width="80%"
   >
     <v-card
       v-if="store.showDetail"
@@ -368,7 +370,7 @@ function showBigSizeImg (item) {
                   </template>
                   <template #[`item.subLinear`]="{ item }">
                     <v-progress-linear
-                      :model-value="getDateProgressLinear(item.subscriptionStartDate,item.subscriptionEndDate)"
+                      :model-value="getDateProgressLinear(item.subscriptionStartDate,item.subscriptionEndDate,item.endDate)"
                       height="20"
                       color="info"
                       rounded
@@ -377,6 +379,15 @@ function showBigSizeImg (item) {
                         <strong>{{ Math.ceil(value) }}%</strong>
                       </template>
                     </v-progress-linear>
+                  </template>
+                  <template #[`item.status`]="{ item }">
+                    <v-card
+                      elevation="0"
+                      :color="item.status === 'active' ? 'success' : 'grey'"
+                      class="pa-2 d-flex justify-center align-center"
+                    >
+                      {{ item.status }}
+                    </v-card>
                   </template>
                 </v-data-table>
               </v-tabs-window-item>
