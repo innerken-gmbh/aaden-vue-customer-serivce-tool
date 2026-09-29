@@ -227,4 +227,29 @@ export default [
       },
     ],
   },
+  {
+    menuUrl: '/france',
+    menuName: 'Fiskaly-France',
+    badge: 'dot',
+    iconPrefix: 'iconfont',
+    icon: 'file-text',
+    parentPath: '',
+    children: [
+      {
+        parentPath: '/france',
+        menuUrl: '/france/registration',
+        menuName: '开店注册',
+      },
+      {
+        parentPath: '/france',
+        menuUrl: '/france/system-producers',
+        menuName: '硬件',
+      },
+      {
+        parentPath: '/france',
+        menuUrl: '/france/system-software',
+        menuName: '软件',
+      },
+    ],
+  },
 ]
