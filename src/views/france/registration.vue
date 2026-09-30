@@ -313,15 +313,15 @@ const columns = [
                 },
                 { default: () => '重发' }
             ),
-            h(
-                NButton,
-                {
-                  size: 'small',
-                  type: 'info',
-                  onClick: () => handleRecheck(row)
-                },
-                { default: () => '轮询' }
-            )
+            // h(
+            //     NButton,
+            //     {
+            //       size: 'small',
+            //       type: 'info',
+            //       onClick: () => handleRecheck(row)
+            //     },
+            //     { default: () => '轮询' }
+            // )
           ]
         }
       );
