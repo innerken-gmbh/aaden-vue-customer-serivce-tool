@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { ref, reactive, h, onMounted } from 'vue';
-import { FormInst, useMessage, useDialog, NButton, NSpace, NDataTable, NCard, NModal, NForm, NGrid, NFormItemGi, NInput, NSelect, NInputNumber, NDivider, NDatePicker } from 'naive-ui';
-import { getRegistrations, addRegistration, getRegistrationById, deleteRegistration, resendRegistration } from '../../store/aaden/france/registration';
-import { addSystemProducer } from '../../store/aaden/france/systemProducer';
-import { addSystemSoftware } from '../../store/aaden/france/systemSoftware';
+import { ref, reactive, h, onMounted, computed } from 'vue';
+import { FormInst, useMessage, useDialog, NButton, NSpace, NDataTable, NCard, NModal, NForm, NGrid, NFormItemGi, NInput, NSelect, NInputNumber, NDivider, NDatePicker, NTabs, NTabPane, NDescriptions, NDescriptionsItem, NTag } from 'naive-ui';
+import { getRegistrations, addRegistration,getRegistrationDetailById, getRegistrationById, deleteRegistration, resendRegistration } from '../../store/aaden/france/registration';
+import { addSystemProducer,getSystemProducers } from '../../store/aaden/france/systemProducer';
+import { addSystemSoftware,getSystemSoftwares } from '../../store/aaden/france/systemSoftware';
+import dayjs from "dayjs";
 
 
 const message = useMessage();
@@ -11,7 +12,7 @@ const dialog = useDialog();
 const formRef = ref<FormInst | null>(null);
 const showModal = ref(false);
 const showDetailModal = ref(false);
-const detailModel = ref<RegistrationModel | null>(null);
+const detailModel = ref<any>(null);
 
 interface RegistrationModel {
   id?: string;
@@ -127,6 +128,30 @@ const fetchData = async () => {
   try {
     const res = await getRegistrations();
     dataList.value = res || [];
+
+    const producers = await getSystemProducers() || [];
+    const uniqueProducers = [];
+    const pSet = new Set();
+    for (const item of producers) {
+      const key = `${item.name}`;
+      if (!pSet.has(key)) {
+        pSet.add(key);
+        uniqueProducers.push(item);
+      }
+    }
+    producersList.value = uniqueProducers;
+
+    const softwares = await getSystemSoftwares() || [];
+    const uniqueSoftwares = [];
+    const sSet = new Set();
+    for (const item of softwares) {
+      const key = `${item.name}-${item.version}`;
+      if (!sSet.has(key)) {
+        sSet.add(key);
+        uniqueSoftwares.push(item);
+      }
+    }
+    softwaresList.value = uniqueSoftwares;
   } catch (error) {
     message.error('获取列表失败');
   } finally {
@@ -315,12 +340,24 @@ const handleEdit = (row: RegistrationModel) => {
   showModal.value = true;
 };
 
-const handleDetail = (row: RegistrationModel) => {
+const handleDetail = async (row: RegistrationModel) => {
   console.log(row, 'row')
-  // row.hardware = (await getSystemProducerById(row.)).data
-  detailModel.value = row;
+  detailModel.value = await getRegistrationDetailById(row.id);
+  console.log(detailModel.value, 'detailModel.value')
   showDetailModal.value = true;
 };
+
+const locationDetail = computed(() => {
+  return detailModel.value?.location;
+})
+
+const systemDetail = computed(() => {
+  return detailModel.value?.system;
+})
+
+const taxpayerDetail = computed(() => {
+  return detailModel.value?.taxpayer;
+})
 
 const handleDelete = (row: RegistrationModel) => {
   if (!row.id) {
@@ -371,10 +408,62 @@ const handleRecheck = async (row: RegistrationModel) => {
 };
 
 const step = ref('')
+const stepMap: Record<string, string> = {
+  'GET_GROUP_TOKEN': '获取组织级 token（GROUP scope）',
+  'CREATE_ORG': '创建 fiskaly Organization（门店组织）',
+  'CREATE_SUBJECT': '创建 Subject（API 凭证主体）',
+  'GET_UNIT_TOKEN': '获取 UNIT scope token（换取受管凭证）',
+  'CREATE_TAXPAYER': '创建 Taxpayer（法国税务主体，含 SIREN/APE/地址）',
+  'COMMISSION_TAXPAYER': '授信 Taxpayer',
+  'CREATE_LOCATION': '创建 Location（场所）',
+  'COMMISSION_LOCATION': '授信 Location',
+  'CREATE_SYSTEM': '创建 System（收银设备，producer/software 引用）',
+  'COMMISSION_SYSTEM': '授信 System',
+  'COMPLETED': '完成'
+};
 const status = ref('')
 const lastUpdateTimestamp = ref('')
 const pollingShow = ref(false)
 const pollingStartTime = ref(0)
+const producersList = ref<any[]>([])
+const softwaresList = ref<any[]>([])
+
+const producerOptions = computed(() => {
+  return producersList.value.map((item: any) => ({
+    label: `${item.name}`,
+    value: item.id
+  }))
+})
+
+const softwareOptions = computed(() => {
+  return softwaresList.value.map((item: any) => ({
+    label: `${item.name} (${item.version})`,
+    value: item.id
+  }))
+})
+
+const handleProducerChange = (id: string | number) => {
+  const producer = producersList.value.find(item => item.id === id)
+  if (producer) {
+    model.hardware.number = producer.number
+    model.hardware.name = producer.name
+    model.hardware.brand = producer.brand
+    model.hardware.model = producer.model
+    model.hardware.serial = producer.serial
+    model.hardware.label = producer.label
+    model.hardware.dateOfProduction = producer.dateOfProduction
+    model.hardware.dateOfEntry = producer.dateOfEntry
+  }
+}
+
+const handleSoftwareChange = (id: string | number) => {
+  const software = softwaresList.value.find(item => item.id === id)
+  if (software) {
+    model.software.name = software.name
+    model.software.version = software.version
+  }
+}
+
 let pollingTimer: any = null
 
 const startPolling = async (registrationId: string) => {
@@ -387,7 +476,7 @@ const startPolling = async (registrationId: string) => {
       const data = res.data;
       step.value = data.step;
       status.value = data.status;
-      lastUpdateTimestamp.value = data.lastUpdateTimestamp;
+      lastUpdateTimestamp.value = dayjs(data.lastUpdateTimestamp).format('YYYY-MM-DD HH:mm:ss');
 
       if (step.value === 'COMPLETED' && status.value === 'COMPLETED') {
         message.success('注册完成');
@@ -727,6 +816,18 @@ const handleClear = () => {
           </n-form-item-gi>
 
           <n-form-item-gi
+            :span="2"
+            label="快速填充硬件"
+          >
+            <n-select
+              placeholder="请选择预设硬件"
+              :options="producerOptions"
+              clearable
+              @update:value="handleProducerChange"
+            />
+          </n-form-item-gi>
+
+          <n-form-item-gi
             label="硬件编号"
             path="hardware.number"
           >
@@ -815,6 +916,18 @@ const handleClear = () => {
           </n-form-item-gi>
 
           <n-form-item-gi
+            :span="2"
+            label="快速填充软件"
+          >
+            <n-select
+              placeholder="请选择预设软件"
+              :options="softwareOptions"
+              clearable
+              @update:value="handleSoftwareChange"
+            />
+          </n-form-item-gi>
+
+          <n-form-item-gi
             label="软件名称"
             path="software.name"
           >
@@ -854,208 +967,193 @@ const handleClear = () => {
     <n-modal
       v-model:show="showDetailModal"
       preset="card"
-      title="详情"
-      style="width: 900px"
+      title="注册详情"
+      style="width: 1000px"
     >
       <div v-if="detailModel">
-        <n-grid
-          :cols="2"
-          :x-gap="24"
+        <n-tabs
+          type="line"
+          animated
         >
-          <n-form-item-gi label="环境">
-            <n-input
-              :value="detailModel.env"
-              readonly
-            />
-          </n-form-item-gi>
-          <n-form-item-gi label="门店设备号">
-            <n-input
-              :value="detailModel.deviceId"
-              readonly
-            />
-          </n-form-item-gi>
+          <!-- Taxpayer Detail -->
+          <n-tab-pane
+            name="taxpayer"
+            tab="纳税人 (Taxpayer)"
+          >
+            <n-descriptions
+              bordered
+              label-placement="left"
+              :column="2"
+            >
+              <n-descriptions-item label="ID">
+                {{ taxpayerDetail?.id }}
+              </n-descriptions-item>
+              <n-descriptions-item label="类型">
+                <n-tag
+                  type="info"
+                  size="small"
+                >
+                  {{ taxpayerDetail?.type }}
+                </n-tag>
+              </n-descriptions-item>
+              <n-descriptions-item label="state">
+                <n-tag
+                  :type="taxpayerDetail?.state === 'COMMISSIONED' ? 'success' : 'warning'"
+                  size="small"
+                >
+                  {{ taxpayerDetail?.state }}
+                </n-tag>
+              </n-descriptions-item>
+              <n-descriptions-item label="mode">
+                <n-tag
+                  :type="taxpayerDetail?.mode === 'OPERATIVE' ? 'success' : 'default'"
+                  size="small"
+                >
+                  {{ taxpayerDetail?.mode }}
+                </n-tag>
+              </n-descriptions-item>
+              <n-descriptions-item label="国家">
+                {{ taxpayerDetail?.country }}
+              </n-descriptions-item>
+              <n-descriptions-item label="增值税号 (VAT)">
+                {{ taxpayerDetail?.vatNumber || '-' }}
+              </n-descriptions-item>
 
-          <n-form-item-gi label="税务主体类型">
-            <n-input
-              :value="detailModel.taxpayer.taxpayerType"
-              readonly
-            />
-          </n-form-item-gi>
-          <n-form-item-gi label="企业注册号 (SIREN)">
-            <n-input
-              :value="detailModel.taxpayer.siren"
-              readonly
-            />
-          </n-form-item-gi>
+              <n-descriptions-item
+                label="法定名称"
+                :span="1"
+              >
+                {{ taxpayerDetail?.name?.legal }}
+              </n-descriptions-item>
+              <n-descriptions-item
+                label="商业名称"
+                :span="1"
+              >
+                {{ taxpayerDetail?.name?.trade }}
+              </n-descriptions-item>
 
-          <template v-if="detailModel.taxpayer.taxpayerType === 'COMPANY'">
-            <n-form-item-gi label="法定名称">
-              <n-input
-                :value="detailModel.taxpayer.companyName"
-                readonly
-              />
-            </n-form-item-gi>
-            <n-form-item-gi label="商业名称">
-              <n-input
-                :value="detailModel.taxpayer.tradeName"
-                readonly
-              />
-            </n-form-item-gi>
-          </template>
-          <template v-else>
-            <n-form-item-gi label="公司名">
-              <n-input
-                :value="detailModel.taxpayer.personLegalName"
-                readonly
-              />
-            </n-form-item-gi>
-            <n-form-item-gi label="性别">
-              <n-input
-                :value="detailModel.taxpayer.person?.gender"
-                readonly
-              />
-            </n-form-item-gi>
-            <n-form-item-gi label="名 (Forename)">
-              <n-input
-                :value="detailModel.taxpayer.person?.forename"
-                readonly
-              />
-            </n-form-item-gi>
-            <n-form-item-gi label="姓 (Surname)">
-              <n-input
-                :value="detailModel.taxpayer.person?.surname"
-                readonly
-              />
-            </n-form-item-gi>
-          </template>
+              <n-descriptions-item
+                label="税务识别号 (Tax ID)"
+                :span="1"
+              >
+                {{ taxpayerDetail?.fiscalization?.taxIdNumber }}
+              </n-descriptions-item>
+              <n-descriptions-item
+                label="财年起始日"
+                :span="1"
+              >
+                {{ taxpayerDetail?.fiscalization?.fiscalYearDate }}
+              </n-descriptions-item>
 
-          <n-form-item-gi label="法律形式">
-            <n-input
-              :value="detailModel.taxpayer.legalForm"
-              readonly
-            />
-          </n-form-item-gi>
-          <n-form-item-gi label="APE/NAF 代码">
-            <n-input
-              :value="detailModel.taxpayer.nafApeCode"
-              readonly
-            />
-          </n-form-item-gi>
-          <n-form-item-gi label="财年起始日">
-            <n-input
-              :value="detailModel.taxpayer.fiscalYearDate"
-              readonly
-            />
-          </n-form-item-gi>
+              <n-descriptions-item
+                label="地址"
+                :span="2"
+              >
+                {{ taxpayerDetail?.address?.line?.number }} {{ taxpayerDetail?.address?.line?.street }},
+                {{ taxpayerDetail?.address?.code }} {{ taxpayerDetail?.address?.city }},
+                {{ taxpayerDetail?.address?.country }}
+              </n-descriptions-item>
+            </n-descriptions>
+          </n-tab-pane>
 
-          <n-form-item-gi :span="2">
-            <n-divider title-placement="left">
-              主体地址
-            </n-divider>
-          </n-form-item-gi>
-          <n-form-item-gi label="街道">
-            <n-input
-              :value="detailModel.taxpayer.address?.street"
-              readonly
-            />
-          </n-form-item-gi>
-          <n-form-item-gi label="门牌号">
-            <n-input
-              :value="detailModel.taxpayer.address?.number"
-              readonly
-            />
-          </n-form-item-gi>
-          <n-form-item-gi label="邮编">
-            <n-input
-              :value="detailModel.taxpayer.address?.postalCode"
-              readonly
-            />
-          </n-form-item-gi>
-          <n-form-item-gi label="城市">
-            <n-input
-              :value="detailModel.taxpayer.address?.city"
-              readonly
-            />
-          </n-form-item-gi>
+          <!-- Location Detail -->
+          <n-tab-pane
+            name="location"
+            tab="场所 (Location)"
+          >
+            <n-descriptions
+              bordered
+              label-placement="left"
+              :column="2"
+            >
+              <n-descriptions-item label="ID">
+                {{ locationDetail?.id }}
+              </n-descriptions-item>
+              <n-descriptions-item label="state">
+                <n-tag
+                  :type="locationDetail?.state === 'COMMISSIONED' ? 'success' : 'warning'"
+                  size="small"
+                >
+                  {{ locationDetail?.state }}
+                </n-tag>
+              </n-descriptions-item>
+              <n-descriptions-item
+                label="场所标识 (Label/SIRET)"
+                :span="2"
+              >
+                {{ locationDetail?.label }}
+              </n-descriptions-item>
 
-          <n-form-item-gi :span="2">
-            <n-divider title-placement="left">
-              场所信息
-            </n-divider>
-          </n-form-item-gi>
-          <n-form-item-gi label="场所识别号 (SIRET)">
-            <n-input
-              :value="detailModel.locationSiret"
-              readonly
-            />
-          </n-form-item-gi>
-          <n-form-item-gi label="街道">
-            <n-input
-              :value="detailModel.locationStreet"
-              readonly
-            />
-          </n-form-item-gi>
-          <n-form-item-gi label="门牌号">
-            <n-input
-              :value="detailModel.locationNumber"
-              readonly
-            />
-          </n-form-item-gi>
-          <n-form-item-gi label="邮编">
-            <n-input
-              :value="detailModel.locationPostalCode"
-              readonly
-            />
-          </n-form-item-gi>
-          <n-form-item-gi label="城市">
-            <n-input
-              :value="detailModel.locationCity"
-              readonly
-            />
-          </n-form-item-gi>
-          <n-form-item-gi label="国家">
-            <n-input
-              :value="detailModel.locationCountry"
-              readonly
-            />
-          </n-form-item-gi>
+              <n-descriptions-item
+                label="地址"
+                :span="2"
+              >
+                {{ locationDetail?.address?.line?.number }} {{ locationDetail?.address?.line?.street }},
+                {{ locationDetail?.address?.code }} {{ locationDetail?.address?.city }},
+                {{ locationDetail?.address?.country }}
+              </n-descriptions-item>
+            </n-descriptions>
+          </n-tab-pane>
 
-          <n-form-item-gi :span="2">
-            <n-divider title-placement="left">
-              其他信息
-            </n-divider>
-          </n-form-item-gi>
-          <n-form-item-gi label="LocationId">
-            <n-input
-              :value="detailModel?.fiskalyLocationId"
-              readonly
-            />
-          </n-form-item-gi>
-          <n-form-item-gi label="OrgId">
-            <n-input
-              :value="detailModel?.fiskalyOrgId"
-              readonly
-            />
-          </n-form-item-gi>
-          <n-form-item-gi label="SubjectId">
-            <n-input
-              :value="detailModel?.fiskalySubjectId"
-              readonly
-            />
-          </n-form-item-gi>
-          <n-form-item-gi label="SystemId">
-            <n-input
-              :value="detailModel?.fiskalySystemId"
-              readonly
-            />
-          </n-form-item-gi>
-          <n-form-item-gi label="TaxpayerId">
-            <n-input
-              :value="detailModel?.fiskalyTaxpayerId"
-              readonly
-            />
-          </n-form-item-gi>
-        </n-grid>
+          <!-- System Detail -->
+          <n-tab-pane
+            name="system"
+            tab="系统设备 (System)"
+          >
+            <n-descriptions
+              bordered
+              label-placement="left"
+              :column="2"
+            >
+              <n-descriptions-item label="ID">
+                {{ systemDetail?.id }}
+              </n-descriptions-item>
+              <n-descriptions-item label="state">
+                <n-tag
+                  :type="systemDetail?.state === 'COMMISSIONED' ? 'success' : 'warning'"
+                  size="small"
+                >
+                  {{ systemDetail?.state }}
+                </n-tag>
+              </n-descriptions-item>
+
+              <n-descriptions-item label="硬件类型">
+                {{ systemDetail?.producer?.type }}
+              </n-descriptions-item>
+              <n-descriptions-item label="硬件编号">
+                {{ systemDetail?.producer?.number }}
+              </n-descriptions-item>
+              <n-descriptions-item label="硬件名称">
+                {{ systemDetail?.producer?.details?.name }}
+              </n-descriptions-item>
+              <n-descriptions-item label="品牌">
+                {{ systemDetail?.producer?.details?.brand }}
+              </n-descriptions-item>
+              <n-descriptions-item label="型号">
+                {{ systemDetail?.producer?.details?.model }}
+              </n-descriptions-item>
+              <n-descriptions-item label="序列号">
+                {{ systemDetail?.producer?.details?.serial }}
+              </n-descriptions-item>
+              <n-descriptions-item label="标签">
+                {{ systemDetail?.producer?.details?.label }}
+              </n-descriptions-item>
+              <n-descriptions-item label="生产日期">
+                {{ systemDetail?.producer?.details?.dateOfProduction }}
+              </n-descriptions-item>
+              <n-descriptions-item label="启用日期">
+                {{ systemDetail?.producer?.details?.dateOfEntry }}
+              </n-descriptions-item>
+
+              <n-descriptions-item label="软件名称">
+                {{ systemDetail?.software?.name }}
+              </n-descriptions-item>
+              <n-descriptions-item label="软件版本">
+                {{ systemDetail?.software?.version }}
+              </n-descriptions-item>
+            </n-descriptions>
+          </n-tab-pane>
+        </n-tabs>
         <n-space
           justify="end"
           class="mt-4"
@@ -1080,7 +1178,7 @@ const handleClear = () => {
       <n-space vertical>
         <div class="flex justify-between">
           <span>步骤:</span>
-          <span class="font-bold">{{ step || '等待中...' }}</span>
+          <span class="font-bold">{{ stepMap[step] || step || '等待中...' }}</span>
         </div>
         <div class="flex justify-between">
           <span>状态:</span>

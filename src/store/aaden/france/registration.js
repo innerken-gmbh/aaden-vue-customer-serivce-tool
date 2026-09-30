@@ -11,6 +11,10 @@ export async function getRegistrationById (id) {
     return await hillo.get(baseUrl + path + 'registrations/' + id)
 }
 
+export async function getRegistrationDetailById (id) {
+    return (await hillo.get(baseUrl + path + 'registrations/' + id + '/fiskaly-resources')).data
+}
+
 export async function updateRegistration (id, item) {
     return await hillo.put(baseUrl + path + 'registrations/' + id, {
         ...item,
