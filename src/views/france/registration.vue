@@ -341,9 +341,7 @@ const handleEdit = (row: RegistrationModel) => {
 };
 
 const handleDetail = async (row: RegistrationModel) => {
-  console.log(row, 'row')
   detailModel.value = await getRegistrationDetailById(row.id);
-  console.log(detailModel.value, 'detailModel.value')
   showDetailModal.value = true;
 };
 
@@ -518,7 +516,6 @@ const handleSave = (e: MouseEvent) => {
         } else {
           model.systemProducerId = (await addSystemProducer(model.hardware))?.data?.id
           model.systemSoftwareId = (await addSystemSoftware(model.software))?.data?.id
-          console.log(model, 'model')
           const res = await addRegistration(model);
           const registrationId = res?.data?.registrationId;
           if (registrationId) {

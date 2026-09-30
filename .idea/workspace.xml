@@ -6,7 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="1777049f-9f7a-4424-9005-71635bd2b339" name="Changes" comment="jiaruxingongneng">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/store/aaden/france/registration.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/aaden/france/registration.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/france/registration.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/france/registration.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -488,7 +487,7 @@
       <workItem from="1790054785913" duration="2073000" />
       <workItem from="1790141401472" duration="3280000" />
       <workItem from="1790665542679" duration="5274000" />
-      <workItem from="1790752074054" duration="2543000" />
+      <workItem from="1790752074054" duration="2570000" />
     </task>
     <task id="LOCAL-00001" summary="加入包裹记录功能和库存管理相关优化">
       <option name="closed" value="true" />
