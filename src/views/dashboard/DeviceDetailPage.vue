@@ -12,7 +12,18 @@ import SecondaryButton from "@/views/BaseWidget/basic/button/SecondaryButton.vue
 import JSpace from "@/views/BaseWidget/basic/JSpace.vue";
 import LoadingProvider from "@/views/BaseWidget/basic/premade/LoadingProvider.vue";
 import {recordSchema} from "@/old/utils/recordSchema";
-import {getDeviceBackendList, getDeviceSubscriptionList, getLogsByDeviceId} from "@/store/aaden/cloud-v2-api";
+import {getDeviceSubscriptionList, getLogsByDeviceId} from "@/store/aaden/cloud-v2-api";
+import {
+  downloadBackup,
+  ERP_BACKUP_PAGE,
+  ErpAuthError,
+  getDeviceBackups,
+  getErpEmail,
+  getErpToken,
+  loginErp,
+  logoutErp,
+  sendErpOtp
+} from "@/store/aaden/erpBackupApi";
 import {getZHProductName,getDateProgressLinear,formatDate,formatPriceDisplay,showCurrentBillType} from "@/store/aaden/saasSubscription";
 import {checkFileType,imageList} from "@/store/aaden/utils";
 import {VFileInput, VSelect} from "vuetify/components";
@@ -24,20 +35,107 @@ const tab = ref(0)
 const dialogStore = useDialogStore()
 const logInfo = ref([])
 const subInfo = ref([])
-const backendList = ref([])
 
 watch(store,async (value) => {
   if (value) {
     logInfo.value = await getLogsByDeviceId(store?.activeDevice?.deviceId)
     subInfo.value = await getDeviceSubscriptionList(store?.activeDevice?.deviceId)
-    backendList.value = await getDeviceBackendList(store?.activeDevice?.deviceId)
   }
 })
+
+// ---- 备份列表：走 ERP 接口，要先用有客服/财务/超管角色的 ERP 账号登录
+const backupList = ref([])
+const backupLoading = ref(false)
+const backupError = ref('')
+const downloadingId = ref(null)
+const erpLoggedIn = ref(!!getErpToken())
+const erpEmail = ref(getErpEmail())
+const erpOtp = ref('')
+const erpOtpSent = ref(false)
+const erpBusy = ref(false)
+const erpLoginError = ref('')
+
+async function loadBackups() {
+  const deviceId = store?.activeDevice?.deviceId
+  backupList.value = []
+  backupError.value = ''
+  if (!deviceId || !erpLoggedIn.value) return
+  backupLoading.value = true
+  try {
+    backupList.value = (await getDeviceBackups(deviceId)).backups
+  } catch (e) {
+    if (e instanceof ErpAuthError) {
+      erpLoggedIn.value = false
+      erpLoginError.value = e.message
+    } else {
+      backupError.value = e.message
+    }
+  } finally {
+    backupLoading.value = false
+  }
+}
+
+watch(() => store?.activeDevice?.deviceId, loadBackups, {immediate: true})
+
+async function onSendErpOtp() {
+  erpBusy.value = true
+  erpLoginError.value = ''
+  try {
+    await sendErpOtp(erpEmail.value)
+    erpOtpSent.value = true
+  } catch (e) {
+    erpLoginError.value = e.message
+  } finally {
+    erpBusy.value = false
+  }
+}
+
+async function onLoginErp() {
+  erpBusy.value = true
+  erpLoginError.value = ''
+  try {
+    await loginErp(erpEmail.value, erpOtp.value)
+    erpLoggedIn.value = true
+    erpOtp.value = ''
+    erpOtpSent.value = false
+    await loadBackups()
+  } catch (e) {
+    erpLoginError.value = e.message
+  } finally {
+    erpBusy.value = false
+  }
+}
+
+function onLogoutErp() {
+  logoutErp()
+  erpLoggedIn.value = false
+  backupList.value = []
+}
+
+async function downloadBackendFiles(item) {
+  downloadingId.value = item.id
+  backupError.value = ''
+  try {
+    await downloadBackup(item)
+  } catch (e) {
+    if (e instanceof ErpAuthError) {
+      erpLoggedIn.value = false
+      erpLoginError.value = e.message
+    } else {
+      backupError.value = e.message
+    }
+  } finally {
+    downloadingId.value = null
+  }
+}
+
+function formatFileSize(n) {
+  if (n === null || n === undefined) return '—'
+  if (n < 1024 * 1024) return `${(n / 1024).toFixed(0)} KB`
+  return `${(n / 1024 / 1024).toFixed(1)} MB`
+}
 async function sendInvite () {
   console.log(store?.activeDevice, '321')
-}
-async function downloadBackendFiles (item) {
-  window.open(item.fileUrl)
 }
 async function addInfo() {
   const info = await dialogStore.editItem(recordSchema)
@@ -100,8 +198,9 @@ const subHeader = ref([
 ])
 
 const backendHeader = ref([
-  {title: 'id', key: 'id',},
   {title: '创建时间', key: 'timeDisplay'},
+  {title: '文件', key: 'fileName'},
+  {title: '大小', key: 'fileSizeDisplay'},
   {title: '下载', key: 'downloadFile'},
 ])
 const emit = defineEmits(['ngrok'])
@@ -392,30 +491,122 @@ function showBigSizeImg (item) {
                 </v-data-table>
               </v-tabs-window-item>
               <v-tabs-window-item>
-                <v-data-table
-                  :headers="backendHeader"
-                  :items="backendList"
+                <div
+                  v-if="!erpLoggedIn"
+                  class="pa-4"
+                  style="max-width: 420px"
                 >
-                  <template #[`item.timeDisplay`]="{ item }">
-                    <v-tooltip top>
-                      <template #activator="{props }">
-                        <div v-bind="props">
-                          {{ fromNowTimestamp(item.createTimestamp) }}
-                        </div>
-                      </template>
-                      <span>{{ fromNowTimeDisplay(item.createTimestamp) }}</span>
-                    </v-tooltip>
-                  </template>
-                  <template #[`item.downloadFile`]="{ item }">
+                  <div class="text-body-2 mb-3">
+                    备份是门店整库数据，需要用 ERP 账号（客服 / 财务 / 超管角色）登录后才能查看和下载。
+                  </div>
+                  <v-text-field
+                    v-model="erpEmail"
+                    label="ERP 邮箱"
+                    density="compact"
+                    hide-details
+                    class="mb-2"
+                  />
+                  <v-text-field
+                    v-if="erpOtpSent"
+                    v-model="erpOtp"
+                    label="邮箱验证码"
+                    density="compact"
+                    hide-details
+                    class="mb-2"
+                    @keyup.enter="onLoginErp"
+                  />
+                  <v-alert
+                    v-if="erpLoginError"
+                    type="error"
+                    density="compact"
+                    variant="tonal"
+                    class="mb-2"
+                  >
+                    {{ erpLoginError }}
+                  </v-alert>
+                  <div class="d-flex ga-2">
                     <v-btn
                       elevation="0"
                       variant="outlined"
-                      @click="downloadBackendFiles(item)"
+                      :loading="erpBusy && !erpOtpSent"
+                      :disabled="!erpEmail"
+                      @click="onSendErpOtp"
                     >
-                      下载
+                      {{ erpOtpSent ? '重新发送' : '发送验证码' }}
                     </v-btn>
-                  </template>
-                </v-data-table>
+                    <v-btn
+                      v-if="erpOtpSent"
+                      elevation="0"
+                      color="primary"
+                      :loading="erpBusy"
+                      :disabled="!erpOtp"
+                      @click="onLoginErp"
+                    >
+                      登录
+                    </v-btn>
+                  </div>
+                </div>
+                <div v-else>
+                  <div class="d-flex align-center ga-2 pa-2">
+                    <span class="text-caption">云端每台只留最近 3 份；下载会记录操作人</span>
+                    <v-spacer />
+                    <v-btn
+                      size="small"
+                      variant="text"
+                      :href="`${ERP_BACKUP_PAGE}?deviceId=${store?.activeDevice?.deviceId}`"
+                      target="_blank"
+                    >
+                      在 ERP 中查看
+                    </v-btn>
+                    <v-btn
+                      size="small"
+                      variant="text"
+                      @click="onLogoutErp"
+                    >
+                      退出 ERP 登录
+                    </v-btn>
+                  </div>
+                  <v-alert
+                    v-if="backupError"
+                    type="error"
+                    density="compact"
+                    variant="tonal"
+                    class="mx-2 mb-2"
+                  >
+                    {{ backupError }}
+                  </v-alert>
+                  <v-data-table
+                    :headers="backendHeader"
+                    :items="backupList"
+                    :loading="backupLoading"
+                    no-data-text="云端没有这台设备的备份"
+                  >
+                    <template #[`item.timeDisplay`]="{ item }">
+                      <v-tooltip top>
+                        <template #activator="{props }">
+                          <div v-bind="props">
+                            {{ fromNowTimestamp(item.createdAt) }}
+                          </div>
+                        </template>
+                        <span>{{ fromNowTimeDisplay(item.createdAt) }}</span>
+                      </v-tooltip>
+                    </template>
+                    <template #[`item.fileSizeDisplay`]="{ item }">
+                      {{ formatFileSize(item.fileSize) }}
+                    </template>
+                    <template #[`item.downloadFile`]="{ item }">
+                      <v-btn
+                        elevation="0"
+                        variant="outlined"
+                        :loading="downloadingId === item.id"
+                        :disabled="downloadingId !== null && downloadingId !== item.id"
+                        @click="downloadBackendFiles(item)"
+                      >
+                        下载
+                      </v-btn>
+                    </template>
+                  </v-data-table>
+                </div>
               </v-tabs-window-item>
             </v-tabs-window>
           </v-card>
