@@ -94,7 +94,7 @@ export const useSubscriptionStore = defineStore("saas-subscription",{
 })
 
 export function getZHProductName (productCode) {
-    return allProductCodeList.find(it => it.value === productCode).name
+    return getProductNameByCode(productCode)
 }
 
 export function getDateProgressLinear (startDate,endDate,realEndDate) {
@@ -146,6 +146,7 @@ export const allProductCodeList = [
     {value: 'cashmanage',name:'资金管理'},
     {value: 'takeawayWeb',name:'外卖网站'},
     {value: 'scanToOrder',name:'扫码点餐'},
+    {value: 'quickOrder',name:'快餐扫码'},
     {value: 'queneNumber',name:'叫号系统'},
     {value: 'kitchenMonitor',name:'厨房显示器'},
     {value: 'hotpotSystem',name:'火锅传菜系统'},
@@ -186,14 +187,16 @@ export const softProductCodeList = [
     {value: 'cashmanage',name:'资金管理'},
     {value: 'takeawayWeb',name:'外卖网站'},
     {value: 'scanToOrder',name:'扫码点餐'},
+    {value: 'quickOrder',name:'快餐扫码'},
     {value: 'queneNumber',name:'叫号系统'},
     {value: 'kitchenMonitor',name:'厨房显示器'},
     {value: 'hotpotSystem',name:'火锅传菜系统'},
     {value: 'advancedReservation',name:'高级预定'},
 ]
 
+// 列表里没有的产品码（Stripe 新加的产品）直接显示产品码本身，不能抛错
 export function getProductNameByCode (code) {
-    return allProductCodeList.find(it => it.value === code).name
+    return allProductCodeList.find(it => it.value === code)?.name ?? code
 }
 
 export const colorList = [
