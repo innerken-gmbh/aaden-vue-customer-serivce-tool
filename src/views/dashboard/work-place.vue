@@ -11,7 +11,8 @@ import {createEvent, editTseStatus, getNgrokUrl} from "@/old/utils/firebase";
 import {recordSchema} from "@/old/utils/recordSchema";
 import dayjs from "dayjs";
 import {allProductCodeList, softProductCodeList, useSubscriptionStore} from "@/store/aaden/saasSubscription";
-import {addProduct, deleteProduct, maintenanceSchedule} from "@/store/aaden/cloud-v2-api";
+import {maintenanceSchedule} from "@/store/aaden/cloud-v2-api";
+import {addManualFunction, deleteManualFunction} from "@/store/aaden/erpBackupApi";
 import LoadingProvider from "@/views/BaseWidget/basic/premade/LoadingProvider.vue";
 import DatePicker from "@/views/BaseWidget/basic/dialog/DatePicker.vue";
 import {useDatePickerStore} from "@/views/BaseWidget/basic/dialog/dateRepo";
@@ -189,14 +190,18 @@ const currentProducts = computed(() => {
 })
 async function editProduct (item) {
   storeSub.loading = true
-  if (item.active) {
-    const id = storeSub.productList.find(it => it.productCode === item.value).id
-    await deleteProduct(id)
-  } else {
-    await addProduct(item.value,storeSub.deviceId)
+  try {
+    if (item.active) {
+      const id = storeSub.productList.find(it => it.productCode === item.value).id
+      await deleteManualFunction(id)
+    } else {
+      await addManualFunction(item.value,storeSub.deviceId)
+    }
+    activeProductDialog.value = false
+  } finally {
+    // 没登录 ERP / 没权限时 erpManualFunctionRequest 会先弹提示再抛出，这里只负责把 loading 收回来
+    storeSub.loading = false
   }
-  storeSub.loading = false
-  activeProductDialog.value = false
 }
 
 const dateRange = ref([dayjs().format('YYYY-MM-DD'), dayjs().format('YYYY-MM-DD')])

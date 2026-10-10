@@ -1,9 +1,8 @@
 import {
-    addProduct,
-    getAllProductList,
     getAllSubscriptionList,
     getDeviceSubscriptionList
 } from "./cloud-v2-api";
+import {getManualFunctions} from "./erpBackupApi";
 import {defineStore} from "pinia";
 import dayjs from "dayjs";
 import {groupBy, uniq} from "lodash-es";
@@ -56,7 +55,7 @@ export const useSubscriptionStore = defineStore("saas-subscription",{
     actions: {
         async getProductList () {
             this.loading = true
-            this.productList = (await getAllProductList()).filter(it => it.deviceId.toString() === this.deviceId.toString())
+            this.productList = (await getManualFunctions(this.deviceId)).filter(it => it.deviceId.toString() === this.deviceId.toString())
             this.loading = false
         },
         clearFilterInfo () {
