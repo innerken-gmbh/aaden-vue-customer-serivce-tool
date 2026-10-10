@@ -6,7 +6,9 @@ import IKUtils from "innerken-js-utils";
 const TOKEN_KEY = 'erpToken'
 const EMAIL_KEY = 'erpEmail'
 
-export const ERP_BACKUP_PAGE = 'https://erp.aaden.io/compliance/backups'
+// 生产 ERP 是 hash 路由，链接要带 #/
+export const ERP_BACKUP_PAGE = 'https://erp.aaden.io/#/compliance/backups'
+export const ERP_CHAIN_BRANDS_PAGE = 'https://erp.aaden.io/#/compliance/chain-brands'
 
 export class ErpAuthError extends Error {
 }
@@ -112,6 +114,30 @@ export async function erpStoreBindingPost(path, {query, body} = {}) {
     if (res.status === 403) fail('这个 ERP 账号没有门店绑定权限（需要超级管理员或客服角色）')
     if (!res.ok) fail(await errorMessage(res, '操作失败'))
     return await res.text()
+}
+
+/**
+ * 连锁品牌（新建品牌、门店挂品牌 / 摘出品牌）：走云端 ERP「租户管理 → 连锁品牌」的 /erp/tenants/chain-brands，
+ * 需要 ERP 登录，账号是 ERP 超级管理员或 Aaden POS 平台运维。原来的 /common/businessLayer/create、updateParent 是匿名接口，云端在收口。
+ * 失败时和 erpStoreBindingPost 一样先弹提示再抛出。
+ */
+export async function erpChainBrandRequest(path, {method = 'GET', query, body} = {}) {
+    const token = getErpToken()
+    if (!token) fail('请先登录 ERP（设备详情页里的「ERP 登录」），账号需要是超级管理员或平台运维')
+    const qs = query ? '?' + new URLSearchParams(query).toString() : ''
+    const res = await fetch(baseUrl + 'erp/tenants/chain-brands' + (path ? '/' + path : '') + qs, {
+        method,
+        headers: body ? {satoken: token, 'Content-Type': 'application/json'} : {satoken: token},
+        body: body ? JSON.stringify(body) : undefined,
+    })
+    if (res.status === 401) {
+        logoutErp()
+        fail('ERP 登录已失效，请重新登录')
+    }
+    if (res.status === 403) fail(await errorMessage(res, '这个 ERP 账号没有连锁品牌权限（需要超级管理员或平台运维）'))
+    if (!res.ok) fail(await errorMessage(res, '操作失败'))
+    const body2 = await res.json()
+    return body2?.data ?? body2
 }
 
 function fail(message) {

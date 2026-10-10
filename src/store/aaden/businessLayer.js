@@ -1,5 +1,5 @@
 import {defineStore} from "pinia";
-import {erpStoreBindingPost} from "./erpBackupApi";
+import {erpChainBrandRequest, erpStoreBindingPost} from "./erpBackupApi";
 import hillo from "hillo";
 import {baseUrl} from "@/store/aaden/cloud-v2-api";
 import axios from "axios";
@@ -36,10 +36,9 @@ export const businessLayerStore = defineStore("businessLayerStore",{
     },
 })
 const commonPath = 'common/businessLayer/'
-export async function createBusinessLayer(item) {
-    return (await hillo.jsonPost(baseUrl + commonPath + 'create',{
-        ...item
-    }))
+// 新建品牌走 ERP「连锁品牌」（见 erpBackupApi.erpChainBrandRequest），只收名称；简介、logo 由品牌店主在会员后台填
+export async function createBrand(name) {
+    return await erpChainBrandRequest('', {method: 'POST', body: {name: (name ?? '').trim()}})
 }
 
 export async function deleteBusinessLayer(id) {
@@ -67,10 +66,17 @@ export async function updateBusinessLayerDisplayInfo(item) {
     }))
 }
 
-export async function updateBusinessLayerParent(item) {
-    return (await hillo.jsonPost(baseUrl + commonPath + 'updateParent',{
-        ...item
-    }))
+// 改上级只支持门店：挂进品牌 / 摘出品牌，都走 ERP「连锁品牌」。挂之前先看影响（会停用门店自己的会员体系、集点卡，会员转成品牌会员）
+export async function previewAttachShop(brandId, deviceId) {
+    return await erpChainBrandRequest(`${brandId}/attach-preview`, {query: {deviceId}})
+}
+
+export async function attachShopToBrand(brandId, deviceId) {
+    return await erpChainBrandRequest(`${brandId}/shops`, {method: 'POST', body: {deviceId}})
+}
+
+export async function detachShopFromBrand(shopId) {
+    return await erpChainBrandRequest(`shops/${shopId}/detach`, {method: 'POST'})
 }
 
 export async function getAllBusinessLayer() {
