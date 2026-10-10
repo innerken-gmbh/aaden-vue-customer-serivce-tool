@@ -86,21 +86,7 @@ export async function createDeviceByAdmin (userId) {
 }
 
 
-export async function getAllProductList () {
-    return await hillo.get(baseUrl + 'subscriptions/function/list',{})
-}
-
-export async function addProduct (productCode,deviceId) {
-    return await hillo.jsonPost(baseUrl + 'subscriptions/function/add',{
-        note: '',
-        productCode,
-        deviceId,
-    })
-}
-
-export async function deleteProduct (id) {
-    return await hillo.jsonPost(baseUrl + 'subscriptions/function/delete/' + id,{})
-}
+// 手动开通的增删查已移到 erpBackupApi.js（getManualFunctions / addManualFunction / deleteManualFunction）：走 ERP 登录 + 超级管理员
 
 export async function maintenanceSchedule (item) {
     return await hillo.jsonPost(baseUrl + 'api/maintenance-schedule/schedule',{
