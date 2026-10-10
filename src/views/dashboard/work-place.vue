@@ -388,8 +388,9 @@ function getNextNoonLocalDateTime() {
   return nextNoon.format('YYYY-MM-DDTHH:mm:ss');
 }
 async function showActiveProduct (item) {
-  await storeSub.getProductList()
+  // 先设设备号再拉列表：反过来会列出上一台设备的手动开通，点 chip 会删错门店
   storeSub.deviceId = item.deviceId
+  await storeSub.getProductList()
   activeProductDialog.value = true
 }
 async function download3In1() {

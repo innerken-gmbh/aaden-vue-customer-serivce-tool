@@ -55,8 +55,12 @@ export const useSubscriptionStore = defineStore("saas-subscription",{
     actions: {
         async getProductList () {
             this.loading = true
-            this.productList = (await getManualFunctions(this.deviceId)).filter(it => it.deviceId.toString() === this.deviceId.toString())
-            this.loading = false
+            try {
+                this.productList = (await getManualFunctions(this.deviceId)).filter(it => it.deviceId.toString() === this.deviceId.toString())
+            } finally {
+                // 没登录 ERP / 没权限时会先弹提示再抛出，这里把 loading 收回来
+                this.loading = false
+            }
         },
         clearFilterInfo () {
             this.deviceId = ''

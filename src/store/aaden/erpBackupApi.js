@@ -141,13 +141,13 @@ export async function erpChainBrandRequest(path, {method = 'GET', query, body} =
 }
 
 /**
- * 手动开通 / 取消付费功能：走云端 /erp/compliance/subscriptions/manual-functions，需要 ERP 登录且是超级管理员。
+ * 手动开通 / 取消付费功能：走云端 /erp/compliance/subscriptions/manual-functions，需要 ERP 登录，账号是超级管理员或客服。
  * 原来的 /subscriptions/function/list、add、delete 是匿名接口，云端已删除（任何人都能给任意设备免费开通）。
  * 云端开通快餐扫码后会立即登记菜单镜像，不用等第二天。
  */
 export async function erpManualFunctionRequest(path, {method = 'GET', query, body} = {}) {
     const token = getErpToken()
-    if (!token) fail('请先登录 ERP（设备详情页里的「ERP 登录」），账号需要是超级管理员')
+    if (!token) fail('请先登录 ERP（设备详情页里的「ERP 登录」），账号需要是超级管理员或客服')
     const qs = query ? '?' + new URLSearchParams(query).toString() : ''
     const res = await fetch(baseUrl + 'erp/compliance/subscriptions/manual-functions' + (path ? '/' + path : '') + qs, {
         method,
@@ -158,7 +158,7 @@ export async function erpManualFunctionRequest(path, {method = 'GET', query, bod
         logoutErp()
         fail('ERP 登录已失效，请重新登录')
     }
-    if (res.status === 403) fail(await errorMessage(res, '这个 ERP 账号不能手动开通功能（需要超级管理员）'))
+    if (res.status === 403) fail(await errorMessage(res, '这个 ERP 账号不能手动开通功能（需要超级管理员或客服）'))
     if (!res.ok) fail(await errorMessage(res, '操作失败'))
     return await res.json()
 }
