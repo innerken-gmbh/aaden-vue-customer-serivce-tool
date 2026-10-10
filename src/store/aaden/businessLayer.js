@@ -1,4 +1,5 @@
 import {defineStore} from "pinia";
+import {erpStoreBindingPost} from "./erpBackupApi";
 import hillo from "hillo";
 import {baseUrl} from "@/store/aaden/cloud-v2-api";
 import axios from "axios";
@@ -99,12 +100,13 @@ export const BLTyp = {
 
 export const BLTypeArray = ['Brand','Normal','Shop']
 
+// 门店绑定类操作走 ERP 登录 + 角色校验的 /erp/store-bindings（见 erpBackupApi.erpStoreBindingPost）
 export async function createInvite (item) {
-    return (await hillo.jsonPost(baseUrl + 'user-bl' + '/invite', { ...item }))
+    return await erpStoreBindingPost('user-bl/invite', {body: {...item}})
 }
 
 export async function createAppInvite (item) {
-    return (await hillo.jsonPost(baseUrl + 'user-stores' + '/invite', { ...item }))
+    return await erpStoreBindingPost('user-stores/invite', {body: {...item}})
 }
 
 export async function getShopInfo (deviceId) {
@@ -154,14 +156,11 @@ export const inviteSchema = {
 
 
 export async function bindDeviceWithMain (bindingKey,userId) {
-    return (await hillo.post(baseUrl + 'user-stores/bind-main-user/' + bindingKey + '/' + userId, {}))
+    return await erpStoreBindingPost('user-stores/bind-main-user/' + encodeURIComponent(bindingKey) + '/' + encodeURIComponent(userId))
 }
 
 export async function bindDeviceWithoutMain (userId,deviceId) {
-    return (await hillo.post(baseUrl + 'user-stores/bind', {
-        firebaseUid: userId,
-        deviceId: deviceId
-    }))
+    return await erpStoreBindingPost('user-stores/bind', {query: {firebaseUid: userId, deviceId: deviceId}})
 }
 
 export async function setDebugInfo (info) {
@@ -173,10 +172,7 @@ export async function getBindingKeyByDeviceId (deviceId) {
 }
 
 export async function unbindingDevice (deviceId, uuid) {
-    return (await hillo.post(baseUrl + 'user-stores/unbind', {
-        firebaseUid: uuid,
-        deviceId: deviceId
-    }))
+    return await erpStoreBindingPost('user-stores/unbind', {query: {firebaseUid: uuid, deviceId: deviceId}})
 }
 
 

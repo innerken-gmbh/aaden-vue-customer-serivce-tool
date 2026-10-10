@@ -260,8 +260,12 @@ async function findUuidWithDeviceId () {
 
 async function unbind () {
   unbindLoading.value = true
-  await unbindingDevice(unbindDeviceId.value,unbindUuid.value)
-  unbindLoading.value = false
+  try {
+    await unbindingDevice(unbindDeviceId.value,unbindUuid.value)
+  } finally {
+    // 失败时 erpStoreBindingPost 已经弹过提示
+    unbindLoading.value = false
+  }
 }
 
 async function searchBindingKey () {
@@ -270,12 +274,16 @@ async function searchBindingKey () {
 
 async function bindDeviceWithUid () {
   loading.value = true
-  if (isMain.value) {
-    await bindDeviceWithMain(bindingKey.value, uid.value)
-  } else {
-    await bindDeviceWithoutMain(uid.value, deviceId.value)
+  try {
+    if (isMain.value) {
+      await bindDeviceWithMain(bindingKey.value, uid.value)
+    } else {
+      await bindDeviceWithoutMain(uid.value, deviceId.value)
+    }
+  } finally {
+    // 失败时 erpStoreBindingPost 已经弹过提示
+    loading.value = false
   }
-  loading.value = false
 }
 
 
