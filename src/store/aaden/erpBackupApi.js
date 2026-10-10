@@ -24,11 +24,19 @@ export function logoutErp() {
 }
 
 async function errorMessage(res, fallback) {
+    // 云端有的回 JSON（{message} / {error}），有的直接回纯文本（如 "Main User Occupied"），两种都要显示出来
+    let text = ''
     try {
-        const body = await res.json()
-        return body?.message || body?.error || fallback
+        text = (await res.text()).trim()
     } catch {
         return fallback
+    }
+    if (!text) return fallback
+    try {
+        const body = JSON.parse(text)
+        return body?.message || body?.error || fallback
+    } catch {
+        return text.slice(0, 200)
     }
 }
 
@@ -86,14 +94,11 @@ export async function downloadBackup(backup) {
 /**
  * 门店绑定操作（邀请、绑定、解绑、设主账号）：走云端 /erp/store-bindings，需要 ERP 登录且有超级管理员或客服角色。
  * 原来用的 /user-bl、/user-stores 是匿名接口，能被拿来冒充店主，云端在收口。
- * 失败时直接弹提示并返回 null（调用页面原来不处理异常，抛出去会卡住加载状态）。
+ * 失败时先弹提示再抛出：dialogStore.waitFor 遇到异常会保持弹窗不关，不会看起来像成功了。
  */
 export async function erpStoreBindingPost(path, {query, body} = {}) {
     const token = getErpToken()
-    if (!token) {
-        IKUtils.showError('请先登录 ERP（设备详情页里的「ERP 登录」），账号需要有超级管理员或客服角色')
-        return null
-    }
+    if (!token) fail('请先登录 ERP（设备详情页里的「ERP 登录」），账号需要有超级管理员或客服角色')
     const qs = query ? '?' + new URLSearchParams(query).toString() : ''
     const res = await fetch(baseUrl + 'erp/store-bindings/' + path + qs, {
         method: 'POST',
@@ -102,16 +107,14 @@ export async function erpStoreBindingPost(path, {query, body} = {}) {
     })
     if (res.status === 401) {
         logoutErp()
-        IKUtils.showError('ERP 登录已失效，请重新登录')
-        return null
+        fail('ERP 登录已失效，请重新登录')
     }
-    if (res.status === 403) {
-        IKUtils.showError('这个 ERP 账号没有门店绑定权限（需要超级管理员或客服角色）')
-        return null
-    }
-    if (!res.ok) {
-        IKUtils.showError(await errorMessage(res, '操作失败'))
-        return null
-    }
+    if (res.status === 403) fail('这个 ERP 账号没有门店绑定权限（需要超级管理员或客服角色）')
+    if (!res.ok) fail(await errorMessage(res, '操作失败'))
     return await res.text()
+}
+
+function fail(message) {
+    IKUtils.showError(message)
+    throw new Error(message)
 }
