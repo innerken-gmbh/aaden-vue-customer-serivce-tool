@@ -215,7 +215,9 @@
 
 <script lang="ts" setup>
 
-import {deleteBusinessLayer,businessLayerStore,BLTypeArray,saveFile,createBusinessLayer,updateBusinessLayerDisplayInfo,updateBusinessLayerParent,createInvite,inviteSchema} from "@/store/aaden/businessLayer";
+import {deleteBusinessLayer,businessLayerStore,BLTypeArray,saveFile,createBrand,updateBusinessLayerDisplayInfo,previewAttachShop,attachShopToBrand,detachShopFromBrand,createInvite,inviteSchema} from "@/store/aaden/businessLayer";
+import IKUtils from "innerken-js-utils";
+import {ERP_CHAIN_BRANDS_PAGE} from "@/store/aaden/erpBackupApi";
 import {computed, onMounted, ref, watch} from "vue";
 import BaseForm from "@/views/BaseWidget/form/BaseForm.vue";
 import {VFileInput, VSelect, VSwitch} from "vuetify/components";
@@ -432,12 +434,8 @@ const dialogStore = useDialogStore()
 async function menuClick (name,node) {
   const info = store.allList.find(it => it.id === node)
   if (name === 'Add') {
-    parentId.value = node
-    if (info.type === 'Brand') {
-      await newAdd('Normal')
-    } else if (info.type === 'Normal') {
-      await newAdd('Normal')
-    }
+    // 原来在这里建 Normal 子节点（生产从没用过）；往品牌里加门店到 ERP「连锁品牌」页按设备号挂
+    IKUtils.showError('往品牌里加门店请到 ERP「租户管理 → 连锁品牌」按设备号添加：' + ERP_CHAIN_BRANDS_PAGE)
   } else if (name === 'EditBind') {
     await showChangeDialog(info, 1)
   } else if (name === 'Delete') {
@@ -485,7 +483,8 @@ async function submit (info) {
     color: info.color ?? ''
   }
   if (!editParent.value && !editDisplayInfo.value) {
-    await createBusinessLayer(info)
+    // 新建只建连锁品牌（ERP 接口只收名称）；简介、logo 由品牌店主在会员后台「关于我们 → 品牌资料」填
+    await createBrand(info.name)
   } else {
     if (editDisplayInfo.value) {
       if (typeof info.imageUrl !== 'string') {
@@ -494,11 +493,49 @@ async function submit (info) {
       await updateBusinessLayerDisplayInfo(info)
     }
     if (editParent.value) {
-      await updateBusinessLayerParent(info)
+      // 取消确认时保持弹窗不关
+      if (await changeShopParent(info) === false) return
     }
   }
   showAddDialog.value = false
   await store.getBusinessLayerList()
+}
+
+// 改上级：只支持门店。换品牌 = 先摘出原品牌再挂进新品牌；挂之前把影响（停用的会员体系 / 集点卡、转过去的会员数）给客服确认
+async function changeShopParent (info) {
+  const current = store.allList.find(it => it.id === info.id) ?? editObj.value
+  const oldParent = current?.parentId ?? null
+  const newParent = info.parentId || null
+  if (oldParent === newParent) return
+  if (current?.type !== 'Shop') {
+    IKUtils.showError('只有门店能改上级（挂进品牌 / 摘出品牌）')
+    throw new Error('not a shop')
+  }
+  if (newParent) {
+    if (!current.deviceId) {
+      IKUtils.showError('这家门店没有设备号，不能挂进品牌')
+      throw new Error('no deviceId')
+    }
+    const preview = await previewAttachShop(newParent, current.deviceId)
+    if (preview.currentBrand && !oldParent) {
+      IKUtils.showError(`门店已在品牌「${preview.currentBrand}」里`)
+      throw new Error('already in brand')
+    }
+    const impact = preview.impact
+    const lines = [`把门店 ${current.name}（设备号 ${current.deviceId}）挂进品牌「${store.allList.find(it => it.id === newParent)?.name ?? newParent}」？`]
+    if (oldParent) lines.push('会先从原品牌摘出（原品牌期间的订单留在原品牌）。')
+    if (impact) {
+      if (impact.ownSystems?.length) lines.push(`会停用门店自己的会员体系：${impact.ownSystems.map(it => it.name).join('、')}`)
+      if (impact.ownStampCards?.length) lines.push(`会停用门店自己的集点卡：${impact.ownStampCards.map(it => it.name).join('、')}`)
+      lines.push(`${impact.memberCount ?? 0} 位会员会转成品牌会员。`)
+    }
+    if (!window.confirm(lines.join('\n'))) return false
+    if (oldParent) await detachShopFromBrand(current.id)
+    await attachShopToBrand(newParent, current.deviceId)
+  } else {
+    if (!window.confirm(`把门店 ${current.name} 从品牌里摘出？品牌期间的订单留在品牌，不回迁。`)) return false
+    await detachShopFromBrand(current.id)
+  }
 }
 
 watch(showAddDialog,(value) => {
