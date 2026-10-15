@@ -4,7 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1777049f-9f7a-4424-9005-71635bd2b339" name="Changes" comment="jiaruxingongneng" />
+    <list default="true" id="1777049f-9f7a-4424-9005-71635bd2b339" name="Changes" comment="jiaruxingongneng">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/components/common/DeviceIdSelector.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/components/common/DeviceIdSelector.vue" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -484,7 +487,12 @@
       <workItem from="1790054785913" duration="2073000" />
       <workItem from="1790141401472" duration="3280000" />
       <workItem from="1790665542679" duration="5274000" />
-      <workItem from="1790752074054" duration="2592000" />
+      <workItem from="1790752074054" duration="2636000" />
+      <workItem from="1790754741672" duration="9000" />
+      <workItem from="1791466815030" duration="2178000" />
+      <workItem from="1791525108665" duration="881000" />
+      <workItem from="1791620327584" duration="4757000" />
+      <workItem from="1792056568148" duration="1994000" />
     </task>
     <task id="LOCAL-00001" summary="加入包裹记录功能和库存管理相关优化">
       <option name="closed" value="true" />
