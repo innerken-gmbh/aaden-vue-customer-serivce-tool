@@ -18,7 +18,10 @@
           :key="note"
           class="flex flex-col gap-2"
         >
-          <div class="text-xs font-bold text-gray-500 border-b pb-1">
+          <div
+            class="text-xs font-bold text-gray-500 border-b pb-1 cursor-pointer hover:text-primary transition-colors"
+            @click="toggleNoteSelection(devices)"
+          >
             {{ note }}
           </div>
           <div class="flex flex-wrap gap-2">
@@ -237,6 +240,21 @@ function toggleDeviceId(id: string, checked: boolean) {
   const newSelected = checked
     ? [...selectedIds.value, id]
     : selectedIds.value.filter(i => i !== id)
+  handleUpdate(newSelected)
+}
+
+function toggleNoteSelection(devices: DeviceInfo[]) {
+  const deviceIds = devices.map(d => d.deviceId)
+  const allSelected = deviceIds.every(id => selectedIds.value.includes(id))
+
+  let newSelected: string[]
+  if (allSelected) {
+    // 如果全部已选中，则取消选中该组的所有设备
+    newSelected = selectedIds.value.filter(id => !deviceIds.includes(id))
+  } else {
+    // 否则，选中该组的所有设备（去重）
+    newSelected = [...new Set([...selectedIds.value, ...deviceIds])]
+  }
   handleUpdate(newSelected)
 }
 
