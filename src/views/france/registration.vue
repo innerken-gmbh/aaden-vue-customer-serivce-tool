@@ -385,7 +385,7 @@ const handleResend = async (row: RegistrationModel) => {
     return;
   }
   try {
-    await resendRegistration(row.id);
+    await resendRegistration(row.id, row.env);
     message.success('重发成功');
   } catch (error) {
     message.error('重发失败');
