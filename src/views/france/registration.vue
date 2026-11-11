@@ -68,7 +68,7 @@ interface RegistrationModel {
 }
 
 const initialModel: RegistrationModel = {
-  env: 'TEST',
+  env: 'LIVE',
   deviceId: '',
   taxpayer: {
     taxpayerType: 'COMPANY',

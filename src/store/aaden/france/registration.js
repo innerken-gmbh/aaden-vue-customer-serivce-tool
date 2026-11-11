@@ -32,5 +32,5 @@ export async function addRegistration (item) {
 }
 
 export async function resendRegistration (id) {
-    return await hillo.jsonPost(baseUrl + path + 'registrations/' + id + '/resend')
+    return await hillo.jsonPost(baseUrl + path + 'registrations/' + id + '/push-settings')
 }
