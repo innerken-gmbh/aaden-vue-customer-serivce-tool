@@ -645,12 +645,12 @@ const handleClear = () => {
 
           <template v-else>
             <n-form-item-gi
-              label="公司名"
+              label="法定全名"
               path="taxpayer.personLegalName"
             >
               <n-input
                 v-model:value="model.taxpayer.personLegalName"
-                placeholder="请输入公司全名"
+                placeholder="请输入本人法定全名"
               />
             </n-form-item-gi>
             <n-form-item-gi
@@ -1017,7 +1017,7 @@ const handleClear = () => {
               </n-descriptions-item>
 
               <n-descriptions-item
-                label="法定名称"
+                :label="taxpayerDetail?.type === 'INDIVIDUAL' ? '法定全名' : '法定名称'"
                 :span="1"
               >
                 {{ taxpayerDetail?.name?.legal }}
