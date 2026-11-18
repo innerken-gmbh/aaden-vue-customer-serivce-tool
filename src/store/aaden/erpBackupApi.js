@@ -117,6 +117,30 @@ export async function erpStoreBindingPost(path, {query, body} = {}) {
 }
 
 /**
+ * 老板端 App（Aaden 管家）账号：按邮箱查账号、绑到多家门店（POS-775）。和 erpStoreBindingPost 走同一组接口、同样的登录和角色，
+ * 只是云端回 JSON。邮箱放请求体里，不进 URL。
+ */
+export async function erpStoreBindingJson(path, body) {
+    const res = await fetch(await storeBindingUrl(path), {
+        method: 'POST',
+        headers: {satoken: getErpToken(), 'Content-Type': 'application/json'},
+        body: JSON.stringify(body),
+    })
+    if (res.status === 401) {
+        logoutErp()
+        fail('ERP 登录已失效，请重新登录')
+    }
+    if (res.status === 403) fail('这个 ERP 账号没有门店绑定权限（需要超级管理员或客服角色）')
+    if (!res.ok) fail(await errorMessage(res, '操作失败'))
+    return await res.json()
+}
+
+async function storeBindingUrl(path) {
+    if (!getErpToken()) fail('请先登录 ERP（设备详情页里的「ERP 登录」），账号需要有超级管理员或客服角色')
+    return baseUrl + 'erp/store-bindings/' + path
+}
+
+/**
  * 连锁品牌（新建品牌、门店挂品牌 / 摘出品牌）：走云端 ERP「租户管理 → 连锁品牌」的 /erp/tenants/chain-brands，
  * 需要 ERP 登录，账号是 ERP 超级管理员或 Aaden POS 平台运维。原来的 /common/businessLayer/create、updateParent 是匿名接口，云端在收口。
  * 失败时和 erpStoreBindingPost 一样先弹提示再抛出。

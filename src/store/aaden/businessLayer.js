@@ -1,5 +1,5 @@
 import {defineStore} from "pinia";
-import {erpChainBrandRequest, erpStoreBindingPost} from "./erpBackupApi";
+import {erpChainBrandRequest, erpStoreBindingJson, erpStoreBindingPost} from "./erpBackupApi";
 import hillo from "hillo";
 import {baseUrl} from "@/store/aaden/cloud-v2-api";
 import axios from "axios";
@@ -175,6 +175,16 @@ export async function setDebugInfo (info) {
 
 export async function getBindingKeyByDeviceId (deviceId) {
     return (await hillo.get(baseUrl + 'report/shop/' + deviceId, {})).bindingUUID
+}
+
+// 老板端 App（Aaden 管家）账号：按邮箱查账号和已绑门店；没有账号时 found=false
+export async function lookupBossAppAccount (email) {
+    return await erpStoreBindingJson('boss-app/account/lookup', {email})
+}
+
+// 把这个邮箱的老板端 App 账号绑到多家门店；每家回 BOUND / ALREADY_BOUND / STORE_NOT_FOUND
+export async function bindBossAppAccount (email, deviceIds) {
+    return await erpStoreBindingJson('boss-app/bind', {email, deviceIds})
 }
 
 export async function unbindingDevice (deviceId, uuid) {
