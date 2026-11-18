@@ -13,7 +13,7 @@
         variant="tonal"
         density="compact"
       >
-        不知道 UID？到 ERP「租户管理 → 租户与成员 → 老板端 App 账号」按邮箱查账号，一次绑多家门店：
+        按邮箱查询和多店绑定请到 ERP「租户管理 → 租户与成员 → 老板端 App 账号」：
         <a
           :href="ERP_BOSS_APP_ACCOUNTS_PAGE"
           target="_blank"
