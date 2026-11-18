@@ -9,6 +9,8 @@ const EMAIL_KEY = 'erpEmail'
 // 生产 ERP 是 hash 路由，链接要带 #/
 export const ERP_BACKUP_PAGE = 'https://erp.aaden.io/#/compliance/backups'
 export const ERP_CHAIN_BRANDS_PAGE = 'https://erp.aaden.io/#/compliance/chain-brands'
+// 按邮箱查老板端 App（Aaden 管家）账号、绑多家门店（POS-775）：做在 ERP，不在客服平台加功能
+export const ERP_BOSS_APP_ACCOUNTS_PAGE = 'https://erp.aaden.io/#/compliance/boss-app-accounts'
 
 export class ErpAuthError extends Error {
 }
@@ -114,30 +116,6 @@ export async function erpStoreBindingPost(path, {query, body} = {}) {
     if (res.status === 403) fail('这个 ERP 账号没有门店绑定权限（需要超级管理员或客服角色）')
     if (!res.ok) fail(await errorMessage(res, '操作失败'))
     return await res.text()
-}
-
-/**
- * 老板端 App（Aaden 管家）账号：按邮箱查账号、绑到多家门店（POS-775）。和 erpStoreBindingPost 走同一组接口、同样的登录和角色，
- * 只是云端回 JSON。邮箱放请求体里，不进 URL。
- */
-export async function erpStoreBindingJson(path, body) {
-    const res = await fetch(await storeBindingUrl(path), {
-        method: 'POST',
-        headers: {satoken: getErpToken(), 'Content-Type': 'application/json'},
-        body: JSON.stringify(body),
-    })
-    if (res.status === 401) {
-        logoutErp()
-        fail('ERP 登录已失效，请重新登录')
-    }
-    if (res.status === 403) fail('这个 ERP 账号没有门店绑定权限（需要超级管理员或客服角色）')
-    if (!res.ok) fail(await errorMessage(res, '操作失败'))
-    return await res.json()
-}
-
-async function storeBindingUrl(path) {
-    if (!getErpToken()) fail('请先登录 ERP（设备详情页里的「ERP 登录」），账号需要有超级管理员或客服角色')
-    return baseUrl + 'erp/store-bindings/' + path
 }
 
 /**

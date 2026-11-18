@@ -7,119 +7,19 @@
       <div class="text-body-2 text-medium-emphasis">
         这里绑的是老板手机上「Aaden 管家」App 的登录账号，不是网页后台（Portal / 会员后台）的账号。
       </div>
-    </div>
-    <div class="pa-4">
-      <v-card
-        class="pa-4"
-        max-width="1224px"
+      <v-alert
+        class="mt-2"
+        type="info"
+        variant="tonal"
+        density="compact"
       >
-        <div class="text-h6 mb-2">
-          按邮箱查账号，绑到门店
-        </div>
-        <div class="d-flex align-center">
-          <v-text-field
-            v-model="bossEmail"
-            label="老板端 App 登录邮箱"
-            clearable
-            hide-details
-            @keyup.enter="lookupBossAccount"
-          />
-          <v-btn
-            class="ml-4"
-            :loading="bossLookupLoading"
-            :disabled="!bossEmail"
-            color="blue lighten-2"
-            variant="outlined"
-            @click="lookupBossAccount"
-          >
-            查询
-          </v-btn>
-        </div>
-        <v-alert
-          v-if="bossAccount && !bossAccount.found"
-          class="mt-4"
-          type="warning"
-          variant="tonal"
-        >
-          这个邮箱还没有账号，请先让对方登录一次（用这个邮箱登录 Aaden 管家 App），再来查。
-        </v-alert>
-        <template v-if="bossAccount && bossAccount.found">
-          <v-card
-            class="mt-4 pa-4"
-            variant="outlined"
-          >
-            <div class="d-flex align-center">
-              <div>
-                <div class="text-subtitle-1">
-                  {{ bossAccount.email }}
-                  <span v-if="bossAccount.displayName">（{{ bossAccount.displayName }}）</span>
-                </div>
-                <div class="text-caption text-medium-emphasis">
-                  UID: {{ bossAccount.firebaseUid }}
-                </div>
-              </div>
-              <v-spacer />
-              <v-chip
-                v-if="bossAccount.disabled"
-                color="red"
-              >
-                账号已停用，不能绑定
-              </v-chip>
-            </div>
-            <div class="mt-2">
-              <div class="text-body-2 mb-1">
-                已绑定的门店（{{ bossAccount.stores.length }}）
-              </div>
-              <div v-if="bossAccount.stores.length === 0" class="text-caption text-medium-emphasis">
-                还没有绑定任何门店
-              </div>
-              <v-chip
-                v-for="store in bossAccount.stores"
-                :key="store.deviceId"
-                class="mr-2 mb-2"
-                :color="store.isOwner ? 'green' : undefined"
-              >
-                {{ store.deviceId }}<span v-if="store.storeName">&nbsp;{{ store.storeName }}</span><span v-if="store.isOwner">&nbsp;· 主账号</span>
-              </v-chip>
-            </div>
-          </v-card>
-          <div
-            v-if="!bossAccount.disabled"
-            class="d-flex align-center mt-4"
-          >
-            <v-text-field
-              v-model="bossDeviceIds"
-              label="要绑定的门店号（可多家，用逗号或空格隔开，如 1805, 1536）"
-              clearable
-              hide-details
-            />
-            <v-btn
-              class="ml-4"
-              :loading="bossBindLoading"
-              :disabled="parsedBossDeviceIds.length === 0"
-              color="primary"
-              @click="bindBossAccount"
-            >
-              绑定到 {{ parsedBossDeviceIds.length }} 家门店
-            </v-btn>
-          </div>
-          <div
-            v-if="bossBindOutcomes.length > 0"
-            class="mt-4"
-          >
-            <v-alert
-              v-for="item in bossBindOutcomes"
-              :key="item.deviceId"
-              class="mb-2"
-              density="compact"
-              variant="tonal"
-              :type="outcomeView(item.outcome).type"
-            >
-              {{ item.deviceId }}<span v-if="item.storeName">（{{ item.storeName }}）</span>：{{ outcomeView(item.outcome).text }}
-            </v-alert>
-          </div>
-        </template>
-      </v-card>
+        不知道 UID？到 ERP「租户管理 → 租户与成员 → 老板端 App 账号」按邮箱查账号，一次绑多家门店：
+        <a
+          :href="ERP_BOSS_APP_ACCOUNTS_PAGE"
+          target="_blank"
+          rel="noopener"
+        >{{ ERP_BOSS_APP_ACCOUNTS_PAGE }}</a>
+      </v-alert>
     </div>
     <div class="d-flex main-container pa-4">
       <v-card
@@ -127,7 +27,7 @@
         max-width="600px"
       >
         <div class="d-flex align-center justify-center text-h5 mb-4">
-          按 UID 绑定（已知 UID 时用）
+          开始今天的绑定之旅吧!
         </div>
         <div class="d-flex flex-column">
           <div class="d-flex align-center justify-center">
@@ -345,64 +245,9 @@
 
 <script lang="ts" setup>
 
-import {computed, onMounted, ref, watch, watchEffect} from "vue";
-import {unbindingDevice,bindDeviceWithMain, bindDeviceWithoutMain, getBindingKeyByDeviceId, checkDeviceUuid, lookupBossAppAccount, bindBossAppAccount} from "@/store/aaden/businessLayer";
-
-// 老板端 App（Aaden 管家）账号：按邮箱查 → 绑到多家门店（POS-775）
-const bossEmail = ref('')
-const bossAccount = ref(null)
-const bossLookupLoading = ref(false)
-const bossDeviceIds = ref('')
-const bossBindLoading = ref(false)
-const bossBindOutcomes = ref([])
-
-const parsedBossDeviceIds = computed(() => [...new Set((bossDeviceIds.value ?? '')
-  .split(/[\s,，、;；]+/)
-  .map(it => it.trim())
-  .filter(it => it))])
-
-watch(bossEmail, () => {
-  // 换了邮箱，上一次查到的账号就不再对应，避免绑错人
-  bossAccount.value = null
-  bossBindOutcomes.value = []
-})
-
-async function lookupBossAccount () {
-  if (!bossEmail.value) return
-  bossLookupLoading.value = true
-  bossBindOutcomes.value = []
-  try {
-    bossAccount.value = await lookupBossAppAccount(bossEmail.value.trim())
-  } finally {
-    // 失败时 erpStoreBindingJson 已经弹过提示
-    bossLookupLoading.value = false
-  }
-}
-
-async function bindBossAccount () {
-  bossBindLoading.value = true
-  try {
-    const result = await bindBossAppAccount(bossEmail.value.trim(), parsedBossDeviceIds.value)
-    if (!result.found) {
-      bossAccount.value = {found: false}
-      return
-    }
-    bossBindOutcomes.value = result.outcomes ?? []
-    bossAccount.value = {...bossAccount.value, disabled: result.disabled, stores: result.stores ?? bossAccount.value.stores}
-    if (bossBindOutcomes.value.every(it => it.outcome !== 'STORE_NOT_FOUND')) bossDeviceIds.value = ''
-  } finally {
-    bossBindLoading.value = false
-  }
-}
-
-function outcomeView (outcome) {
-  switch (outcome) {
-    case 'BOUND': return {type: 'success', text: '已绑定'}
-    case 'ALREADY_BOUND': return {type: 'info', text: '之前就绑定了，没有重复建'}
-    case 'STORE_NOT_FOUND': return {type: 'error', text: '没找到这家门店，请检查门店号'}
-    default: return {type: 'warning', text: outcome}
-  }
-}
+import {onMounted, ref, watch, watchEffect} from "vue";
+import {unbindingDevice,bindDeviceWithMain, bindDeviceWithoutMain, getBindingKeyByDeviceId, checkDeviceUuid} from "@/store/aaden/businessLayer";
+import {ERP_BOSS_APP_ACCOUNTS_PAGE} from "@/store/aaden/erpBackupApi";
 
 const deviceId = ref('')
 const uid = ref('')
