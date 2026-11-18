@@ -1,5 +1,26 @@
 <template>
   <div>
+    <div class="pa-4 pb-0">
+      <div class="text-h5">
+        老板端 App（Aaden 管家）账号绑定
+      </div>
+      <div class="text-body-2 text-medium-emphasis">
+        这里绑的是老板手机上「Aaden 管家」App 的登录账号，不是网页后台（Portal / 会员后台）的账号。
+      </div>
+      <v-alert
+        class="mt-2"
+        type="info"
+        variant="tonal"
+        density="compact"
+      >
+        按邮箱查询和多店绑定请到 ERP「租户管理 → 租户与成员 → 老板端 App 账号」：
+        <a
+          :href="ERP_BOSS_APP_ACCOUNTS_PAGE"
+          target="_blank"
+          rel="noopener"
+        >{{ ERP_BOSS_APP_ACCOUNTS_PAGE }}</a>
+      </v-alert>
+    </div>
     <div class="d-flex main-container pa-4">
       <v-card
         class="pa-4"
@@ -226,6 +247,7 @@
 
 import {onMounted, ref, watch, watchEffect} from "vue";
 import {unbindingDevice,bindDeviceWithMain, bindDeviceWithoutMain, getBindingKeyByDeviceId, checkDeviceUuid} from "@/store/aaden/businessLayer";
+import {ERP_BOSS_APP_ACCOUNTS_PAGE} from "@/store/aaden/erpBackupApi";
 
 const deviceId = ref('')
 const uid = ref('')

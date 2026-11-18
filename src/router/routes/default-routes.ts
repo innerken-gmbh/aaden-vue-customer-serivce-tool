@@ -96,7 +96,7 @@ export default [
       {
         parentPath: '/store-management',
         menuUrl: '/store-management/device-bind',
-        menuName: 'Admin绑定'
+        menuName: '老板端 App（Aaden 管家）账号绑定'
       },
       {
         parentPath: '/store-management',

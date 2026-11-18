@@ -9,6 +9,8 @@ const EMAIL_KEY = 'erpEmail'
 // 生产 ERP 是 hash 路由，链接要带 #/
 export const ERP_BACKUP_PAGE = 'https://erp.aaden.io/#/compliance/backups'
 export const ERP_CHAIN_BRANDS_PAGE = 'https://erp.aaden.io/#/compliance/chain-brands'
+// 按邮箱查老板端 App（Aaden 管家）账号、绑多家门店（POS-775）：做在 ERP，不在客服平台加功能
+export const ERP_BOSS_APP_ACCOUNTS_PAGE = 'https://erp.aaden.io/#/compliance/boss-app-accounts'
 
 export class ErpAuthError extends Error {
 }
